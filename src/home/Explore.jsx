@@ -3,8 +3,8 @@ import React from 'react'
 const Explore = () => {
   return (
         <div><section>
-    <div className="h-dvh w-screen bg-[#D6EBF3] ">
-        <div className="grid grid-cols-5 h-full ">
+    <div className="h-dvh w-full bg-[#D6EBF3] ">
+        <div className="grid grid-cols-1 md:grid-cols-5 h-full ">
             <div className="col-span-2 flex flex-col items-start justify-center px-1 ml-30">
                 <h1 className="font-bold text-[#447F98] text-6xl mb-6 leading-tight">
                     Explore your own <br />style
@@ -20,7 +20,7 @@ const Explore = () => {
                 </button>
             </div>
 
-            <div className="col-san-3 h-full
+            <div className="col-span-3 h-full
                 px-10 py-30
                 flex items-center justify-start
                 relative overflow-x-hidden">
