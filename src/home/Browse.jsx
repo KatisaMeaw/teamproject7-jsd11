@@ -1,4 +1,4 @@
-export default function BrowseTheRange() {
+export default function Browse() {
   return (
     <>
       <div className="p-20 flex flex-col justify-center items-center">
