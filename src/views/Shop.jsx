@@ -7,6 +7,7 @@ return (
       <h2 className="font-bold leading-tight text-[48px]">
           555555555555555555555555555555555555555555555555555555555
       </h2>
+      <img className="w-100 h-auto" src="/2.png" alt="123" />
       </div>
   );
 }
