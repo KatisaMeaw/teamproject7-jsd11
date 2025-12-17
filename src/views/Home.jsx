@@ -1,9 +1,16 @@
 import React from 'react'
 import OurProduct from '../home/OurProduct'
+import Hero from '../home/Hero'
+import Browse from "../home/Browse"
 
-function Home() {
+const Home = () => {
   return (
-    <OurProduct />
+    <>
+      <Hero />
+      <Browse />
+      <OurProduct />
+    </>
+
   )
 }
 
