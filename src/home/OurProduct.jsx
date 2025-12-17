@@ -18,9 +18,14 @@ function OurProduct() {
           <Card />
           <Card />
           </div>
+
     </div>
 
-    
+    <div class="flex justify-center items-center md:mt-15">
+      <button class="p-4 border border-[#447F98] w-80 text-md font-bold text-[#447F98] cursor-pointer hover:bg-[#447F98] hover:text-white">Show More</button>
+    </div>
+
+
   </div>
 
 </section>
