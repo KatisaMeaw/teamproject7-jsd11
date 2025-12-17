@@ -1,15 +1,9 @@
-// import { useState } from 'react'
-import './App.css'
-import Explore from './home/Explore';
+import { Layout } from "./views/Layout";
 
-function App() {
-  // const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <Explore />
-    </>
-  )
+export default function App() {
+  return(
+    <div className="min-h-screen flex justify-center">
+      <Layout />
+    </div>
+  );
 }
-
-export default App
