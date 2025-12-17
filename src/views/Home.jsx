@@ -1,12 +1,17 @@
-export default function Home() {
+import React from 'react'
+import OurProduct from '../home/OurProduct'
+import Hero from '../home/Hero'
+import Browse from "../home/Browse"
+
+const Home = () => {
   return (
-    <div className="flex flex-col items-center justify-center text-center pt-15">
-      <h1 className="font-bold leading-tight text-[48px] text-amber-600">
-        เบื่อคุณส้มมมมมมมมมมมมมมมมมม
-      </h1>
-      <h2 className="font-bold leading-tight text-[48px]">
-          เมือ่ยยยยยยยยยยยยยยยยยยยยยยยย
-      </h2>
-      </div>
+    <>
+      <Hero />
+      <Browse />
+      <OurProduct />
+    </>
+
   );
 }
+
+export default Home
