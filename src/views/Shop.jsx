@@ -1,6 +1,6 @@
 import Card from "../components/Card";
 import FilterBar from "../shop/FilterBar";
-import Production from "../shop/Production";
+
 
 
 export default function Shop() {
