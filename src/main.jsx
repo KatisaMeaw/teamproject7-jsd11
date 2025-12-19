@@ -5,7 +5,6 @@ import { Layout } from "./views/Layout.jsx";
 import Home from "./views/Home.jsx"
 import Shop from "./views/Shop.jsx"
 import { createRoot } from "react-dom/client";
-
 const router = createBrowserRouter([
   {
     path: "/",
