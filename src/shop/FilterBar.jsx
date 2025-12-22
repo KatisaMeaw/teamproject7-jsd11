@@ -1,4 +1,4 @@
-// import React from 'react'
+import React from 'react'
 import { BiFilter } from "react-icons/bi";
 
 function FilterBar() {

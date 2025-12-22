@@ -1,4 +1,4 @@
-// import React from 'react'
+import React from 'react'
 
 
 function Production() {
@@ -18,7 +18,7 @@ function Production() {
         </div>
       </div>
     </div>
-  
+
   )
 }
 
