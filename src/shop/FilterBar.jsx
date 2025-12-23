@@ -14,7 +14,7 @@ function FilterBar() {
             </button>
 
             {/* เส้นคั่นแนวตั้ง (Divider) */}
-            <div className="h-6 w-[2px] bg-gray-400 mx-2"></div>
+            <div className="h-6 w-2px bg-gray-400 mx-2"></div>
             {/* ข้อความแสดงผลลัพธ์ */}
             <p className="text-sm md:text-base text-gray-600">
                 Showing 1–16 of 32 results
