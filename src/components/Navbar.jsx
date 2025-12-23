@@ -5,7 +5,7 @@ export function Navbar() {
     return (
         	<nav className="flex justify-between items-center shadow-md  p-4">
 				<div className="flex items-center">
-					<img src="../public/icon/Frame 281.png" alt="" />
+					<img src="icon/Frame 281.png" alt="" />
 				</div>
                 <ul className="hidden md:flex justify-center gap-28 text-shadow-none text-[#447F98] font-bold">
                     <li>
@@ -25,19 +25,19 @@ export function Navbar() {
           <div className="hidden md:flex justify-center gap-6 ">
 
                <a href="#" className="p-2 rounded-full text-gray-600 hover:bg-teal-100">
-                    <img src="../public/icon/mdi_account-alert-outline.png" alt="" />
+                    <img src="icon/mdi_account-alert-outline.png" alt="" />
                 </a>
 
                 <a href="#" className="p-2 rounded-full text-gray-600 hover:bg-teal-100">
-                    <img src="../public/icon/akar-icons_search.png" alt="" />
+                    <img src="icon/akar-icons_search.png" alt="" />
                 </a>
 
                 <a href="#" className="p-2 rounded-full text-gray-600 hover:bg-teal-100">
-                 <img src="../public/icon/akar-icons_heart.png" alt="" />
+                 <img src="icon/akar-icons_heart.png" alt="" />
                 </a>
 
                 <a href="#" className="p-2 rounded-full text-gray-600 hover:bg-teal-100">
-                  <img src="../public/icon/ant-design_shopping-cart-outlined.png" alt="" />
+                  <img src="icon/ant-design_shopping-cart-outlined.png" alt="" />
                 </a>
             </div>
 
