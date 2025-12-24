@@ -5,7 +5,9 @@ import { Layout } from "./views/Layout.jsx";
 import Home from "./views/Home.jsx"
 import Shop from "./views/Shop.jsx"
 import { createRoot } from "react-dom/client";
-
+import ProductDetail from "./views/ProductDetail.jsx";
+import Cart from "./views/Cart.jsx";
+import Checkout from "./views/Checkout.jsx";
 
 const router = createBrowserRouter([
   {
@@ -19,7 +21,9 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element:<Home /> },
       { path: "/shop", element:<Shop />},
-
+      { path: "shop/:id", element:<ProductDetail />},
+      { path: "/cart", element: <Cart />},
+      { path: "/checkout", element: <Checkout />},
       // { path: "/about", element:<About /> },
       // { path: "/contact", element:<Contact /> },
     ],
