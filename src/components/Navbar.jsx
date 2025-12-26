@@ -36,7 +36,7 @@ export function Navbar() {
                  <img src="icon/akar-icons_heart.png" alt="" />
                 </a>
 
-                <a href="#" className="p-2 rounded-full text-gray-600 hover:bg-teal-100">
+                <a href="/cart" className="p-2 rounded-full text-gray-600 hover:bg-teal-100">
                   <img src="icon/ant-design_shopping-cart-outlined.png" alt="" />
                 </a>
             </div>
