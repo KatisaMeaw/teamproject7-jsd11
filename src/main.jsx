@@ -1,9 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import './index.css'
 import App from './App.jsx'
 import { Layout } from "./views/Layout.jsx";
 import Home from "./views/Home.jsx"
 import Shop from "./views/Shop.jsx"
+import AdminDashboard from "./views/AdminDashboard.jsx"
 import { createRoot } from "react-dom/client";
 
 const router = createBrowserRouter([
@@ -18,6 +18,7 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element:<Home /> },
       { path: "/shop", element:<Shop /> },
+      { path: "/admin", element:<AdminDashboard /> },
       // { path: "/about", element:<About /> },
       // { path: "/contact", element:<Contact /> },
     ],
