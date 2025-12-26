@@ -8,6 +8,7 @@ import { createRoot } from "react-dom/client";
 import ProductDetail from "./views/ProductDetail.jsx";
 import Cart from "./views/Cart.jsx";
 import Checkout from "./views/Checkout.jsx";
+import UserProfile from "./components/UserProfile.jsx";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,7 @@ const router = createBrowserRouter([
       { path: "shop/:id", element:<ProductDetail />},
       { path: "/cart", element: <Cart />},
       { path: "/checkout", element: <Checkout />},
+      { path: "/userprofile", element:<UserProfile />}
       // { path: "/about", element:<About /> },
       // { path: "/contact", element:<Contact /> },
     ],
