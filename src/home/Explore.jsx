@@ -14,45 +14,44 @@ const Explore = () => {
   ];
 
   return (
-    <section className="h-dvh w-screen bg-[#D6EBF3] overflow-hidden">
-      <div className="grid grid-cols-5 h-full">
-        {/* Left Content */}
-        <div className="col-span-2 flex flex-col items-start justify-center px-6 ml-10 lg:ml-20">
-          <h1 className="font-bold text-[#447F98] text-6xl mb-6 leading-tight">
-            Explore your own <br /> style
-          </h1>
-          <p className="text-[#60A8C7] font-medium text-lg mb-8">
-            We recommended you to try it out <br />
-            All stuff you want in one room
-          </p>
-          <button className="bg-[#447F98] hover:bg-[#5591A9] text-white font-bold py-3 px-8 rounded-lg shadow-md transition duration-300 ease-in-out cursor-pointer">
-            Explore More
-          </button>
-        </div>
+        <div><section>
+    <div className="h-dvh w-full bg-[#D6EBF3] ">
+        <div className="grid grid-cols-1 md:grid-cols-5 h-full ">
+            <div className="col-span-2 flex flex-col items-start justify-center px-1 ml-30">
+                <h1 className="font-bold text-[#447F98] text-6xl mb-6 leading-tight">
+                    Explore your own <br />style
+                </h1>
+                <p className="text-[#60A8C7] font-medium text-lg mb-8">
+                    We recommended you to try it out <br/>
+                    All stuff you want in one room
+                </p>
+                <button
+                    className="bg-[#447F98] hover:bg-[#5591A9] text-white font-bold py-3 px-8 rounded-lg shadow-md transition duration-300 ease-in-out cursor-pointer"
+                >
+                    Explore More
+                </button>
+            </div>
 
-        {/* Right Carousel Area */}
-        <div className="col-span-3 h-full px-10 py-20 flex items-center justify-start relative overflow-hidden">
-          {/* Slides Container */}
-          <div
-            className="flex items-center transition-transform duration-500 ease-in-out"
-            style={{ transform: `translateX(-${currentIndex * 10}%)` }} // Simple movement logic
-          >
-            {slides.map((slide, index) => (
-              <div
-                key={slide.id}
-                className={`w-[450px] h-[550px] flex-shrink-0 relative shadow-2xl transition duration-500 mr-12 rounded-xl overflow-hidden cursor-pointer
-                ${currentIndex === index ? 'opacity-100 scale-105 z-10' : 'opacity-60 scale-95'}`}
-              >
-                <img src={slide.img} alt={slide.title} className="w-full h-full object-cover" />
-                {currentIndex === index && (
-                  <div className="absolute bottom-10 left-10 text-white z-20">
-                    <p className="text-sm">{slide.desc}</p>
-                    <h2 className="text-4xl font-bold mt-1">{slide.title}</h2>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+            <div className="col-span-3 h-full
+                px-10 py-30
+                flex items-center justify-start
+                relative overflow-x-hidden">
+
+        <div className=" flex items-center transition-transform duration-500 transform translate-x-0">
+
+            <div className="w-[500px] h-[600px] relative shadow-2xl  overflow-hidden cursor-pointer opacity-70
+                        transition duration-300 ease-in-out hover:z-30 hover:scale-110 hover:shadow-2xl hover:opacity-100">
+                <img src="/img-prod/explore-1.jpeg" alt="Office Room" className="w-full h-full object-cover"/>
+                <div className="absolute bottom-10 left-10 text-white z-10">
+                    <p className="text-sm">01 — Office Room</p>
+                    <h2 className="text-4xl font-bold mt-1">Inner Peace</h2>
+                </div>
+            </div>
+
+            <div className="w-[500px] h-[600px] relative shadow-2xl ml-16 opacity-70 cursor-pointer
+                        transition duration-300 ease-in-out hover:z-30 hover:scale-110 hover:opacity-100">
+                <img src="/img-prod/explore-2.jpeg" alt="Bedroom Setup" className="w-full h-full object-cover"/>
+            </div>
 
           {/* Navigation Indicators */}
           <div className="absolute z-30 flex space-x-3 bottom-20 left-1/2 -translate-x-1/2">
