@@ -9,7 +9,7 @@ import React from "react";
           <div className="flex items-center gap-6">
             <div className="w-24 h-24 rounded-full overflow-hidden border border-gray-200">
               <img 
-                src="https://placehold.co/100x100" 
+                src="" 
                 alt="Profile" 
                 className="w-full h-full object-cover"
               />
