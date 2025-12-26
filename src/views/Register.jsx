@@ -4,7 +4,7 @@ const Register = () => {
   return (
     <>
 
-    <div className="flex flex-col jusitfy-center items-center p-10 border border-gray-100 w-[450px] h-[920px] mx-auto shadow-xl hover:shadow-xl/30 rounded-xl mt-30 mb-40">
+    <div className="flex flex-col jusitfy-center items-center p-10 border border-gray-100 w-[450px] min-h-[920px] mx-auto shadow-xl hover:shadow-xl/30 rounded-xl mt-30 mb-40">
         <div className="font-medium text-xl ">
             Register with
         </div>

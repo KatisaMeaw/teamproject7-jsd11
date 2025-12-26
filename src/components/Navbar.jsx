@@ -18,7 +18,7 @@ export function Navbar() {
                         <Link to="/about" className="hover:text-gray-500">About</Link>
                     </li>
                     <li>
-                        <Link to="contact" className="hover:text-gray-500">Contact</Link>
+                        <Link to="/contact" className="hover:text-gray-500">Contact</Link>
                     </li>
                 </ul>
         <div>
