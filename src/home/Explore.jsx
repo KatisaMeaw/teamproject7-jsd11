@@ -2,53 +2,53 @@ import React from 'react'
 
 const Explore = () => {
   return (
-        <div><section>
+        <div>
     <div className="h-dvh w-full bg-[#D6EBF3] ">
         <div className="grid grid-cols-1 md:grid-cols-5 h-full ">
-            <div className="col-span-2 flex flex-col items-start justify-center px-1 ml-30">
-                <h1 className="font-bold text-[#447F98] text-6xl mb-6 leading-tight">
-                    Explore your own <br />style
+            <div className="col-span-2 flex flex-col items-center md:items-start justify-center px-1 md:ml-30 ">
+                <h1 className="font-bold text-[#447F98] text-4xl md:text-6xl mt-15 md:mt-0 mb-6 leading-tight">
+                    Explore your own style
                 </h1>
-                <p className="text-[#60A8C7] font-medium text-lg mb-8">
+                <p className="text-[#60A8C7] font-medium text-lg md:mb-8">
                     We recommended you to try it out <br/>
                     All stuff you want in one room
                 </p>
                 <button
-                    className="bg-[#447F98] hover:bg-[#5591A9] text-white font-bold py-3 px-8 rounded-lg shadow-md transition duration-300 ease-in-out cursor-pointer"
+                    className="bg-[#447F98] hover:bg-[#5591A9] text-white font-bold hidden md:block py-3 px-8 rounded-lg shadow-md transition duration-300 ease-in-out cursor-pointer"
                 >
                     Explore More
                 </button>
             </div>
 
-            <div className="col-span-3 h-full
-                px-10 py-30
-                flex items-center justify-start
+            <div className="col-span-3  
+                px-6 md:px-10 md:py-8
+                flex items-start justify-start
                 relative overflow-x-hidden">
 
-        <div className=" flex items-center transition-transform duration-500 transform translate-x-0">
+        <div className="flex items-center transition-transform duration-500 transform translate-x-0">
 
-            <div className="w-[500px] h-[600px] relative shadow-2xl  overflow-hidden cursor-pointer opacity-70
+            <div className="w-[350px] h-[450px] md:w-[500px] md:h-[600px] relative shadow-2xl  overflow-hidden cursor-pointer opacity-70
                         transition duration-300 ease-in-out hover:z-30 hover:scale-110 hover:shadow-2xl hover:opacity-100">
                 <img src="/img-prod/explore-1.jpeg" alt="Office Room" className="w-full h-full object-cover"/>
-                <div className="absolute bottom-10 left-10 text-white z-10">
-                    <p className="text-sm">01 — Office Room</p>
-                    <h2 className="text-4xl font-bold mt-1">Inner Peace</h2>
+                <div className="absolute bottom-10 left-10 text-white z-10 bg-white opacity-80 p-3">
+                    <p className="text-sm text-[#447F98]">01 — Office Room</p>
+                    <h2 className="text-4xl font-bold mt-1 text-[#447F98] ">Inner Peace</h2>
                 </div>
             </div>
 
-            <div className="w-[500px] h-[600px] relative shadow-2xl ml-16 opacity-70 cursor-pointer
+            <div className="w-[350px] h-[450px] md:w-[500px] md:h-[600px]  relative shadow-2xl ml-16 opacity-70 cursor-pointer
                         transition duration-300 ease-in-out hover:z-30 hover:scale-110 hover:opacity-100">
                 <img src="/img-prod/explore-2.jpeg" alt="Bedroom Setup" className="w-full h-full object-cover"/>
             </div>
 
-            <div className="w-[500px] h-[600px] relative shadow-2xl ml-16 opacity-70 cursor-pointer
+            <div className="w-[350px] h-[450px] md:w-[500px] md:h-[600px]  relative shadow-2xl ml-16 opacity-70 cursor-pointer
                         transition duration-300 ease-in-out hover:z-30 hover:scale-110 hover:opacity-100">
                 <img src="/img-prod/explore-3.jpeg" alt="Living Room" className="w-full h-full object-cover"/>
             </div>
 
         </div>
 
-        <div className="absolute z-30 flex -translate-x-1/2 space-x-3 rtl:space-x-reverse bottom-40 left-1/2">
+        <div className="absolute z-30 flex -translate-x-1/2 space-x-3 rtl:space-x-reverse bottom-20 left-1/2">
             <button type="button" className="w-3 h-3 rounded-full bg-[#447F98]" aria-current="true" aria-label="Slide 1" data-carousel-slide-to="0"></button>
             <button type="button" className="w-3 h-3 rounded-full bg-gray-400 opacity-50" aria-current="false" aria-label="Slide 2" data-carousel-slide-to="1"></button>
             <button type="button" className="w-3 h-3 rounded-full bg-gray-400 opacity-50" aria-current="false" aria-label="Slide 3" data-carousel-slide-to="2"></button>
@@ -68,7 +68,6 @@ const Explore = () => {
         </div>
         </div>
         </div>
-    </section>
     </div>
   )
 }

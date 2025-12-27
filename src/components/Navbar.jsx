@@ -4,9 +4,9 @@ import {Link} from "react-router-dom";
 export function Navbar() {
     return (
         	<nav className="flex justify-between items-center shadow-md  p-4">
-				<div className="flex items-center">
+				<Link to="/" className="flex items-center">
 					<img src="icon/Frame 281.png" alt="" />
-				</div>
+				</Link>
                 <ul className="hidden md:flex justify-center gap-28 text-shadow-none text-[#447F98] font-bold">
                     <li>
                         <Link to="/" className="hover:text-gray-500">Home</Link>
