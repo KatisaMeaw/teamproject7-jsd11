@@ -1,7 +1,7 @@
 export default function Browse() {
   return (
     <>
-      <div className="p-10 md:p-20 flex flex-col justify-center items-center text-center">
+      <div className="p-10 md:p-20 flex flex-col justify-center items- text-center">
         <h1 className="text-2xl md:text-3xl font-bold text-[#447F98]">
           Browse The Range
         </h1>
@@ -16,7 +16,7 @@ export default function Browse() {
       <div
         id="controls-carousel" className="relative w-full flex md:hidden gap-4 " data-carousel="static" 
       >
-        <div className="relative h-[500px] rounded-xl ">
+        <div className="relative h-fit rounded-xl ">
 
           {/* Item 1: Chair (เอา hidden ออกถ้าเป็นตัวแรก หรือให้ Library จัดการ) */}
           <div className="flex-none duration-700 ease-in-out flex flex-col items-center" data-carousel-item>
@@ -25,10 +25,10 @@ export default function Browse() {
               alt="Ergonomic Chair"
               className="rounded-xl block w-[250px] h-[300px] object-cover cursor-pointer hover:-translate-y-3 transition duration-300 hover:shadow-xl"
             />
-          </div>
-          <span className="inline-block text-xl mt-8 text-[#447F98] font-bold cursor-pointer">
+            <span className="inline-block text-xl mt-8 text-[#447F98] font-bold cursor-pointer">
             Ergonomic Chair
           </span>
+          </div>
         </div>
 
         {/* Item 2: Table */}
@@ -46,7 +46,7 @@ export default function Browse() {
         </div>
 
         {/* Item 3: Accessories */}
-        <div className="flex-none duration-700 ease-in-out flex flex-col items-center">
+        <div className="flex-none duration-700 ease-in-out flex flex-col items-center text-center">
           <div>
             <img
               src="./img-prod/Desk Ideas for the Perfect Home Office Setup.jpeg"

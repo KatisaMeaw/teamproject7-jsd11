@@ -5,12 +5,13 @@ import { Layout } from "./views/Layout.jsx";
 import Home from "./views/Home.jsx"
 import Shop from "./views/Shop.jsx"
 import { createRoot } from "react-dom/client";
-import Register from "./views/Register.jsx"
 import ProductDetail from "./views/ProductDetail.jsx";
 import Cart from "./views/Cart.jsx";
 import Checkout from "./views/Checkout.jsx";
+import Contact from "./views/Contact.jsx";
+import Register from "./views/Register.jsx"
 import UserProfile from "./components/UserProfile.jsx";
-
+import AdminDashboard from "./views/AdminDashboard.jsx"
 
 const router = createBrowserRouter([
   {
@@ -27,10 +28,11 @@ const router = createBrowserRouter([
       { path: "/register", element:<Register /> },
       { path: "shop/:id", element:<ProductDetail />},
       { path: "/cart", element: <Cart />},
+      { path: "/contact", element: <Contact />},
       { path: "/checkout", element: <Checkout />},
-      { path: "/userprofile", element:<UserProfile />}
+      { path: "/userprofile", element:<UserProfile />},
+      { path: "/admin", element:<AdminDashboard /> },
       // { path: "/about", element:<About /> },
-      // { path: "/contact", element:<Contact /> },
     ],
   },
 ]);
@@ -40,8 +42,3 @@ const router = createBrowserRouter([
   <App />
   </RouterProvider>);
 
-// createRoot(document.getElementById('root')).render(
-//   <StrictMode>
-//     <App />
-//   </StrictMode>,
-// )
