@@ -31,17 +31,17 @@ export default function Browse() {
           </div>
         </div>
 
-        {/* Item 2: Table */}
+        {/* Item 2: Desk */}
         <div className="flex-none duration-700 ease-in-out flex flex-col items-center">
           <div>
             <img
               src="./img-prod/White gaming setup inspiration _ Secretlab.jpeg"
-              alt="Table"
+              alt="Desk"
               className="rounded-xl block w-[250px] h-[300px] object-cover cursor-pointer hover:-translate-y-3 transition duration-300 hover:shadow-xl"
             />
           </div>
           <span className="inline-block mt-8 text-xl  text-[#447F98] font-bold cursor-pointer ">
-            Table
+            Desk
           </span>
         </div>
 
@@ -94,12 +94,12 @@ export default function Browse() {
           <div>
             <img
               src="./img-prod/White gaming setup inspiration _ Secretlab.jpeg"
-              alt="Table"
+              alt="Desk"
               className="rounded-xl w-[350px] h-[400px] cursor-pointer hover:-translate-y-3 transition duration-300 hover:shadow-xl"
             />
           </div>
           <span className="text-xl mt-8 text-[#447F98] font-bold cursor-pointer">
-            Table
+            Desk
           </span>
         </div>
 

@@ -55,7 +55,7 @@ const menuItems = [
   },
   {
     id: "inventory",
-    iconL: Package,
+    icon: Package,
     label: "Inventory",
     count: "847",
   },
@@ -88,7 +88,7 @@ const menuItems = [
 ];
 
 function Sidebar({ collapsed, onToggle, currentPage, onPageChange }) {
-  const [expandedItems, setExpendedItems] = useState(new Set(["analytics"]));
+  const [expandedItems, setExpandedItems] = useState(new Set(["analytics"]));
 
     const toggleExpended = (itemid) => {
       const newExpended = new Set(expandedItems);
@@ -99,11 +99,11 @@ function Sidebar({ collapsed, onToggle, currentPage, onPageChange }) {
         newExpended.add(itemid);
       }
 
-      setExpendedItems(newExpended);
+      setExpandedItems(newExpended);
     };
   return (
     <div
-      className={`${collapsed ? "w-20" : "72" } transition-all duration-300 ease-in-out bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-700/50 flex flex-col relative z-10`}
+      className={`${collapsed ? "w-20" : "w-72" } transition-all duration-300 ease-in-out bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-r border-slate-200/50 dark:border-slate-700/50 flex flex-col relative z-10`}
     >
       {/*Logo*/}
       <div className="p-6 border-b border-slate-200/50 dark:border-slate-700/50">
@@ -116,7 +116,7 @@ function Sidebar({ collapsed, onToggle, currentPage, onPageChange }) {
           {!collapsed && (
             <div>
               <h1 className='text-xl font-bold text-slate-800 dark:text-white'>
-              Relift
+              RELIEF
               </h1>
               <p className='text-xs text-slate-500 dark:text-slate-400'>
               Admin Panel
@@ -161,7 +161,8 @@ function Sidebar({ collapsed, onToggle, currentPage, onPageChange }) {
                   </>
                 )}
               </div>
-              {!collapsed && item.submenu && (<ChevronDown className={`w-4 h-4 transition-transform `}/>
+              {!collapsed && item.submenu && (
+                <ChevronDown className={`w-4 h-4 transition-transform `}/>
               )}
             </button>
 

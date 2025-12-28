@@ -4,7 +4,6 @@ import Header from '../components/AdminPage/Header';
 import Dashboard from '../components/Dashboard/Dashboard';
 
 function AdminDashboard() {
-
     const [sideBarCollapsed, setSideBarCollapsed] = useState(false);
     const [currentPage, setCurrentPage] = useState("dashboard");
 

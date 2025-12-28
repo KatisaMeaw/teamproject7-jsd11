@@ -1,10 +1,12 @@
+import React from "react";
+import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import './index.css'
-import App from './App.jsx'
+
 import { Layout } from "./views/Layout.jsx";
+import App from './App.jsx'
 import Home from "./views/Home.jsx"
 import Shop from "./views/Shop.jsx"
-import { createRoot } from "react-dom/client";
 import ProductDetail from "./views/ProductDetail.jsx";
 import Cart from "./views/Cart.jsx";
 import Checkout from "./views/Checkout.jsx";
@@ -31,14 +33,16 @@ const router = createBrowserRouter([
       { path: "/contact", element: <Contact />},
       { path: "/checkout", element: <Checkout />},
       { path: "/userprofile", element:<UserProfile />},
-      { path: "/admin", element:<AdminDashboard /> },
       // { path: "/about", element:<About /> },
     ],
+  },
+  {
+    path: "/admin",
+    element:<AdminDashboard />,
   },
 ]);
 
  createRoot(document.getElementById("root")).render(
- <RouterProvider router={router}>
-  <App />
+  <RouterProvider router={router}>
+    <App />
   </RouterProvider>);
-
