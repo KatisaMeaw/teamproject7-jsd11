@@ -1,8 +1,8 @@
 // import React from 'react'
-import OurProduct from "../home/OurProduct";
-import Hero from "../home/Hero";
-import Browse from "../home/Browse";
-import Explore from "../home/Explore";
+import OurProduct from '../home/OurProduct'
+import Hero from '../home/Hero'
+import Browse from "../home/Browse"
+import Explore from '../home/Explore';
 import Footer from  "../components/Footer"
 import SidebarUser from "../components/SidebarUser";
 import OrderTabs from "../components/OrderTabs";
