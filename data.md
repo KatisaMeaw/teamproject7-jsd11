@@ -1,3 +1,69 @@
+const recentOrders = [
+  {
+    id: "#3847",
+    customer: "John Smith",
+    product: "Desk",
+    amount: "$2,399",
+    status: "completed",
+    date: "2025-12-15",
+  },
+  {
+    id: "#3848",
+    customer: "Sarah Johnson",
+    product: "Desk",
+    amount: "$1,199",
+    status: "pending",
+    date: "2025-12-15",
+  },
+  {
+    id: "#3849",
+    customer: "Mike Wilson",
+    product: "Accessories",
+    amount: "$249",
+    status: "completed",
+    date: "2025-12-14",
+  },
+  {
+    id: "#3850",
+    customer: "Emily Davis",
+    product: "Ergonomic Chair",
+    amount: "$5,990",
+    status: "cancelled",
+    date: "2025-12-14",
+  },
+];
+
+const topProducts = [
+  {
+    name: 'Desk"',
+    sales: 1247,
+    revenue: "$2,987,530",
+    trend: "up",
+    change: "+12%",
+  },
+  {
+    name: "Desk",
+    sales: 2156,
+    revenue: "$2,587,044",
+    trend: "up",
+    change: "+8%",
+  },
+  {
+    name: "Ergonomic Chair",
+    sales: 3421,
+    revenue: "$852,229",
+    trend: "down",
+    change: "-3%",
+  },
+  {
+    name: "Accessories",
+    sales: 987,
+    revenue: "$591,213",
+    trend: "up",
+    change: "+15%",
+  },
+];
+
 const data = [
   { name: "Electronics", value: 45, color: "#3b82f6" },
   { name: "Clothing", value: 30, color: "#8b5cf6" },
@@ -63,6 +129,19 @@ const data = [
   },
 ];
 
+const getStatusColor = (status) => {
+  switch (status) {
+    case "completed":
+      return "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400";
+    case "pending":
+      return "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400";
+    case "cancelled":
+      return "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400";
+    default:
+      return "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400";
+  }
+}
+
 <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
             <defs>
@@ -119,3 +198,5 @@ const data = [
             />
           </BarChart>
         </ResponsiveContainer>
+
+
