@@ -1,14 +1,18 @@
 import React from "react";
+import SubNavbar from "../components/SubNavbar";
+import SubFooter from "../components/SubFooter";
+import Footer from "../components/Footer";
 
 const Register = () => {
   return (
     <>
-      <div className="flex flex-col jusitfy-center items-center p-10 border border-gray-100 w-[450px] h-[920px] mx-auto shadow-xl hover:shadow-xl/30 rounded-xl mt-30 mb-40">
+      <SubNavbar />
+      <div className="flex flex-col jusitfy-center items-center p-10 border border-gray-100 w-[350px] md:w-[450px] md:min-h-[920px] mx-auto shadow-xl hover:shadow-xl/30 rounded-xl mt-30 mb-20 md:mb-40 ">
         <div className="font-medium text-xl ">Register with</div>
 
         <div>
-          <div className="flex flex-row items-center p-6">
-            <div className="w-20 h-20 border border-[#E2E8F0]  rounded-lg flex items-center justify-center mr-4">
+          <div className="flex flex-row items-center p-6 ">
+            <div className="w-15 h-15 md:w-20 md:h-20 border border-[#E2E8F0]  rounded-lg flex items-center justify-center mr-4 ">
               <span className="[&>svg]:h-7 [&>svg]:w-7 [&>svg]:fill-[#2D3748] cursor-pointer">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -23,7 +27,7 @@ const Register = () => {
               </span>
             </div>
 
-            <div className="w-20 h-20 border border-[#E2E8F0]  rounded-lg flex items-center justify-center mr-4">
+            <div className="w-15 h-15 md:w-20 md:h-20 border border-[#E2E8F0]  rounded-lg flex items-center justify-center mr-4">
               <span className="[&>svg]:h-7 [&>svg]:w-7 [&>svg]:fill-[#2D3748] cursor-pointer">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -38,7 +42,7 @@ const Register = () => {
               </span>
             </div>
 
-            <div className="w-20 h-20 border border-[#E2E8F0]  rounded-lg flex items-center justify-center mr-4">
+            <div className="w-15 h-15 md:w-20 md:h-20 border border-[#E2E8F0]  rounded-lg flex items-center justify-center mr-4">
               <span className="[&>svg]:h-6 [&>svg]:w-6 [&>svg]:fill-[#2D3748] cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
                   {/* Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc. */}
@@ -51,7 +55,7 @@ const Register = () => {
 
         <h3 className="text-[#A0AEC0] text-xl">or</h3>
 
-        <div className="mt-10 flex flex-col gap-x-4 gap-y-6 w-[95%]">
+        <div className="mt-10 flex flex-col gap-y-3 md:gap-x-4 md:gap-y-6 w-[95%]">
           <div>
             <label for="fullname" className="block text-md  text-[#2D3748]">
               Name
@@ -60,7 +64,7 @@ const Register = () => {
               <input
                 type="text"
                 placeholder="Your full name"
-                className="w-95 h-12 rounded-lg bg-none  border border-[#E6EAF1] px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] "
+                className="w-75 h-10 md:w-95 md:h-12 rounded-lg bg-none  border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] "
               />
             </div>
           </div>
@@ -73,7 +77,7 @@ const Register = () => {
               <input
                 type="email"
                 placeholder="Your email address"
-                className="w-95 h-12 rounded-lg bg-none border border-[#E6EAF1] px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] "
+                className="w-75 h-10 md:w-95 md:h-12 rounded-lg bg-none border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] "
               />
             </div>
           </div>
@@ -86,7 +90,7 @@ const Register = () => {
               <input
                 type="tel"
                 placeholder="Your mobile number"
-                className="w-95 h-12 rounded-lg bg-none border border-[#E6EAF1] px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] "
+                className="w-75 h-10 md:w-95 md:h-12 rounded-lg bg-none border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] "
               />
             </div>
           </div>
@@ -99,7 +103,7 @@ const Register = () => {
               <input
                 type="date"
                 placeholder="Your date of birth"
-                className="w-95 h-12 rounded-lg bg-none border border-[#E6EAF1] px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] "
+                className="w-75 h-10 md:w-95 md:h-12 rounded-lg bg-none border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] "
               />
             </div>
           </div>
@@ -112,7 +116,7 @@ const Register = () => {
               <input
                 type="text"
                 placeholder="****************"
-                className="w-95 h-12 rounded-lg bg-none border border-[#E6EAF1] px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] "
+                className="w-75 h-10 md:w-95 md:h-12 rounded-lg bg-none border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] "
               />
             </div>
 
@@ -125,17 +129,23 @@ const Register = () => {
             </label>
           </div>
 
-          <button className="bg-[#447F98] hover:bg-[#5591A9] w-95 h-12 rounded-lg text-sm font-bold text-white cursor-pointer">
+          <button className="bg-[#447F98] hover:bg-[#5591A9] w-75 h-10 md:w-95 md:h-12 rounded-lg text-sm font-bold text-white cursor-pointer">
             {" "}
             SIGN UP
           </button>
-          <div className="flex flex-row py-2 justify-center items-center text-[#A0AEC0]">
+          <div className="flex flex-row justify-center items-center text-[#A0AEC0]">
             Already have an account?
             <span className="text-[#447F98] font-bold cursor-pointer ml-1">
               Sign in
             </span>
           </div>
         </div>
+      </div>
+      <div className="hidden md:block">
+        <SubFooter />
+      </div>
+      <div className="hidden md:block">
+        <Footer />
       </div>
     </>
   );
