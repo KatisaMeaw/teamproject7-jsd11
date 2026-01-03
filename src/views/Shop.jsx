@@ -3,6 +3,7 @@ import Footer from "../components/Footer";
 import SubFooter from "../components/SubFooter";
 import SubNavbar from "../components/SubNavbar";
 import FilterBar from "../shop/FilterBar";
+import { Link } from "react-router-dom";
 
 export default function Shop() {
   const products = [
@@ -86,9 +87,11 @@ export default function Shop() {
       <SubNavbar />
       <FilterBar />
       <div className="container mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 p-16">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 p-16">
           {products.map((product) => (
-            <Card key={product.id} product={product} />
+          <Link key={product.id} to={`/shop/${product.id}`}>
+            <Card product={product} />
+          </Link>
           ))}
         </div>
         <div className="flex justify-center items-center mt-12 gap-5 my-10">
