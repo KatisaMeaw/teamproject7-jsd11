@@ -2,6 +2,7 @@ import React from "react";
 import SubNavbar from "../components/SubNavbar";
 import SubFooter from "../components/SubFooter";
 import Footer from "../components/Footer";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   return (
@@ -134,9 +135,11 @@ const Register = () => {
           </button>
           <div className="flex flex-row justify-center items-center text-[#A0AEC0]">
             Already have an account?
+            <Link to="/userprofile">
             <span className="text-[#447F98] font-bold cursor-pointer ml-1">
               Sign in
             </span>
+            </Link>
           </div>
         </div>
       </div>
