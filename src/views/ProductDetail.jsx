@@ -1,5 +1,7 @@
 // import React from 'react'
-function ProductDetail() {
+
+
+export default function ProductDetail() {
   return (
     <div className="flex justify-center">
     <div className="bg-white p-6 md:p-10 rounded-2xl shadow-xl w-full max-w-6xl">
@@ -150,4 +152,3 @@ function ProductDetail() {
   )
 }
 
-export default ProductDetail
