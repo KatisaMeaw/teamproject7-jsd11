@@ -4,83 +4,9 @@ import SubFooter from "../components/SubFooter";
 import SubNavbar from "../components/SubNavbar";
 import FilterBar from "../shop/FilterBar";
 import { Link } from "react-router-dom";
+import { products } from '../data';
 
 export default function Shop() {
-  const products = [
-    {
-      id: 1,
-      image: "./img-prod/chair1.jpeg",
-      name: "Syltherine",
-      description:
-        "Full-support ergonomic chair with adjustable headrest for neck relief.",
-      price: "2,500",
-      originalPrice: "3,500",
-      discount: "-30%",
-    },
-    {
-      id: 2,
-      image: "./img-prod/chair2.jpeg",
-      name: "Lolito",
-      description: "Luxury big sofa 2-seater",
-      price: "7,000",
-      originalPrice: "14,000",
-      discount: "-50%",
-    },
-    {
-      id: 3,
-      image: "./img-prod/chair3.jpeg",
-      name: "Respawn",
-      description: "Minimalist fan-shaped sofa",
-      price: "5,000",
-      originalPrice: "6,000",
-      discount: "New",
-    },
-    {
-      id: 4,
-      image: "./img-prod/chair6.jpeg",
-      name: "Grifo",
-      description: "Night lamp",
-      price: "1,500",
-      originalPrice: "1,800",
-      discount: "-20%",
-    },
-    {
-      id: 5,
-      image: "./img-prod/chair8.jpeg",
-      name: "Muggo",
-      description: "Small mug",
-      price: "150",
-      originalPrice: "200",
-      discount: "New",
-    },
-    {
-      id: 6,
-      image: "./img-prod/chair1.jpeg",
-      name: "Pingky",
-      description: "Cute bed set",
-      price: "7,000",
-      originalPrice: "14,000",
-      discount: "-50%",
-    },
-    {
-      id: 7,
-      image: "./img-prod/chair2.jpeg",
-      name: "Potty",
-      description: "Minimalist flower pot",
-      price: "500",
-      originalPrice: "600",
-      discount: "New",
-    },
-    {
-      id: 8,
-      image: "./img-prod/chair3.jpeg",
-      name: "Syltherine",
-      description: "Stylish cafe chair",
-      price: "2,500",
-      originalPrice: "3,500",
-      discount: "-30%",
-    },
-  ];
 
   return (
     <>
@@ -117,3 +43,10 @@ export default function Shop() {
     </>
   );
 }
+
+// if click at "Add to cart" button both of shop.jsx and ProductDetail.jsx  i want navigate to and add the list of production in the cart.jsx
+
+// ✦ I'll implement "Add to Cart" by first creating a CartContext.jsx file in a new src/context directory. This context will manage cart items and an addToCart function. Next, I'll wrap
+//   my app in main.jsx with the CartProvider. Then, in both Card.jsx and ProductDetail.jsx, I'll use useContext to get addToCart, create a function to add the product to the cart and
+//   navigate to /cart, and attach this to the "Add to Cart" button's onClick event. Finally, I'll update Cart.jsx to consume the cartItems from the context and display the products and
+//   total price. I'm starting with creating CartContext.jsx.
