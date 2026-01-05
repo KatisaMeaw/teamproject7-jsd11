@@ -11,8 +11,6 @@ export default function SubNavbar() {
         return "Shop";
       case "/register":
         return "Register";
-      case "/login":
-        return "Login";
       case "/contact":
         return "Contact";
       case "/checkout":
