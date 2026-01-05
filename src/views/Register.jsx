@@ -2,6 +2,7 @@ import React from "react";
 import SubNavbar from "../components/SubNavbar";
 import SubFooter from "../components/SubFooter";
 import Footer from "../components/Footer";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   return (
@@ -9,7 +10,6 @@ const Register = () => {
       <SubNavbar />
       <div className="flex flex-col jusitfy-center items-center p-10 border border-gray-100 w-[350px] md:w-[450px] md:min-h-[920px] mx-auto shadow-xl hover:shadow-xl/30 rounded-xl mt-30 mb-20 md:mb-40 ">
         <div className="font-medium text-xl ">Register with</div>
-
         <div>
           <div className="flex flex-row items-center p-6 ">
             <div className="w-15 h-15 md:w-20 md:h-20 border border-[#E2E8F0]  rounded-lg flex items-center justify-center mr-4 ">
@@ -135,9 +135,11 @@ const Register = () => {
           </button>
           <div className="flex flex-row justify-center items-center text-[#A0AEC0]">
             Already have an account?
+            <Link to="/userprofile">
             <span className="text-[#447F98] font-bold cursor-pointer ml-1">
               Sign in
             </span>
+            </Link>
           </div>
         </div>
       </div>
