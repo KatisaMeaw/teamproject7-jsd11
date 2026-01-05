@@ -1,7 +1,7 @@
 import React from 'react'
 
 
-function Production() {
+function Product() {
   return (
     <div class="bg-gray-50 p-24">
       <div class="container mx-auto">
@@ -22,4 +22,4 @@ function Production() {
   )
 }
 
-export default Production
+export default Product

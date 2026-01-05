@@ -2,7 +2,7 @@
 
 export default function Footer() {
     return (
-<footer className="bg-gray-50 py-10 md:py-10 flex  justify-center">
+<footer className="bg-gray-50 py-10 md:py-10 flex  justify-center pl-10 md:pl-0">
     <div className="">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-y-10 md:gap-x-45">
 
