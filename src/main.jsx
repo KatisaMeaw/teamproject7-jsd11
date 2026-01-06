@@ -35,7 +35,7 @@ const router = createBrowserRouter([
       // { path: "/about", element:<About /> },
     ],
   },
-]);
+])
 
  createRoot(document.getElementById("root")).render(
  <RouterProvider router={router}>
