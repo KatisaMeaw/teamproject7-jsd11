@@ -1,37 +1,53 @@
 // import React, { useState } from 'react'
+import { FcCheckmark } from "react-icons/fc";
 
-import { useState } from "react";
 
-export const Form = ({formData, setFormData}) => {
+export const Form = ({formData, setFormData, setHasSubmitted,submitSuccess, setSubmitSuccess, loading, setLoading}) => {
 
-  // const [loading, setLoading] = useState(false);
+  
+
 
   const nameParts = formData.name.trim().split(/\s+/);
   const hasNumber = /\d/.test(formData.name);
   const isEachPartLongEnough = nameParts.every(part => part.length >= 2);
   const minBirthday = new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate()).toISOString().split('T')[0];
 
-  const [hasSubmitted, setHasSubmitted] = useState(false);
 
-  const nameError = (hasSubmitted && formData.name.length === 0) || ( formData.name.length !==0 &&( !formData.name.includes(" ") || hasNumber || !isEachPartLongEnough)) ? "Invalid name. Please try again." : null;
+  const nameError = formData.name.length !==0 &&( !formData.name.includes(" ") || hasNumber || !isEachPartLongEnough) ? "Invalid name. Please try again." : null;
 
-  const emailError = (hasSubmitted && formData.email.length === 0) || (formData.email.length !== 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) ? "Please enter a valid email address" : null;
-  const mobileNumberError = (hasSubmitted && formData.mobileNumber.length === 0) || (formData.mobileNumber.length > 0 && (formData.mobileNumber[0] !== "0" || formData.mobileNumber.length !== 10 || !/^\d+$/.test(formData.mobileNumber))) ? "Please enter a valid phone number" : null;
-  const dobError = (hasSubmitted && formData.dob.length === 0) || (formData.dob.length !== 0 && formData.dob > minBirthday)  ? "You must be at least 18 years old to register." : null;
-  const passwordError = (hasSubmitted && formData.dob.length === 0) || (formData.password.length !== 0 && formData.password.length < 8) ? "Make your password at least 8 characters long" : null;
-  const confirmPasswordError = (hasSubmitted && formData.confirmPassword.length ===0) || (formData.confirmPassword.length > 0 && formData.confirmPassword !== formData.password) ? "Passwords do NOT match" : null;
+  const emailError = formData.email.length !== 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) ? "Please enter a valid email address" : null;
+  const mobileNumberError = formData.mobileNumber.length > 0 && (formData.mobileNumber[0] !== "0" || formData.mobileNumber.length !== 10 || !/^\d+$/.test(formData.mobileNumber))? "Please enter a valid phone number" : null;
+  const dobError = formData.dob.length !== 0 && formData.dob > minBirthday  ? "You must be at least 18 years old to register." : null;
+  const passwordError = formData.password.length !== 0 && formData.password.length < 8 ? "Make your password at least 8 characters long" : null;
+  const confirmPasswordError = formData.confirmPassword.length > 0 &&  formData.confirmPassword !== formData.password ? "Passwords do NOT match" : null;
 
-  const isFormValid = !nameError && !emailError && !mobileNumberError && !dobError && !passwordError && !confirmPasswordError && formData.name !== "" && formData.password !== "";
+  const isFormValid = !nameError && !emailError && !mobileNumberError && !dobError && !passwordError && !confirmPasswordError && formData.name !== "" && formData.password !== "" && formData.confirmPassword !== "";
 
  
 
-  function onSubmit(e){
+  function handleSubmit(e){
     e.preventDefault();
     setHasSubmitted(true);
+    setSubmitSuccess("");
 
-    if(!isFormValid){
+    if(!isFormValid)
       return;
-    }
+    
+    // setLoading(true)
+    //รอ verify จาก backend ---> setLoading(false)
+    setLoading(false)
+    setSubmitSuccess("Account created successfully! You can now sign in to your account.")
+    setFormData(prev => ({
+        ...prev,
+      name:"",
+      email:"",
+      mobileNumber:"",
+      dob:"",
+      password:"",
+      confirmPassword:"",
+      })
+      )
+      setHasSubmitted(false);
   }
 
 
@@ -45,8 +61,16 @@ export const Form = ({formData, setFormData}) => {
 
   return (
     
-    <form onSubmit={onSubmit}>
-    <div className="flex flex-col jusitfy-center items-center p-10 border border-none md:border md:border-gray-100 w-full md:w-[480px] md:min-h-[920px] mx-auto md:shadow-xl md:hover:shadow-xl/30 rounded-xl mt-30 mb-20 md:mb-40 ">
+    <form onSubmit={handleSubmit}>
+      {submitSuccess && (
+          <div className="relative flex justify-center items-center mt-40 ">
+            
+              <p className="px-40 py-10 rounded-xl border border-green-300 bg-green-50 font-bold text-lg text-green-600">
+                {submitSuccess}
+              </p>
+              </div>
+            )}
+    <div className="flex flex-col jusitfy-center items-center p-10 border border-none md:border md:border-gray-100 w-full md:w-[480px] md:min-h-[920px] mx-auto md:shadow-xl md:hover:shadow-xl/30 rounded-xl mb-20 mt-20 md:mb-40 ">
         <div className="font-medium text-xl ">Register with</div>
 
         <div>
@@ -108,9 +132,11 @@ export const Form = ({formData, setFormData}) => {
                 placeholder="Your full name"
                 onChange={handleChange}
                 className={`w-full h-10 md:w-95 md:h-12 rounded-lg bg-none  border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] ${nameError ? "border border-red-500 focus:outline-red-500" : ""} `}
+
+              
               />
 
-              {hasSubmitted && nameError && (
+              {nameError && (
               <p className="text-red-500  mt-1 px-2">
                 {nameError}
               </p>
@@ -133,7 +159,7 @@ export const Form = ({formData, setFormData}) => {
                 className={`w-full h-10 md:w-95 md:h-12 rounded-lg bg-none border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] ${emailError ? "border border-red-500 focus:outline-red-500" : ""}`} 
               />
 
-              {hasSubmitted && emailError && (
+              {emailError && (
               <p className="text-red-500  mt-1 px-2">
                 {emailError}
               </p>
@@ -154,7 +180,7 @@ export const Form = ({formData, setFormData}) => {
                 onChange={handleChange}
                 className={`w-full h-10 md:w-95 md:h-12 rounded-lg bg-none border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] ${mobileNumberError ? "border border-red-500 focus:outline-red-500" : ""}`}
               />
-              {hasSubmitted && mobileNumberError && (
+              {mobileNumberError && (
               <p className="text-red-500  mt-1 px-2">{mobileNumberError}
               </p>
               )}
@@ -173,9 +199,10 @@ export const Form = ({formData, setFormData}) => {
                 placeholder="Your date of birth"
                 onChange={handleChange}
                 className={`w-full h-10 md:w-95 md:h-12 rounded-lg bg-none border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] ${dobError ? "border border-red-500 focus:outline-red-500" : ""} `}
+                
               />
 
-              {hasSubmitted && dobError &&(
+              {dobError &&(
                 <p className="text-red-500  mt-1 px-2">{dobError}
 
               </p>
@@ -198,7 +225,7 @@ export const Form = ({formData, setFormData}) => {
               
               />
               
-              {hasSubmitted && passwordError && (
+              {passwordError && (
               <p className="text-red-500  mt-1 px-2">
                 {passwordError}
       
@@ -216,14 +243,14 @@ export const Form = ({formData, setFormData}) => {
             <div className="mt-2">
               <input
               name="confirmPassword"
-              type="text"
+              type="password"
               value={formData.confirmPassword}
                 placeholder="****************"
                 onChange={handleChange}
                 className={`w-full h-10 md:w-95 md:h-12 rounded-lg bg-none border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] ${confirmPasswordError ? "border border-red-500  focus:outline-red-500" : "" } `}
               />
 
-               {hasSubmitted && confirmPasswordError && (
+               {confirmPasswordError && (
               <p className="text-red-500  mt-1 px-2">
                 {confirmPasswordError}
               </p>
@@ -243,11 +270,11 @@ export const Form = ({formData, setFormData}) => {
 
           <button
           type="submit"
-          className={`bg-[#447F98] w-full h-10 md:w-95 md:h-12 rounded-lg text-sm font-bold text-white ${isFormValid ? "cursor-pointer hover:bg-[#5591A9]" : "opacity-60 cursor-default"}`}
-          
+          className={`bg-[#447F98] w-full h-10 md:w-95 md:h-12 rounded-lg text-sm font-bold text-white ${loading|| isFormValid ? "cursor-pointer hover:bg-[#5591A9]" : "opacity-60 cursor-default"}`}
+          disabled={loading || !isFormValid}
           
           >
-            Sign in
+            {loading ? "Signing in" : "Sign in"}
           </button>
 
              

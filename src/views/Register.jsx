@@ -23,6 +23,10 @@ const Register = () => {
 
   });
 
+  const [submitSuccess, setSubmitSuccess] = useState("");
+  const [hasSubmitted , setHasSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false);
+
   return (
     <>
       <SubNavbar />
@@ -30,6 +34,11 @@ const Register = () => {
       <Form 
       formData={formData}
       setFormData={setFormData}
+      setHasSubmitted={setHasSubmitted}
+      submitSuccess={submitSuccess}
+      setSubmitSuccess={setSubmitSuccess}
+      loading={loading}
+      setLoading={setLoading}
 
       />
 

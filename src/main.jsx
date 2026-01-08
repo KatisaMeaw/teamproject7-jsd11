@@ -12,6 +12,7 @@ import Contact from "./views/Contact.jsx";
 import Register from "./views/Register.jsx"
 import UserProfile from "./components/UserProfile.jsx";
 import AdminDashboard from "./views/AdminDashboard.jsx"
+import MyOrders from "./components/MyOrders.jsx"
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
       { path: "/checkout", element: <Checkout />},
       { path: "/userprofile", element:<UserProfile />},
       { path: "/admin", element:<AdminDashboard /> },
+      { path: "/myorders", element:<MyOrders /> },
       // { path: "/about", element:<About /> },
     ],
   },
