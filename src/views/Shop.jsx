@@ -1,42 +1,144 @@
+import React, { useState, useMemo } from "react";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
 import SubFooter from "../components/SubFooter";
 import SubNavbar from "../components/SubNavbar";
 import FilterBar from "../shop/FilterBar";
 import { Link } from "react-router-dom";
-import { products } from '../data';
+import { products } from "../data";
+
+//แปลงราคา "2,500" --> 2500 เพราะการ sort ราคามันต้องเป็น number
+const parsePrice = (priceStr) => {
+  if (!priceStr) return 0;
+  // ลบ comma ออก แล้วแปลงเป็น float
+  return parseFloat(priceStr.replace(/,/g, ""));
+};
 
 export default function Shop() {
+  //  สร้าง State สำหรับแบ่งหน้า
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 16; // กำหนดว่าจะโชว์หน้าละกี่ชิ้น (เช่น 16 ชิ้น)
+
+  // State สำหรับ Filter และ Sort
+  const [category, setCategory] = useState("All");
+  const [sortOption, setSortOption] = useState("default");
+
+  // สร้างฟังก์ชัน Wrapper เพื่อ Reset Page เมื่อเปลี่ยน Filter
+  const handleCategoryChange = (newCategory) => {
+    setCategory(newCategory);
+    setCurrentPage(1); // รีเซ็ตหน้าทันทีที่กดเปลี่ยนหมวดหมู่
+  };
+
+  const handleSortChange = (newSort) => {
+    setSortOption(newSort);
+    setCurrentPage(1); // รีเซ็ตหน้าทันทีที่กดเปลี่ยนการเรียงลำดับ
+  };
+
+  const displayProducts = useMemo(() => {
+    let processedData = [...products];
+
+    // 1. Filter by Category
+    if (category !== "All") {
+      processedData = processedData.filter(
+        (item) => item.category === category
+      );
+    }
+
+    // 2. Sort by Price
+    if (sortOption === "price-low") {
+      processedData.sort((a, b) => parsePrice(a.price) - parsePrice(b.price));
+    } else if (sortOption === "price-high") {
+      processedData.sort((a, b) => parsePrice(b.price) - parsePrice(a.price));
+    } else {
+      // Default: เรียงตาม ID
+      processedData.sort((a, b) => a.id - b.id);
+    }
+
+    return processedData; // ส่งค่ากลับไปใส่ตัวแปร displayProducts
+  }, [category, sortOption]);
+
+  //  คำนวณ index สำหรับตัดแบ่งข้อมูล
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentProducts = displayProducts.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  // คำนวณจำนวนหน้าทั้งหมด
+  const totalPages = Math.ceil(displayProducts.length / itemsPerPage);
+
+  // ฟังก์ชันเปลี่ยนหน้า
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <>
       <SubNavbar />
-      <FilterBar />
+
+      {/* ส่ง Props ไปให้ FilterBar ควบคุม */}
+      <FilterBar
+        category={category}
+        setCategory={handleCategoryChange}
+        sortOption={sortOption}
+        setSortOption={handleSortChange}
+        totalResult={displayProducts.length}
+        showingCount={currentProducts.length}
+      />
+
       <div className="container mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 p-16">
-          {products.map((product) => (
-          <Link key={product.id} to={`/shop/${product.id}`}>
-            <Card product={product} />
-          </Link>
-          ))}
-        </div>
-        <div className="flex justify-center items-center mt-12 gap-5 my-10">
-          <button className="w-12 h-12 rounded bg-[#d6ebf3] text-gray-800 font-bold text-lg hover:bg-[#447F98]  hover:text-white transition duration-300">
-            1
-          </button>
+        {/* เช็คว่ามีสินค้าไหม */}
+        {displayProducts.length === 0 ? (
+          <div className="text-center p-20 text-gray-500 text-xl">
+            No products found in this category.
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 p-16">
+            {currentProducts.map((product) => (
+              <Link key={product.id} to={`/shop/${product.id}`}>
+                <Card product={product} />
+              </Link>
+            ))}
+          </div>
+        )}
 
-          <button className="w-12 h-12 rounded bg-[#d6ebf3] text-gray-800 font-bold text-lg hover:bg-[#447F98]  hover:text-white transition duration-300">
-            2
-          </button>
+        {/* --- PAGINATION BUTTONS ปุ่มเปลี่ยนหน้าเรียงกัน --- */}
+        {/*แสดงเมื่อมีจำนวนหน้ามากกว่า 1 หน้า*/}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center mt-12 gap-5 my-10">
+            {/* create dynamic button */}
+            {[...Array(totalPages)].map((_, index) => {
+              const pageNum = index + 1;
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() => paginate(pageNum)}
+                  className={`w-12 h-12 rounded font-bold text-lg transition duration-300 ${
+                    currentPage === pageNum
+                      ? "bg-[#B88E2F] text-white"
+                      : "bg-[#d6ebf3] text-gray-800 hover:bg-[#B88E2F] hover:text-white"
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
 
-          <button className="w-12 h-12 rounded bg-[#d6ebf3] text-gray-800 font-bold text-lg hover:bg-[#447F98]  hover:text-white transition duration-300">
-            3
-          </button>
-
-          <button className="px-6 h-12 rounded bg-[#d6ebf3] text-gray-800 font-bold text-lg hover:bg-[#447F98]  hover:text-white transition duration-300">
-            Next
-          </button>
-        </div>
+            {/* ปุ่ม Next */}
+            <button
+              onClick={() =>
+                setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev))
+              }
+              disabled={currentPage === totalPages} //ปิดปุ่มเมื่อถึงหน้าสุดท้าย
+              className={`px-6 h-12 rounded font-bold text-lg transition duration-300 ${
+                currentPage === totalPages
+                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  : "bg-[#d6ebf3] text-gray-800 hover:bg-[#B88E2F] hover:text-white"
+              }`}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
       <SubFooter />
       <Footer />

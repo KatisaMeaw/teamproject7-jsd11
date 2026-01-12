@@ -21,7 +21,7 @@ export default function ProductDetail() {
         {/* picture */}
         <div className="flex justify-center items-center">
           <img
-            src={`.${product.image}`}
+            src={product.image}
             alt={product.name}
             className="w-full h-auto rounded-xl object-cover"
             style={{ maxWidth: '400px' }}
@@ -100,15 +100,15 @@ export default function ProductDetail() {
           >
             <div className="flex">
               <span className="w-24 text-gray-400">SKU</span>
-              <span>: SS001</span>
+              <span>: SS00{product.id}</span>
             </div>
             <div className="flex">
               <span className="w-24 text-gray-400">Category</span>
-              <span>: Chairs</span>
+              <span>: {product.category}</span>
             </div>
             <div className="flex">
               <span className="w-24 text-gray-400">Tags</span>
-              <span>: Chair, Home, Shop</span>
+              <span>: {product.category}, Home, Shop</span>
             </div>
             <div className="flex items-center mt-6">
               <span className="w-24 text-gray-400">Share</span>
