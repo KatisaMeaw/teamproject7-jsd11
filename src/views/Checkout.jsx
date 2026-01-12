@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { useCart } from "../context/CartContext";
+import SubNavbar from '../components/SubNavbar';
+import SubFooter from '../components/SubFooter';
+import Footer from '../components/Footer';
 
 const FormInput = ({ label, name, type = "text", placeholder, value, onChange, required, ...props }) => (
   <div className="mb-4">
@@ -57,6 +60,8 @@ const Checkout = () => {
   };
 
   return (
+    <>
+    <SubNavbar/>
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-12">
         
@@ -141,13 +146,15 @@ const Checkout = () => {
 
           <button 
             type="submit" 
-            className="w-full mt-8 bg-black text-white py-4 rounded-xl font-bold hover:bg-gray-800 transition-colors shadow-lg active:scale-95"
-          >
+            className="w-full mt-8 hidden md:block bg-[#447F98] hover:bg-[#5591A9] text-white font-bold py-3 px-8 rounded-lg shadow-md transition duration-300 ease-in-out cursor-pointer">
             PAY NOW THB {finalTotal.toLocaleString()}
           </button>
         </div>
       </form>
     </main>
+    <SubFooter/>
+    <Footer/>
+    </>
   );
 };
 

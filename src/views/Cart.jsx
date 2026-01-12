@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useCart } from "../context/CartContext"; 
+import { useCart } from "../context/CartContext";
+import SubNavbar from '../components/SubNavbar';
+import SubFooter from '../components/SubFooter';
+import Footer from '../components/Footer';
 
 const Cart = () => {
   const { cartItems, updateQuantity, removeItem, subtotal } = useCart();
@@ -27,6 +30,8 @@ const Cart = () => {
   };
 
   return (
+    <>
+    <SubNavbar />
     <main className="max-w-7xl mx-auto px-4 py-12 min-h-[60vh]">
       <div className="flex flex-col lg:flex-row gap-8">
         
@@ -116,25 +121,21 @@ const Cart = () => {
             
             <div className="flex justify-between mb-6 text-gray-600">
               <span className="font-medium">Subtotal</span>
-              <span className="font-bold">Rs. {subtotal.toLocaleString()}</span>
+              <span className="font-bold">THB {subtotal.toLocaleString()}</span>
             </div>
 
             <div className="flex justify-between text-xl font-bold pt-6 border-t border-gray-100 mb-8">
               <span className="text-gray-800">Total</span>
-              <span className="text-blue-600">Rs. {subtotal.toLocaleString()}</span> 
+              <span className="text-blue-600">THB {subtotal.toLocaleString()}</span> 
             </div>
 
             <Link 
               to={cartItems.length > 0 ? "/checkout" : "#"} 
-              className={`block text-center py-4 rounded-xl font-bold transition-all shadow-lg ${
-                cartItems.length === 0 
-                ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-                : 'bg-black text-white hover:bg-gray-800 active:scale-95'
-              }`}
+              className="text-center w-full mt-8 md:block bg-[#447F98] hover:bg-[#5591A9] text-white font-bold py-3 px-8 rounded-lg shadow-md transition duration-300 ease-in-out cursor-pointer"
             >
-              PROCEED TO CHECKOUT
+              CHECKOUT
             </Link>
-            
+
             <p className="text-center text-xs text-gray-400 mt-4">
               Tax included and shipping calculated at checkout
             </p>
@@ -142,6 +143,9 @@ const Cart = () => {
         </div>
       </div>
     </main>
+    <SubFooter />
+    <Footer />
+    </>
   );
 };
 
