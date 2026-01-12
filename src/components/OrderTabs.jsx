@@ -1,6 +1,6 @@
 import React ,{useState} from "react";
 
-const OrderTabs = () => {
+const  OrderTabs = () => {
   // สร้าง State เพื่อจำว่าตอนนี้แท็บไหนถูกเลือกอยู่
   const [activeTab, setActiveTab] = useState("all");
   const tabs = [
@@ -11,7 +11,7 @@ const OrderTabs = () => {
   ];
   return (
     // Main Container
-    <div className="flex bg-gray-100 p-1 round-lg w-fit">
+    <div className="flex bg-[#D6EBF3] p-1 rounded-lg w-fit">
       {/* ลองวนลูปแสดงชื่อเมนูออกมาก่อน เพื่อเช็คว่าข้อมูลมาถูกต้อง */}
       {tabs.map((tab) => (
         <button

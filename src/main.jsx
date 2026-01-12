@@ -15,7 +15,8 @@ import Checkout from "./views/Checkout.jsx";
 import Contact from "./views/Contact.jsx";
 import Register from "./views/Register.jsx";
 import UserProfile from "./components/UserProfile.jsx";
-import AdminDashboard from "./views/AdminDashboard.jsx";
+import AdminDashboard from "./views/AdminDashboard.jsx"
+import MyOrders from "./components/MyOrders.jsx"
 
 const router = createBrowserRouter([
   {
@@ -27,15 +28,17 @@ const router = createBrowserRouter([
       </div>
     ),
     children: [
-      { path: "/", element: <Home /> },
-      { path: "/shop", element: <Shop /> },
-      { path: "/register", element: <Register /> },
-      { path: "shop/:id", element: <ProductDetail /> },
-      { path: "/cart", element: <Cart /> },
-      { path: "/contact", element: <Contact /> },
-      { path: "/checkout", element: <Checkout /> },
-      { path: "/userprofile", element: <UserProfile /> },
-      { path: "/admin", element: <AdminDashboard /> },
+      { path: "/", element:<Home /> },
+      { path: "/shop", element:<Shop /> },
+      { path: "/login", element:<Register /> },
+      { path: "shop/:id", element:<ProductDetail />},
+      { path: "/cart", element: <Cart />},
+      { path: "/contact", element: <Contact />},
+      { path: "/checkout", element: <Checkout />},
+      { path: "/userprofile", element:<UserProfile />},
+      { path: "/admin", element:<AdminDashboard /> },
+      { path: "/myorders", element:<MyOrders /> },
+      // { path: "/about", element:<About /> },
     ],
   },
 ]);

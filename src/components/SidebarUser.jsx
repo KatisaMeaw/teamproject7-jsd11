@@ -34,7 +34,7 @@ const SidebarUser = () => {
   ];
 
   return (
-    <aside className="w-64 bg-white border-2 border-gray-100 min-h-screen p-6">
+    <aside className="w-64 min-h-screen p-6">
       <div>
         {/* Header */}
         <div className="mb-8">
@@ -62,7 +62,7 @@ const SidebarUser = () => {
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors duration-200
                   ${
                     isActive
-                      ? "bg-blue-500 text-white shadow-md"
+                      ? "bg-[#447F98] text-white shadow-md"
                       : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"
                   }
                 `}
