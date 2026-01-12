@@ -1,77 +1,152 @@
 // import React, { useState } from 'react'
-import { FcCheckmark } from "react-icons/fc";
 
+import { useState } from "react";
 
-export const Form = ({formData, setFormData, setHasSubmitted,submitSuccess, setSubmitSuccess, loading, setLoading}) => {
-
-  
-
-
+export const Form = ({
+  formData,
+  setFormData,
+  setHasSubmitted,
+  submitSuccess,
+  setSubmitSuccess,
+  loading,
+  setLoading,
+}) => {
   const nameParts = formData.name.trim().split(/\s+/);
   const hasNumber = /\d/.test(formData.name);
-  const isEachPartLongEnough = nameParts.every(part => part.length >= 2);
-  const minBirthday = new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate()).toISOString().split('T')[0];
+  const isEachPartLongEnough = nameParts.every((part) => part.length >= 2);
+  const minBirthday = new Date(
+    new Date().getFullYear() - 18,
+    new Date().getMonth(),
+    new Date().getDate()
+  )
+    .toISOString()
+    .split("T")[0];
 
+  const nameError =
+    formData.name.length !== 0 &&
+    (!formData.name.includes(" ") || hasNumber || !isEachPartLongEnough)
+      ? "Invalid name. Please try again."
+      : null;
 
-  const nameError = formData.name.length !==0 &&( !formData.name.includes(" ") || hasNumber || !isEachPartLongEnough) ? "Invalid name. Please try again." : null;
+  const emailError =
+    formData.email.length !== 0 &&
+    //ประกอบด้วย 3 อย่าง 
+    //1.หน้า @ ต้องมีตัวอักษร ตัวเลข หรือสัญลักษณ์ที่กำหนด
+    //2.หลัง @ ตามด้วยชื่อโดเมน
+    //3. มีจุด . ต่อท้าย ตามด้วยอักษร 2 ตัวด้านหลัง
+    !/^[a-zA-Z0-9][a-zA-Z0-9._-]{1,}@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)
+      ? "Please enter a valid email address"
+      : null;
+  const mobileNumberError =
+    formData.mobileNumber.length > 0 &&
+    (formData.mobileNumber[0] !== "0" ||
+      formData.mobileNumber.length !== 10 ||
+      !/^\d+$/.test(formData.mobileNumber))
+      ? "Please enter a valid phone number"
+      : null;
+  const dobError =
+    formData.dob.length !== 0 && formData.dob > minBirthday
+      ? "You must be at least 18 years old to register."
+      : null;
+  const passwordError =
+    formData.password.length !== 0 && (formData.password.length < 8 ||
+    !/(?=.*[a-zA-Z])(?=.*[0-9])/.test(formData.password)) // ต้องมีทั้งตัวอักษรและตัวเลข
+      ? "Your password must be at least 8 characters long"
+      : null;
+  const confirmPasswordError =
+    formData.confirmPassword.length > 0 &&
+    formData.confirmPassword !== formData.password
+      ? "Passwords do NOT match"
+      : null;
 
-  const emailError = formData.email.length !== 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) ? "Please enter a valid email address" : null;
-  const mobileNumberError = formData.mobileNumber.length > 0 && (formData.mobileNumber[0] !== "0" || formData.mobileNumber.length !== 10 || !/^\d+$/.test(formData.mobileNumber))? "Please enter a valid phone number" : null;
-  const dobError = formData.dob.length !== 0 && formData.dob > minBirthday  ? "You must be at least 18 years old to register." : null;
-  const passwordError = formData.password.length !== 0 && formData.password.length < 8 ? "Make your password at least 8 characters long" : null;
-  const confirmPasswordError = formData.confirmPassword.length > 0 &&  formData.confirmPassword !== formData.password ? "Passwords do NOT match" : null;
+      const [mode, setMode] = useState("signin");
 
-  const isFormValid = !nameError && !emailError && !mobileNumberError && !dobError && !passwordError && !confirmPasswordError && formData.name !== "" && formData.password !== "" && formData.confirmPassword !== "";
+      const [touched, setTouched] = useState({});
 
- 
+  const isFormValid = mode === "signup" 
+  ? (!nameError && !emailError && !mobileNumberError && !dobError && !passwordError && !confirmPasswordError && formData.name.trim() !== "" && formData.email.trim() !== "" && formData.mobileNumber.trim() !== "" && formData.dob.trim() !== "" &&  formData.password.trim() !== "" && formData.confirmPassword.trim() !== "")
+  : (!emailError && !passwordError && formData.email.trim() !== "" && formData.password.trim() !== "");
 
-  function handleSubmit(e){
+  function handleSubmit(e) {
     e.preventDefault();
+    setTouched({
+    name: true,
+    email: true,
+    mobileNumber: true,
+    dob: true,
+    password: true,
+    confirmPassword: true
+    })
     setHasSubmitted(true);
     setSubmitSuccess("");
 
-    if(!isFormValid)
-      return;
+    if (!isFormValid) return;
+
+    if(mode ==="signup"){
+      setLoading(true);
+      setSubmitSuccess("Account created successfully! You can now sign in to your account.");
+      setFormData((prev) => ({
+      ...prev,
+      name: "",
+      email: "",
+      mobileNumber: "",
+      dob: "",
+      password: "",
+      confirmPassword: "",
+    }));
+    setLoading(false);
+
+    } else {
+      setLoading(true)
+      console.log("Signing in...")
+      setLoading(false)
+    }
     
-    // setLoading(true)
-    //รอ verify จาก backend ---> setLoading(false)
-    setLoading(false)
-    setSubmitSuccess("Account created successfully! You can now sign in to your account.")
-    setFormData(prev => ({
-        ...prev,
-      name:"",
-      email:"",
-      mobileNumber:"",
-      dob:"",
-      password:"",
-      confirmPassword:"",
-      })
-      )
-      setHasSubmitted(false);
+    setHasSubmitted(false);
   }
 
-
   const handleChange = (e) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
 
-    setFormData({ ...formData, [name]: value 
-    });
-    
+    setFormData({ ...formData, [name]: value });
   };
 
+  const handleBlur = (e) => {
+    const {name} = e.target;
+    setTouched((prev)=> ({...prev, [name]:true}));
+  };
+
+  const toggleMode = (newMode) => {
+    setMode(newMode);
+    setSubmitSuccess("");
+    setHasSubmitted(false);
+    setTouched({})
+
+    setFormData({
+    name: "",
+    email: "",
+    mobileNumber: "",
+    dob: "",
+    password: "",
+    confirmPassword: "",
+    });
+  };
+
+
+
   return (
-    
     <form onSubmit={handleSubmit}>
-      {submitSuccess && (
-          <div className="relative flex justify-center items-center mt-40 ">
-            
-              <p className="px-40 py-10 rounded-xl border border-green-300 bg-green-50 font-bold text-lg text-green-600">
-                {submitSuccess}
-              </p>
-              </div>
-            )}
-    <div className="flex flex-col jusitfy-center items-center p-10 border border-none md:border md:border-gray-100 w-full md:w-[480px] md:min-h-[920px] mx-auto md:shadow-xl md:hover:shadow-xl/30 rounded-xl mb-20 mt-20 md:mb-40 ">
-        <div className="font-medium text-xl ">Register with</div>
+      {submitSuccess && mode === "signup" && (
+        <div className="relative flex justify-center items-center mt-40 ">
+          <p className="px-40 py-10 rounded-xl border border-green-300 bg-green-50 font-bold text-lg text-green-600">
+            {submitSuccess}
+          </p>
+        </div>
+      )}
+      <div className="flex flex-col jusitfy-center items-center p-10 border border-none md:border md:border-gray-100 w-full md:w-[480px]  mx-auto md:shadow-xl md:hover:shadow-xl/30 rounded-xl mb-20 mt-20 md:mb-40 ">
+        <div className="font-medium text-xl ">
+          {mode === "signup" ? "Register with" : "Login"}
+        </div>
 
         <div>
           <div className="flex flex-row items-center p-6 ">
@@ -116,11 +191,12 @@ export const Form = ({formData, setFormData, setHasSubmitted,submitSuccess, setS
           </div>
         </div>
 
-{/* ---------------------------------ช่อง input ----------------------------------------------- */}
+        {/* ---------------------------------ช่อง input ----------------------------------------------- */}
         <h3 className="text-[#A0AEC0] text-xl">or</h3>
 
-        <div className="mt-10 flex flex-col gap-y-3 md:gap-x-4 md:gap-y-6 w-[95%]">
-          <div>
+        <div className="mt-10 flex flex-col md:gap-x-4 w-[95%]">
+          <div className={`overflow-hidden transition-all duration-500 ease-in-out 
+          ${mode === "signup" ? "max-h-32 opacity-100 mb-4" : "max-h-0 opacity-0"}`}>
             <label htmlFor="fullname" className="block text-md  text-[#2D3748]">
               Name
             </label>
@@ -131,43 +207,46 @@ export const Form = ({formData, setFormData, setHasSubmitted,submitSuccess, setS
                 value={formData.name}
                 placeholder="Your full name"
                 onChange={handleChange}
-                className={`w-full h-10 md:w-95 md:h-12 rounded-lg bg-none  border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] ${nameError ? "border border-red-500 focus:outline-red-500" : ""} `}
-
-              
+                onBlur={handleBlur}
+                className={`w-full h-10 md:w-95 md:h-12 rounded-lg bg-none  border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] ${
+                  touched.name && nameError ? "border border-red-500 focus:outline-red-500" : ""
+                } `}
               />
 
-              {nameError && (
-              <p className="text-red-500  mt-1 px-2">
-                {nameError}
-              </p>
-            )}
+              {touched.name && nameError && (
+                <p className="text-red-500  mt-1 px-2">{nameError}</p>
+              )}
             </div>
           </div>
 
           <div>
             <label htmlFor="email" className="block text-md  text-[#2D3748]">
-              Email
+             Email
             </label>
-            
-            <div className="mt-2">
+
+            <div className="mt-2 mb-4">
               <input
                 name="email"
                 type="email"
                 value={formData.email}
                 placeholder="Your email address"
                 onChange={handleChange}
-                className={`w-full h-10 md:w-95 md:h-12 rounded-lg bg-none border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] ${emailError ? "border border-red-500 focus:outline-red-500" : ""}`} 
+                onBlur={handleBlur}
+                className={`w-full h-10 md:w-95 md:h-12 rounded-lg bg-none border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] ${
+                  touched.email && emailError
+                    ? "border border-red-500 focus:outline-red-500"
+                    : ""
+                }`}
               />
 
-              {emailError && (
-              <p className="text-red-500  mt-1 px-2">
-                {emailError}
-              </p>
-            )}
+              {touched.email && emailError && (
+                <p className="text-red-500  mt-1 px-2">{emailError}</p>
+              )}
             </div>
           </div>
 
-          <div>
+          <div className={`overflow-hidden transition-all duration-500 ease-in-out 
+          ${mode === "signup" ? "max-h-32 opacity-100 mb-4" : "max-h-0 opacity-0"}`}>
             <label htmlFor="tel" className="block text-md  text-[#2D3748]">
               Mobile Number
             </label>
@@ -178,17 +257,25 @@ export const Form = ({formData, setFormData, setHasSubmitted,submitSuccess, setS
                 value={formData.mobileNumber}
                 placeholder="Your mobile number"
                 onChange={handleChange}
-                className={`w-full h-10 md:w-95 md:h-12 rounded-lg bg-none border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] ${mobileNumberError ? "border border-red-500 focus:outline-red-500" : ""}`}
+                onBlur={handleBlur}
+                className={`w-full h-10 md:w-95 md:h-12 rounded-lg bg-none border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] ${
+                  touched.mobileNumber && mobileNumberError
+                    ? "border border-red-500 focus:outline-red-500"
+                    : ""
+                }`}
               />
-              {mobileNumberError && (
-              <p className="text-red-500  mt-1 px-2">{mobileNumberError}
-              </p>
+              {touched.mobileNumber && mobileNumberError && (
+                <p className="text-red-500  mt-1 px-2">{mobileNumberError}</p>
               )}
             </div>
           </div>
 
-          <div>
-            <label htmlFor="birthdate" className="block text-md  text-[#2D3748]">
+          <div className={`overflow-hidden transition-all duration-500 ease-in-out 
+          ${mode === "signup" ? "max-h-32 opacity-100 mb-4" : "max-h-0 opacity-0"}`}>
+            <label
+              htmlFor="birthdate"
+              className="block text-md  text-[#2D3748]"
+            >
               Date of birth
             </label>
             <div className="mt-2">
@@ -198,14 +285,13 @@ export const Form = ({formData, setFormData, setHasSubmitted,submitSuccess, setS
                 value={formData.dob}
                 placeholder="Your date of birth"
                 onChange={handleChange}
-                className={`w-full h-10 md:w-95 md:h-12 rounded-lg bg-none border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] ${dobError ? "border border-red-500 focus:outline-red-500" : ""} `}
-                
+                className={`w-full h-10 md:w-95 md:h-12 rounded-lg bg-none border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] ${
+                  dobError ? "border border-red-500 focus:outline-red-500" : ""
+                } `}
               />
 
-              {dobError &&(
-                <p className="text-red-500  mt-1 px-2">{dobError}
-
-              </p>
+              {dobError && (
+                <p className="text-red-500  mt-1 px-2">{dobError}</p>
               )}
             </div>
           </div>
@@ -214,82 +300,106 @@ export const Form = ({formData, setFormData, setHasSubmitted,submitSuccess, setS
             <label htmlFor="password" className="block text-md  text-[#2D3748]">
               Password
             </label>
-            <div className="mt-2">
+            <div className="mt-2 mb-4">
               <input
-              value={formData.password}
+                value={formData.password}
                 name="password"
                 type="password"
                 placeholder="****************"
                 onChange={handleChange}
-                className={`w-full h-10 md:w-95 md:h-12 rounded-lg bg-none border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] ${passwordError ? 'border border-red-500  focus:outline-red-500' : ""}  `}
-              
+                onBlur={handleBlur}
+                className={`w-full h-10 md:w-95 md:h-12 rounded-lg bg-none border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] ${
+                  touched.password && passwordError
+                    ? "border border-red-500  focus:outline-red-500"
+                    : ""
+                }  `}
               />
-              
-              {passwordError && (
-              <p className="text-red-500  mt-1 px-2">
-                {passwordError}
-      
-              </p> 
-            )}
 
-      
+              {touched.password && passwordError && (
+                <p className="text-red-500  mt-1 px-2">{passwordError}</p>
+              )}
             </div>
-            </div>
+          </div>
 
-            <div>
-            <label htmlFor="confirmPassword" className="block text-md  text-[#2D3748]">
-             Confirm Password
+          <div className={`overflow-hidden transition-all duration-500 ease-in-out 
+          ${mode === 'signup' ? 'max-h-32 opacity-100 mb-4' : 'max-h-0 opacity-0'}`}>
+            <label
+              htmlFor="confirmPassword"
+              className="block text-md  text-[#2D3748]"
+            >
+              Confirm Password
             </label>
             <div className="mt-2">
               <input
-              name="confirmPassword"
-              type="password"
-              value={formData.confirmPassword}
+                name="confirmPassword"
+                type="password"
+                value={formData.confirmPassword}
                 placeholder="****************"
                 onChange={handleChange}
-                className={`w-full h-10 md:w-95 md:h-12 rounded-lg bg-none border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] ${confirmPasswordError ? "border border-red-500  focus:outline-red-500" : "" } `}
+                onBlur={handleBlur}
+                className={`w-full h-10 md:w-95 md:h-12 rounded-lg bg-none border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] ${
+                  touched.confirmPassword && confirmPasswordError
+                    ? "border border-red-500  focus:outline-red-500"
+                    : ""
+                } `}
               />
 
-               {confirmPasswordError && (
-              <p className="text-red-500  mt-1 px-2">
-                {confirmPasswordError}
-              </p>
-            )} 
+              {touched.confirmPassword && confirmPasswordError && (
+                <p className="text-red-500  mt-1 px-2">
+                  {confirmPasswordError}
+                </p>
+              )}
             </div>
-            
-            
-
-            <label className="inline-flex items-center cursor-pointer mt-5">
+            </div>
+              
+            <label className="inline-flex items-center cursor-pointer mb-4">
               <input type="checkbox" value="" className="sr-only peer" />
               <div className="relative w-9 h-5 bg-gray-200   rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#447F98]"></div>
               <span className="select-none ms-3 text-sm font-medium text-heading">
                 Remember me
               </span>
             </label>
-          </div>
-
-          <button
-          type="submit"
-          className={`bg-[#447F98] w-full h-10 md:w-95 md:h-12 rounded-lg text-sm font-bold text-white ${loading|| isFormValid ? "cursor-pointer hover:bg-[#5591A9]" : "opacity-60 cursor-default"}`}
-          disabled={loading || !isFormValid}
           
+{/* ? "cursor-pointer hover:bg-[#5591A9]"
+                : "opacity-60 cursor-default" */}
+          <button
+            type="submit"
+            disabled={loading || !isFormValid}
+            className={`bg-[#447F98] w-full h-10 md:w-95 md:h-12 rounded-lg text-sm font-bold text-white
+              ${loading || !isFormValid
+              ? "opacity-60 cursor-default"
+              : "cursor-pointer hover:bg-[#5591A9]"
+            }`}
           >
-            {loading ? "Signing in" : "Sign in"}
+            {loading 
+                ? (mode === "signup" ? "Registering..." : "Signing In...") 
+                : (mode === "signup" ? "Sign Up" : "Sign In")}
           </button>
 
-             
-          <div className="flex flex-row justify-center items-center text-[#A0AEC0]">
-            Already have an account?
-            <span className="text-[#447F98] font-bold cursor-pointer ml-1">
-              Sign in
-            </span>
-          </div>
+          {mode === "signup" ? (
+            <div className="flex flex-row justify-center items-center mt-6 text-[#A0AEC0]">
+              Already have an account?
+              <span
+                onClick={() => toggleMode("signin")}
+                className="text-[#447F98] font-bold cursor-pointer ml-1"
+              >
+                Sign in
+              </span>
+            </div>
+          ) : (
+            <div className="flex flex-row justify-center items-center mt-6 text-[#A0AEC0]">
+              Not registered?
+              <span
+                onClick={() => toggleMode("signup")}
+                className="text-[#447F98] font-bold cursor-pointer ml-1"
+              >
+                Create an account
+              </span>
+            </div>
+          )}
         </div>
       </div>
-      <div className="hidden md:block">
-
-      </div>
-      </form>
-    
-  )
-}
+      <div className="hidden md:block"></div>
+    </form>
+  );
+};

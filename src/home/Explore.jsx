@@ -55,7 +55,7 @@ const Explore = () => {
 
 
             <div className="col-span-3 h-full px-8 py-30 flex items-center justify-start relative overflow-x-hidden">
-              <div className=" flex items-center transition-transform duration-500 [--slide-dist:350px] md:[--slide-dist:460px] lg:[--slide-dist:370px]"
+              <div className=" flex items-center transition-transform duration-500 [--slide-dist:380px] md:[--slide-dist:460px] lg:[--slide-dist:370px]"
               style={{ transform: `translateX(calc(-1 * ${currentIndex} * var(--slide-dist)))`}}
               >
                 
