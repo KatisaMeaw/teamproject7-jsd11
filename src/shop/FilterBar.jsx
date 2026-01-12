@@ -32,9 +32,9 @@ function FilterBar({
         <div className=" hidden sm:block h-6 w-0.5 bg-gray-400 mx-2"></div>
 
         {/* ข้อความแสดงผลลัพธ์ */}
-        <p>
+        <p className="text-sm md:text-base" >
           {" "}
-          className="text-sm md:text-base" Showing 1-{showingCount} of{" "}
+          Showing 1-{showingCount} of{" "}
           {totalResult}
         </p>
       </div>
