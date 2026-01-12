@@ -1,10 +1,11 @@
 // import React from 'react'
 
+
 function Card({ product }) {
   if (!product) {
     return null;
   }
-  
+ 
   return (
     <div className="bg-white rounded-lg shadow-sm">
       <div className="relative group">

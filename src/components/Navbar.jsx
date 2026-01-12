@@ -24,7 +24,7 @@ export function Navbar() {
         <div>
           <div className="hidden md:flex justify-center gap-6 ">
 
-               <Link to="/register" className="p-2 rounded-full text-gray-600 hover:bg-teal-100">
+               <Link to="/login" className="p-2 rounded-full text-gray-600 hover:bg-teal-100">
                     <img src="icon/mdi_account-alert-outline.png" alt="" />
                 </Link>
 
