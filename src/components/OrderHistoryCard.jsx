@@ -1,8 +1,8 @@
 import React from 'react'
 
-const UserProfileBox = () => {
+const OrderHistoryCard = () => {
   return (
-    <div className=" w-2/3 border border-[#E4E7E9] py-10">
+    <div className=" w-2/3 border border-[#E4E7E9] py-10 mb-6">
         <div className="flex justify-between items-center bg-[#FDFAE7] border border-[#F8EBAA] w-[90%] mx-auto py-10">
         <div className="text-xl ml-8 font-medium">#96459761<div className="text-base font-normal mt-2">4 Products • Order Placed in 17 Jan, 2026 at 7:32 PM</div> </div>
         <div className="text-3xl font-bold mr-8 text-[#447F98]">$3,000.00</div>
@@ -24,10 +24,10 @@ const UserProfileBox = () => {
                     <img
               src="./img-prod/chair1.jpeg"
               alt=""
-              className="rounded-xl w-20 h-30 cursor-pointer hover:-translate-y-3 transition duration-300 hover:shadow-xl"
+              className="rounded-xl w-20 h-30"
             />
                 
-            <div className="text-sm text-[#447F98] font-medium">Syltherine
+            <div className="text-sm text-[#447F98] font-medium cursor-pointer">Syltherine
             <p className="text-base text-gray-500 font-normal">Stylish comfy chair</p>
             </div>
             </div>
@@ -41,10 +41,10 @@ const UserProfileBox = () => {
                     <img
               src="./img-prod/chair1.jpeg"
               alt=""
-              className="rounded-xl w-20 h-30 cursor-pointer hover:-translate-y-3 transition duration-300 hover:shadow-xl"
+              className="rounded-xl w-20 h-30"
             />
                 
-            <div className="text-sm text-[#447F98] font-medium">Syltherine
+            <div className="text-sm text-[#447F98] font-medium cursor-pointer">Syltherine
             <p className="text-base text-gray-500 font-normal">Stylish comfy chair</p>
             </div>
             </div>
@@ -78,4 +78,4 @@ const UserProfileBox = () => {
   )
 }
 
-export default UserProfileBox 
+export default OrderHistoryCard 

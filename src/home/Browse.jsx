@@ -1,4 +1,59 @@
+import { useEffect, useState } from "react";
+import CategoryMobile from "./CategoryMobile";
+import CategoryDesktop from "./CategoryDesktop";
+import axios from "axios";
+
 export default function Browse() {
+  // const [category, setCategory] = useState([
+  //   {
+  //     id: "1",
+  //     img: "./img-prod/Blue Gaming Chair - Pastel Series.jpeg",
+  //     name: "Ergonomic Chair",
+  //   },
+  //   {
+  //     id: "2",
+  //     img: "./img-prod/White gaming setup inspiration _ Secretlab.jpeg",
+  //     name: "Table",
+  //   },
+  //   {
+  //     id: "3",
+  //     img: "./img-prod/Desk Ideas for the Perfect Home Office Setup.jpeg",
+  //     name: "Accessories",
+  //   },
+  // ]);
+
+  const url = "https://jsonplaceholder.typicode.com/posts";
+  
+    const [displayCategory, setDisplayCategory] = useState([]);
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const visibleItems = displayCategory.slice(0, 3)
+
+  const handlePrev = () => {
+    if (currentIndex === 0) {
+      setCurrentIndex(visibleItems.length - 1);
+    } else {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentIndex === visibleItems.length - 1) {
+      setCurrentIndex(0);
+    } else {
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
+
+  useEffect(() => {
+      const fetchData = async () => {
+      let res = await axios.get(url);
+      setDisplayCategory(res.data);
+    };
+    fetchData();
+    }, []);
+
   return (
     <>
       <div className="p-10 md:p-20 flex flex-col justify-center items- text-center">
@@ -14,7 +69,9 @@ export default function Browse() {
       {/* ----------------------------------mobile 📱 ---------------------------------- */}
 
       <div
-        id="controls-carousel" className="relative w-full flex md:hidden gap-4 " data-carousel="static" 
+        id="controls-carousel"
+        className="relative md:hidden gap-4 "
+        data-carousel="static"
       >
         <div className="relative h-fit rounded-xl ">
 
@@ -45,33 +102,14 @@ export default function Browse() {
           </span>
         </div>
 
-        {/* Item 3: Accessories */}
-        <div className="flex-none duration-700 ease-in-out flex flex-col items-center text-center">
-          <div>
-            <img
-              src="./img-prod/Desk Ideas for the Perfect Home Office Setup.jpeg"
-              alt="Accessories"
-              className="rounded-xl block w-[250px] h-[300px] object-cover cursor-pointer hover:-translate-y-3 transition duration-300 hover:shadow-xl"
-            />
-          <span className="text-xl inline-block mt-8 text-[#447F98] font-bold cursor-pointer"
-            >Accessories
-          </span>
-          </div>
-        </div>
+          <CategoryMobile
+          items={visibleItems}
+          currentIndex={currentIndex}
+          handlePrev={handlePrev}
+          handleNext={handleNext}
 
-        {/* 2. ปุ่ม Buttons < > */}
-        <button type="button" className="absolute top-42 transform -translate-y-1/2 start-0 z-30 flex items-center justify-center px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
-            <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#447F98] group-hover:bg-[#31647a] shadow-lg">
-                <svg className="w-5 h-5 text-white rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7"/></svg>
-            </span>
-        </button>
-
-        <button type="button" className="absolute top-42 transform -translate-y-1/2 end-0 z-30 flex items-center justify-center px-4 cursor-pointer group focus:outline-none" data-carousel-next>
-            <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#447F98] group-hover:bg-[#31647a] shadow-lg">
-                <svg className="w-5 h-5 text-white rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
-            </span>
-        </button>
-
+        />
+        
       </div>
 
       {/* ----------------------------------Desktop 💻---------------------------------- */}
@@ -103,18 +141,6 @@ export default function Browse() {
           </span>
         </div>
 
-        <div className="flex flex-col items-center ">
-          <div>
-            <img
-              src="./img-prod/Desk Ideas for the Perfect Home Office Setup.jpeg"
-              alt="Accessories"
-              className="rounded-xl w-[350px] h-[400px] cursor-pointer hover:-translate-y-3 transition duration-300 hover:shadow-xl"
-            />
-          </div>
-          <span className="text-xl mt-8 text-[#447F98] font-bold cursor-pointer"
-            >Accessories
-          </span>
-        </div>
       </div>
     </>
   );
