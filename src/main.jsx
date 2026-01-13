@@ -14,6 +14,7 @@ import Contact from "./views/Contact.jsx";
 import Register from "./views/Register.jsx"
 import UserProfile from "./components/UserProfile.jsx";
 import AdminDashboard from "./views/AdminDashboard.jsx"
+import AdminInventory from "./views/AdminInventory.jsx";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,14 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element:<AdminDashboard />,
+    errorElement: (
+      <div className="min-h-screen flex justify-center items-center">
+        <h1 className="text-4xl">404 - Page Not Found😭</h1>
+      </div>
+    ),
+    children: [
+      { path: "inventory", element:<AdminInventory />},
+    ]
   },
 ]);
 
