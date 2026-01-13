@@ -73,6 +73,34 @@ export default function Browse() {
         className="relative md:hidden gap-4 "
         data-carousel="static"
       >
+        <div className="relative h-fit rounded-xl ">
+
+          {/* Item 1: Chair (เอา hidden ออกถ้าเป็นตัวแรก หรือให้ Library จัดการ) */}
+          <div className="flex-none duration-700 ease-in-out flex flex-col items-center" data-carousel-item>
+            <img
+              src="./img-prod/Blue Gaming Chair - Pastel Series.jpeg"
+              alt="Ergonomic Chair"
+              className="rounded-xl block w-[250px] h-[300px] object-cover cursor-pointer hover:-translate-y-3 transition duration-300 hover:shadow-xl"
+            />
+            <span className="inline-block text-xl mt-8 text-[#447F98] font-bold cursor-pointer">
+            Ergonomic Chair
+          </span>
+          </div>
+        </div>
+
+        {/* Item 2: Desk */}
+        <div className="flex-none duration-700 ease-in-out flex flex-col items-center">
+          <div>
+            <img
+              src="./img-prod/White gaming setup inspiration _ Secretlab.jpeg"
+              alt="Desk"
+              className="rounded-xl block w-[250px] h-[300px] object-cover cursor-pointer hover:-translate-y-3 transition duration-300 hover:shadow-xl"
+            />
+          </div>
+          <span className="inline-block mt-8 text-xl  text-[#447F98] font-bold cursor-pointer ">
+            Desk
+          </span>
+        </div>
 
           <CategoryMobile
           items={visibleItems}
@@ -86,13 +114,32 @@ export default function Browse() {
 
       {/* ----------------------------------Desktop 💻---------------------------------- */}
 
-      <div className="max-w-[1200px] mx-auto mb-10 hidden md:flex ">
-        {displayCategory.slice(0,3).map((post) =>(
-          <CategoryDesktop 
-          key={post.id}
-          userId={post.userId}
-          title={post.title}  />
-        ))}
+      <div className="flex-row justify-center items-start gap-8 mb-10 hidden md:flex ">
+        <div className="flex flex-col items-center">
+          <div>
+            <img
+              src="./img-prod/Blue Gaming Chair - Pastel Series.jpeg"
+              alt="Ergonomic Chair"
+              className="rounded-xl w-[350px] h-[400px] cursor-pointer hover:-translate-y-3 transition duration-300 hover:shadow-xl"
+            />
+          </div>
+          <span className="text-xl mt-8 text-[#447F98] font-bold cursor-pointer">
+            Ergonomic Chair
+          </span>
+        </div>
+
+        <div className="flex flex-col items-center ">
+          <div>
+            <img
+              src="./img-prod/White gaming setup inspiration _ Secretlab.jpeg"
+              alt="Desk"
+              className="rounded-xl w-[350px] h-[400px] cursor-pointer hover:-translate-y-3 transition duration-300 hover:shadow-xl"
+            />
+          </div>
+          <span className="text-xl mt-8 text-[#447F98] font-bold cursor-pointer">
+            Desk
+          </span>
+        </div>
 
       </div>
     </>
