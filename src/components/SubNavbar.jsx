@@ -9,8 +9,8 @@ export default function SubNavbar() {
     switch (path) {
       case "/shop":
         return "Shop";
-      case "/register":
-        return "Register";
+      case "/login":
+        return "Login";
       case "/contact":
         return "Contact";
       case "/checkout":

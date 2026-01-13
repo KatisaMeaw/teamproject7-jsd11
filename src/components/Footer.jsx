@@ -1,5 +1,3 @@
-
-
 export default function Footer() {
     return (
 <footer className="bg-gray-50 py-10 md:py-10 flex  justify-center pl-10 md:pl-0">
@@ -13,6 +11,7 @@ export default function Footer() {
                     Gables,<br />
                     BKK 10300 THA
                 </address>
+                
 
             </div>
 
