@@ -6,6 +6,10 @@ export default function SubNavbar() {
   const getPageTitle = () => {
     const path = location.pathname;
 
+    if (path.startsWith("/shop")) {
+      return "Shop";
+    };
+
     switch (path) {
       case "/shop":
         return "Shop";

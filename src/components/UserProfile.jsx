@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 const UserProfile = () => {
   // 1. เพิ่ม state สำหรับเก็บ URL รูปภาพ (profileImage)
+
   const [formData, setFormData] = useState({
     fullName: "",
     nickName: "",
