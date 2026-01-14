@@ -1,13 +1,10 @@
 import {
   BarChart3,
-  Calendar,
   ChevronDown,
   ChevronLeft, // เพิ่ม import
   ChevronRight, // เพิ่ม import
   CreditCard,
-  FileText,
   LayoutDashboard,
-  MessageSquare,
   Package,
   Settings,
   ShoppingBag,
@@ -15,6 +12,7 @@ import {
   Zap,
 } from 'lucide-react';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const menuItems = [
   {
@@ -46,7 +44,7 @@ const menuItems = [
     ],
   },
   {
-    id: "ecommerce",
+    id: "e-commerce",
     icon: ShoppingBag,
     label: "E-commerce",
     submenu: [
@@ -57,30 +55,9 @@ const menuItems = [
   },
   {
     id: "inventory",
-    icon: Package, // แก้จาก iconL เป็น icon
+    icon: Package,
     label: "Inventory",
     count: "847",
-  },
-  {
-    id: "transactions",
-    icon: CreditCard,
-    label: "Transactions",
-  },
-  {
-    id: "messages",
-    icon: MessageSquare,
-    label: "Messages",
-    badge: "12",
-  },
-  {
-    id: "calendar",
-    icon: Calendar,
-    label: "Calendar",
-  },
-  {
-    id: "reports",
-    icon: FileText,
-    label: "Reports",
   },
   {
     id: "settings",
@@ -90,7 +67,7 @@ const menuItems = [
 ];
 
 function Sidebar({ collapsed, onToggle, currentPage, onPageChange }) {
-  const [expandedItems, setExpendedItems] = useState(new Set(["analytics"]));
+  const [expandedItems, setExpandedItems] = useState(new Set(["analytics"]));
 
   const toggleExpended = (itemid) => {
     const newExpended = new Set(expandedItems);
@@ -111,7 +88,7 @@ function Sidebar({ collapsed, onToggle, currentPage, onPageChange }) {
       {/*Logo Section*/}
       <div className="p-6 border-b border-slate-200/50 dark:border-slate-700/50 flex justify-between items-center">
         <div className='flex items-center space-x-3'>
-          <div className='w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shrink-0'>
+          <div className='w-10 h-10 bg-linear-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg'>
             <Zap className='w-6 h-6 text-white' />
           </div>
 
@@ -119,7 +96,7 @@ function Sidebar({ collapsed, onToggle, currentPage, onPageChange }) {
           {!collapsed && (
             <div>
               <h1 className='text-xl font-bold text-slate-800 dark:text-white'>
-                Relift
+              RELIEF
               </h1>
               <p className='text-xs text-slate-500 dark:text-slate-400'>
                 Admin Panel
@@ -144,8 +121,8 @@ function Sidebar({ collapsed, onToggle, currentPage, onPageChange }) {
         {menuItems.map((item) => {
           return (<div key={item.id}>
             <button
-              className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 ${currentPage === item.id || item.active ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/25" : "text-slate-600  dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50"
-                }`}
+              className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 ${currentPage === item.id || item.active ? "bg-linear-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/25": "text-slate-600  dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50"
+              }`}
               onClick={() => {
                 if (item.submenu) {
                   toggleExpended(item.id);
@@ -160,10 +137,12 @@ function Sidebar({ collapsed, onToggle, currentPage, onPageChange }) {
 
                 {!collapsed && (
                   <>
-                    <span className='font-medium ml-2'>{item.label}</span>
-                    {item.badge && (
-                      <span className='px-2 py-1 text-xs bg-red-500 text-white rounded-full'>   {item.badge}
-                      </span>
+                  <Link to={item.id}>
+                    <span className='font-medium ml-2'>{item.label}</span></Link>
+                      {item.badge && (
+                    <span className='px-2 py-1 text-xs bg-red-500 text-white rounded-full'>
+                      {item.badge}
+                    </span>
                     )}
 
                     {item.count && (
@@ -174,7 +153,8 @@ function Sidebar({ collapsed, onToggle, currentPage, onPageChange }) {
                   </>
                 )}
               </div>
-              {!collapsed && item.submenu && (<ChevronDown className={`w-4 h-4 transition-transform ${expandedItems.has(item.id) ? "rotate-180" : ""}`} />
+              {!collapsed && item.submenu && (
+                <ChevronDown className={`w-4 h-4 transition-transform `}/>
               )}
             </button>
 
