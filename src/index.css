@@ -1,1 +1,21 @@
 @import "tailwindcss";
+
+@theme {
+  /* กำหนดค่า Keyframes */
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* กำหนดชื่อ Animation ให้เรียกใช้ได้ */
+  --animate-fade-up: fade-up 0.5s ease-out forwards;
+  
+  /* แถม: ถ้าอยากได้สี custom-blue ที่เคยเขียนในไฟล์เก่า */
+  --color-custom-blue: #53b8e0;
+}
