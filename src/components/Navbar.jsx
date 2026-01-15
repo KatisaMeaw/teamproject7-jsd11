@@ -1,8 +1,14 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useCart } from "../hooks/useCart";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { cartItems } = useCart();
+  const cartCount = cartItems.reduce(
+    (total, item) => total + (item.quantity || 1),
+    0
+  );
 
   return (
     <nav className="sticky top-0 flex justify-between items-center shadow-md p-4 bg-white z-50">
@@ -144,18 +150,22 @@ export function Navbar() {
               />
             </Link>
             <Link to="#" onClick={() => setIsOpen(false)}>
-              <img
-                src="icon/akar-icons_heart.png"
-                alt=""
-                className="h-6 w-6"
-              />
+              <img src="icon/akar-icons_heart.png" alt="" className="h-6 w-6" />
             </Link>
-            <Link to="/cart" onClick={() => setIsOpen(false)}>
+            <Link
+              to="/cart"
+              className="p-2 rounded-full text-gray-600 hover:bg-teal-100 relative inline-block"
+            >
               <img
                 src="icon/ant-design_shopping-cart-outlined.png"
-                alt=""
-                className="h-6 w-6"
+                alt="Cart"
               />
+
+              {cartCount > 0 && (
+                <span className="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center shadow-sm">
+                  {cartCount}
+                </span>
+              )}
             </Link>
           </div>
         </div>
