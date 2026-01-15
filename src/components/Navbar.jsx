@@ -6,7 +6,6 @@ export function Navbar() {
 
   return (
     <nav className="sticky top-0 flex justify-between items-center shadow-md p-4 bg-white z-50">
-      {/* Logo */}
       <Link to="/" className="flex items-center">
         <img src="icon/Frame 281.png" alt="Logo" className="h-10" />
       </Link>
