@@ -57,10 +57,10 @@ export default function Browse() {
   return (
     <>
       <div className="p-10 md:p-20 flex flex-col justify-center items- text-center">
-        <h1 className="text-2xl md:text-3xl font-bold text-[#447F98]">
+        <h1 className="text-2xl md:text-3xl font-bold text-[#447F98] text-shadow-sm">
           Browse The Range
         </h1>
-        <p className="text-[#629BB5] text-sm md:text-lg mt-3">
+        <p className="text-[#629BB5] text-sm md:text-lg mt-3 text-shadow-sm">
           We offer a full spectrum of solutions to transform your workspace and
           promote lasting health and productivity.
         </p>

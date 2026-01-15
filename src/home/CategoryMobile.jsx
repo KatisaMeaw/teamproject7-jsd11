@@ -29,7 +29,7 @@ const CategoryMobile = ({
                   alt={post.title}
                   className="rounded-xl block object-cover w-[250px] h-[300px] cursor-pointer hover:-translate-y-3 transition duration-300 hover:shadow-xl"
                 />
-                <span className="inline-block text-xl mt-8 text-[#447F98] font-bold cursor-pointer">
+                <span className="inline-block text-xl mt-8 text-[#447F98] font-bold cursor-pointer text-shadow-sm">
                   {/* {post.name} */} {post.title}
                 </span>
                 </div>
