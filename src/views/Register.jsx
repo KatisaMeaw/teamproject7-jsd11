@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useOutletContext, useNavigate } from "react-router-dom";
 import SubNavbar from "../components/SubNavbar";
 import SubFooter from "../components/SubFooter";
 import Footer from "../components/Footer";
@@ -6,6 +7,9 @@ import { Form } from "../components/register/Form.jsx";
 import axios from "axios";
 
 const Register = () => {
+  const { login } = useOutletContext();
+  const navigate = useNavigate();
+
   const apiBase = import.meta.env.VITE_API_URL;
 
   const [formData, setFormData] = useState({
@@ -110,13 +114,14 @@ const Register = () => {
     setSubmitSuccess("");
 
     if (!isFormValid) return;
-    
+
     setLoading(true);
     try {
       if (mode === "signup") {
-        const response = await axios.post(apiBase, formData);
+        const url = apiBase.endsWith('/register') ? apiBase : `${apiBase}/register`;
+        const response = await axios.post(url, formData);
 
-        if (response.data.success) {
+        if (response.data.success || response.status === 200 || response.status === 201) {
           setSubmitSuccess(
             "Account created successfully! You can now sign in to your account."
           );
@@ -131,7 +136,15 @@ const Register = () => {
         });
         setTouched({});
       } else {
-        console.log("Logging in with:", formData.email);
+       const isSuccess = await login({
+          email: formData.email,
+          password: formData.password,
+        });
+        if (isSuccess) {
+          navigate("/userprofile"); // ถ้า Login ผ่าน ให้ย้ายหน้า
+        } else {
+          alert("อีเมลหรือรหัสผ่านไม่ถูกต้อง"); // ถ้าไม่ผ่าน ให้แจ้งเตือน
+        }
       }
     } catch (error) {
       const errorMsg =
@@ -143,7 +156,6 @@ const Register = () => {
       setHasSubmitted(false);
     }
   }
-
 
   return (
     <>
@@ -164,11 +176,10 @@ const Register = () => {
         nameError={nameError}
         emailError={emailError}
         mobileNumberError={mobileNumberError}
-        dobError ={dobError}
-        passwordError ={passwordError}
+        dobError={dobError}
+        passwordError={passwordError}
         confirmPasswordError={confirmPasswordError}
         isFormValid={isFormValid}
-
       />
 
       <div className="hidden md:block">

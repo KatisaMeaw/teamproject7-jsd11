@@ -1,6 +1,5 @@
 // import React, { useState } from 'react'
 
-
 export const Form = ({
   formData,
   setFormData,
@@ -19,12 +18,8 @@ export const Form = ({
   dobError,
   passwordError,
   confirmPasswordError,
-  isFormValid
+  isFormValid,
 }) => {
-  
-
-  
-
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -32,27 +27,25 @@ export const Form = ({
   };
 
   const handleBlur = (e) => {
-    const {name} = e.target;
-    setTouched((prev)=> ({...prev, [name]:true}));
+    const { name } = e.target;
+    setTouched((prev) => ({ ...prev, [name]: true }));
   };
 
   const toggleMode = (newMode) => {
     setMode(newMode);
     setSubmitSuccess("");
     setHasSubmitted(false);
-    setTouched({})
+    setTouched({});
 
     setFormData({
-    name: "",
-    email: "",
-    mobileNumber: "",
-    dob: "",
-    password: "",
-    confirmPassword: "",
+      name: "",
+      email: "",
+      mobileNumber: "",
+      dob: "",
+      password: "",
+      confirmPassword: "",
     });
   };
-
-
 
   return (
     <form onSubmit={handleSubmit}>
@@ -115,8 +108,14 @@ export const Form = ({
         <h3 className="text-[#A0AEC0] text-xl">or</h3>
 
         <div className="mt-10 flex flex-col md:gap-x-4 w-[95%]">
-          <div className={`overflow-hidden transition-all duration-500 ease-in-out 
-          ${mode === "signup" ? "max-h-32 opacity-100 mb-4" : "max-h-0 opacity-0"}`}>
+          <div
+            className={`overflow-hidden transition-all duration-500 ease-in-out 
+          ${
+            mode === "signup"
+              ? "max-h-32 opacity-100 mb-4"
+              : "max-h-0 opacity-0"
+          }`}
+          >
             <label htmlFor="fullname" className="block text-md  text-[#2D3748]">
               Name
             </label>
@@ -129,7 +128,9 @@ export const Form = ({
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className={`w-full h-10 md:w-95 md:h-12 rounded-lg bg-none  border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] ${
-                  touched.name && nameError ? "border border-red-500 focus:outline-red-500" : ""
+                  touched.name && nameError
+                    ? "border border-red-500 focus:outline-red-500"
+                    : ""
                 } `}
               />
 
@@ -141,7 +142,7 @@ export const Form = ({
 
           <div>
             <label htmlFor="email" className="block text-md  text-[#2D3748]">
-             Email
+              Email
             </label>
 
             <div className="mt-2 mb-4">
@@ -165,8 +166,14 @@ export const Form = ({
             </div>
           </div>
 
-          <div className={`overflow-hidden transition-all duration-500 ease-in-out 
-          ${mode === "signup" ? "max-h-32 opacity-100 mb-4" : "max-h-0 opacity-0"}`}>
+          <div
+            className={`overflow-hidden transition-all duration-500 ease-in-out 
+          ${
+            mode === "signup"
+              ? "max-h-32 opacity-100 mb-4"
+              : "max-h-0 opacity-0"
+          }`}
+          >
             <label htmlFor="tel" className="block text-md  text-[#2D3748]">
               Mobile Number
             </label>
@@ -190,8 +197,14 @@ export const Form = ({
             </div>
           </div>
 
-          <div className={`overflow-hidden transition-all duration-500 ease-in-out 
-          ${mode === "signup" ? "max-h-32 opacity-100 mb-4" : "max-h-0 opacity-0"}`}>
+          <div
+            className={`overflow-hidden transition-all duration-500 ease-in-out 
+          ${
+            mode === "signup"
+              ? "max-h-32 opacity-100 mb-4"
+              : "max-h-0 opacity-0"
+          }`}
+          >
             <label
               htmlFor="birthdate"
               className="block text-md  text-[#2D3748]"
@@ -241,8 +254,14 @@ export const Form = ({
             </div>
           </div>
 
-          <div className={`overflow-hidden transition-all duration-500 ease-in-out 
-          ${mode === 'signup' ? 'max-h-32 opacity-100 mb-4' : 'max-h-0 opacity-0'}`}>
+          <div
+            className={`overflow-hidden transition-all duration-500 ease-in-out 
+          ${
+            mode === "signup"
+              ? "max-h-32 opacity-100 mb-4"
+              : "max-h-0 opacity-0"
+          }`}
+          >
             <label
               htmlFor="confirmPassword"
               className="block text-md  text-[#2D3748]"
@@ -270,32 +289,37 @@ export const Form = ({
                 </p>
               )}
             </div>
-            </div>
-              
-            <label className="inline-flex items-center cursor-pointer mb-4">
-              <input type="checkbox" value="" className="sr-only peer" />
-              <div className="relative w-9 h-5 bg-gray-200   rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#447F98]"></div>
-              <span className="select-none ms-3 text-sm font-medium text-heading">
-                Remember me
-              </span>
-            </label>
-          
-{/* ? "cursor-pointer hover:bg-[#5591A9]"
+          </div>
+
+          <label className="inline-flex items-center cursor-pointer mb-4">
+            <input type="checkbox" value="" className="sr-only peer" />
+            <div className="relative w-9 h-5 bg-gray-200   rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#447F98]"></div>
+            <span className="select-none ms-3 text-sm font-medium text-heading">
+              Remember me
+            </span>
+          </label>
+
+          {/* ? "cursor-pointer hover:bg-[#5591A9]"
                 : "opacity-60 cursor-default" */}
           <button
             type="submit"
             disabled={loading || !isFormValid}
-            onClick={() => handleSubmit(formData)}
+            
             className={`bg-[#447F98] w-full h-10 md:w-95 md:h-12 rounded-lg text-sm font-bold text-white
               
-              ${loading || !isFormValid
-              ? "opacity-60 cursor-default"
-              : "cursor-pointer hover:bg-[#5591A9]"
-            }`}
+              ${
+                loading || !isFormValid
+                  ? "opacity-60 cursor-default"
+                  : "cursor-pointer hover:bg-[#5591A9]"
+              }`}
           >
-            {loading 
-                ? (mode === "signup" ? "Registering..." : "Signing In...") 
-                : (mode === "signup" ? "Sign Up" : "Sign In")}
+            {loading
+              ? mode === "signup"
+                ? "Registering..."
+                : "Signing In..."
+              : mode === "signup"
+              ? "Sign Up"
+              : "Sign In"}
           </button>
 
           {mode === "signup" ? (
