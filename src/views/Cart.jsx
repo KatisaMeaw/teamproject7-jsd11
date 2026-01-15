@@ -1,17 +1,25 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from "../context/CartContext";
 import SubNavbar from '../components/SubNavbar';
 import SubFooter from '../components/SubFooter';
 import Footer from '../components/Footer';
+import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
+  const navigate = useNavigate();
+  const handleCheckout = (e) => {
+  if (cartItems.length === 0) {
+    alert("Your cart is empty!"); // หรือใช้ Modal สวยๆ แจ้งเตือน
+    return;
+  }
+  navigate('/checkout'); // ถ้ามีของ ให้พาไปหน้า checkout
+};
   const { cartItems, updateQuantity, removeItem, subtotal } = useCart();
 
   // ฟังก์ชันจัดการการเปลี่ยนจำนวนสินค้าแบบปลอดภัย
   const handleQuantityChange = (id, value) => {
     const qty = parseInt(value);
-    
+
     if (qty < 1 || isNaN(qty)) {
       // ถ้าผู้ใช้กรอก 0 หรือลบจนว่าง ให้ถามว่าจะลบสินค้าไหม
       if (window.confirm("Do you want to remove this item from the cart?")) {
@@ -57,7 +65,7 @@ const Cart = () => {
                     </div>
                     
                     {/* ราคาต่อชิ้น */}
-                    <div className="text-gray-500">Rs. {item.price.toLocaleString()}</div>
+                    <div className="text-gray-500">THB {item.price.toLocaleString()}</div>
                     
                     {/* ตัวปรับจำนวน */}
                     <div className="flex justify-center">
@@ -129,12 +137,17 @@ const Cart = () => {
               <span className="text-blue-600">THB {subtotal.toLocaleString()}</span> 
             </div>
 
-            <Link 
-              to={cartItems.length > 0 ? "/checkout" : "#"} 
-              className="text-center w-full mt-8 md:block bg-[#447F98] hover:bg-[#5591A9] text-white font-bold py-3 px-8 rounded-lg shadow-md transition duration-300 ease-in-out cursor-pointer"
+            <button
+              onClick={handleCheckout}
+              disabled={cartItems.length === 0} // ปิดปุ่มถ้าไม่มีสินค้า
+              className={`text-center w-full mt-8 md:block font-bold py-3 px-8 rounded-lg shadow-md transition duration-300 ease-in-out
+              ${cartItems.length > 0 
+              ? "bg-[#447F98] hover:bg-[#5591A9] text-white cursor-pointer" 
+              : "bg-gray-300 text-gray-500 cursor-not-allowed" // สีปุ่มตอนกดไม่ได้
+              }`}
             >
               CHECKOUT
-            </Link>
+            </button>
 
             <p className="text-center text-xs text-gray-400 mt-4">
               Tax included and shipping calculated at checkout

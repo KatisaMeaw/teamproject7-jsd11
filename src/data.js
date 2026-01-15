@@ -6,7 +6,7 @@ export const products = [
     name: "Syltherine",
     category: "Ergonomic Chair",
     description: "Full-support ergonomic chair with adjustable headrest for neck relief.",
-    price: "2,500",
+    price: 2500,
     originalPrice: "3,500",
     discount: "-30%",
   },
