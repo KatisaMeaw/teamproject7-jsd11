@@ -1,6 +1,7 @@
 // import React, { useState } from 'react'
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const Form = ({
   formData,
@@ -10,7 +11,10 @@ export const Form = ({
   setSubmitSuccess,
   loading,
   setLoading,
+  login,
+  
 }) => {
+  const navigate = useNavigate();
   const nameParts = formData.name.trim().split(/\s+/);
   const hasNumber = /\d/.test(formData.name);
   const isEachPartLongEnough = nameParts.every((part) => part.length >= 2);
@@ -67,7 +71,7 @@ export const Form = ({
   ? (!nameError && !emailError && !mobileNumberError && !dobError && !passwordError && !confirmPasswordError && formData.name.trim() !== "" && formData.email.trim() !== "" && formData.mobileNumber.trim() !== "" && formData.dob.trim() !== "" &&  formData.password.trim() !== "" && formData.confirmPassword.trim() !== "")
   : (!emailError && !passwordError && formData.email.trim() !== "" && formData.password.trim() !== "");
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     setTouched({
     name: true,
@@ -99,6 +103,18 @@ export const Form = ({
     } else {
       setLoading(true)
       console.log("Signing in...")
+     const isSuccess = await login({
+        email: formData.email,
+        password: formData.password
+      });
+
+      if (isSuccess) {
+        console.log("Login Success! Redirecting...");
+        navigate("/userprofile"); // 👈 3. ใส่ URL หน้าที่คุณต้องการให้ไป (เช่น /userprofile หรือ /home)
+      } else {
+        console.log("Login Failed");
+        setSubmitSuccess("Invalid email or password"); // (Optional) แจ้งเตือน user ว่าผิด
+      }
       setLoading(false)
     }
     

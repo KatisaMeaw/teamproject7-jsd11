@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate ,useOutletContext} from "react-router-dom";
 
 const UserProfile = () => {
-  // 1. เพิ่ม state สำหรับเก็บ URL รูปภาพ (profileImage)
+  // 1. ดึงข้อมูล User และสถานะการโหลดมาจาก Layout (ตัวแม่)
+  const { user, authLoading } = useOutletContext();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -11,9 +14,29 @@ const UserProfile = () => {
     language: "",
     timeZone: "",
     email: "",
-    profileImage: null, // เก็บ URL ของรูปที่อัปโหลด
+    profileImage: null,
   });
 
+  // 2. useEffect สำหรับเช็คว่า Login หรือยัง (แก้ปัญหาหน้าจอค้าง)
+  useEffect(() => {
+    // ถ้า "โหลดเสร็จแล้ว" (!authLoading) แต่ "ไม่มีข้อมูล user" (!user) แสดงว่ายังไม่ Login
+    if (!authLoading && !user) {
+      alert("กรุณาเข้าสู่ระบบก่อนใช้งาน!");
+      navigate("/"); // ดีดกลับไปหน้าแรก หรือหน้า Login
+    }
+  }, [authLoading, user, navigate]); // ✅ ใส่ Dependency Array ป้องกันการวนลูป
+
+  // 3. useEffect สำหรับดึงข้อมูล User มาใส่ในฟอร์มอัตโนมัติ
+  useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        fullName: user.name || "",   // ดึงชื่อจาก Backend
+        email: user.email || "",     // ดึงอีเมลจาก Backend
+        // ถ้า Backend ส่งข้อมูลอื่นมาด้วย ก็ใส่เพิ่มตรงนี้ได้ครับ
+      }));
+    }
+  }, [user]);
   // 2. ฟังก์ชันจัดการการอัปโหลดรูป
   const handleImageChange = (e) => {
     const file = e.target.files[0];

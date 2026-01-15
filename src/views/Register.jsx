@@ -1,11 +1,13 @@
+import { useOutletContext } from "react-router-dom";
 import React, { useState } from "react";
+
 import SubNavbar from "../components/SubNavbar";
 import SubFooter from "../components/SubFooter";
 import Footer from "../components/Footer";
-import {Form} from "../components/register/Form.jsx";
+import { Form } from "../components/register/Form.jsx";
 
 const Register = () => {
-
+  const { login } = useOutletContext();
   // const [name, setName] = useState("");
   // const [email, setEmail] = useState("");
   // const [mobileNumber, setMobileNumber] = useState("");
@@ -20,26 +22,25 @@ const Register = () => {
     dob: "",
     password: "",
     confirmPassword: "",
-
   });
 
   const [submitSuccess, setSubmitSuccess] = useState("");
-  const [hasSubmitted , setHasSubmitted] = useState(false)
+  const [hasSubmitted, setHasSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
   return (
     <>
       <SubNavbar />
-      
-      <Form 
-      formData={formData}
-      setFormData={setFormData}
-      setHasSubmitted={setHasSubmitted}
-      submitSuccess={submitSuccess}
-      setSubmitSuccess={setSubmitSuccess}
-      loading={loading}
-      setLoading={setLoading}
 
+      <Form
+        formData={formData}
+        setFormData={setFormData}
+        setHasSubmitted={setHasSubmitted}
+        submitSuccess={submitSuccess}
+        setSubmitSuccess={setSubmitSuccess}
+        loading={loading}
+        setLoading={setLoading}
+        login={login}
       />
 
       <div className="hidden md:block">
