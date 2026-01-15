@@ -3,7 +3,7 @@ import { products } from '../data';
 import Footer from '../components/Footer';
 import SubFooter from '../components/SubFooter';
 import SubNavbar from '../components/SubNavbar';
-import { useCart } from "../context/CartContext"; // 2. import useCart
+import { useCart } from "../hooks/useCart";
 import { useParams, useNavigate } from 'react-router-dom';
 
 export default function ProductDetail() {

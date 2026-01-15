@@ -2,7 +2,7 @@ import React from 'react';
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './index.css';
-import { CartProvider } from "./context/CartContext.jsx";
+import CartProvider from "./context/CartProvider.jsx";
 import { Layout } from "./views/Layout.jsx";
 import Home from "./views/Home.jsx";
 import Shop from "./views/Shop.jsx";
