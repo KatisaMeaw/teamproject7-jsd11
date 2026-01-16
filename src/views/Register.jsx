@@ -118,9 +118,10 @@ const Register = () => {
     setLoading(true);
     try {
       if (mode === "signup") {
-        const url = apiBase.endsWith("/register")
-          ? apiBase
-          : `${apiBase}/register`;
+        const url = `${apiBase}/users/register`;
+        // const url = apiBase.endsWith("/users/register")
+        //   ? `${apiBase}/users`
+        //   : `${apiBase}/users/register`;
         const response = await axios.post(url, formData);
 
         if (
@@ -142,7 +143,7 @@ const Register = () => {
           setTouched({});
         }
       } else {
-        const loginUrl = `${apiBase}/auth/cookie/login`;
+        const loginUrl = `${apiBase}/users/auth/cookie/login`;
 
         console.log("กำลัง Login ไปที่:", loginUrl);
 

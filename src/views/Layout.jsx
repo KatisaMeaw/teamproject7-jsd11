@@ -15,7 +15,7 @@ export function Layout() {
       setAuthLoading(true);
 
       try {
-        const response = await axios.get(`${apiBase}/auth/cookie/me`, {
+        const response = await axios.get(`${apiBase}/users/auth/cookie/me`, {
           withCredentials: true,
         });
 
@@ -36,7 +36,7 @@ export function Layout() {
 
     try {
       const response = await axios.post(
-        `${apiBase}/auth/cookie/login`,
+        `${apiBase}/users/auth/cookie/login`,
         { email, password },
         // if user have token in the cookies, it will attach token with http request.
         { withCredentials: true }
@@ -56,7 +56,7 @@ export function Layout() {
   const logout = async () => {
     setAuthError(null);
     try {
-      await axios.post(`${apiBase}/auth/cookie/logout`, {}, { withCredentials: true });
+      await axios.post(`${apiBase}/users/auth/cookie/logout`, {}, { withCredentials: true });
     } catch (error) {
       console.log(error);
     } finally {
