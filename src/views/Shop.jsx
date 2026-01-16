@@ -1,29 +1,62 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
 import SubFooter from "../components/SubFooter";
 import SubNavbar from "../components/SubNavbar";
 import FilterBar from "../shop/FilterBar";
-import { Link } from "react-router-dom";
-import { products } from "../data";
-
-//แปลงราคา "2,500" --> 2500 เพราะการ sort ราคามันต้องเป็น number
-const parsePrice = (priceStr) => {
-  if (!priceStr) return 0;
-  // ลบ comma ออก แล้วแปลงเป็น float
-  return parseFloat(priceStr.replace(/,/g, ""));
-};
+import { Link, useLocation } from "react-router-dom";
+import axios from "axios";
 
 export default function Shop() {
+
+  //📍 location = ข้อมูลเกี่ยวกับหน้าที่เราอยู่ (URL, state ที่ส่งมา)
+  // ใช้เพื่อรับค่า category ที่ส่งมาจากหน้าอื่น
+  const location = useLocation();
+
+  // 🌐 apiBase = URL ของ API ที่เก็บไว้ใน .env
+  // ใช้ import.meta.env เพื่อดึงค่าจากไฟล์ .env
+  const apiBase = import.meta.env.VITE_API_URL;
+
+  const initialCategory = location.state?.selectedCategory || "All";
+
+  //State สำหรับการดึงข้อมูล
+  const [products, setProducts] = useState([]); //สร้าง state ว่างเพื่อรอรับของ
+  const [loading, setLoading] = useState(true); //สร้าง state รอโหลด
+
   //  สร้าง State สำหรับแบ่งหน้า
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 16; // กำหนดว่าจะโชว์หน้าละกี่ชิ้น (เช่น 16 ชิ้น)
 
   // State สำหรับ Filter และ Sort
-  const [category, setCategory] = useState("All");
-  const [sortOption, setSortOption] = useState("default");
+  const [sortOption, setSortOption] = useState(initialCategory);
+  // เช็คว่ามีค่าส่งมาไหม? ถ้ามีให้ใช้ค่านั้นเลย ถ้าไม่มีให้ใช้ "All"
+  const [category, setCategory] = useState(
+    location.state?.selectedCategory || "All"
+  );
 
-  // สร้างฟังก์ชัน Wrapper เพื่อ Reset Page เมื่อเปลี่ยน Filter
+  // ----------------------------------------------------
+  //  Fetch Data: สร้าง UseEffect ดึงข้อมูลจาก Server หลังจากที่หน้าเว็บวาดเสร็จแล้ว
+  // ----------------------------------------------------
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      //async ฟังก์ชันนี้มีการทำงานที่ "ต้องรอ"
+      try {
+        // สั่งให้ Axios วิ่งไปที่ URL นี้ แล้ว "หยุดรอ" บรรทัดนี้จนกว่า Server จะตอบกลับมา
+        const response = await axios.get(`${apiBase}/products`);
+        // เมื่อได้ข้อมูลมาให้เก็บใน State
+        setProducts(response.data);
+        console.log(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false); //ถึงจะ error ก็ต้องสั่งหยุดหมุน ไม่งั้นหน้าเว็บจะหมุนค้างตลอดกาล
+      }
+    };
+    fetchProducts();
+  }, [apiBase]); // [] แปลว่าทำครั้งเดียวตอนเปิดหน้า
+
+  // ฟังก์ชัน Reset Page เมื่อเปลี่ยน Filter
   const handleCategoryChange = (newCategory) => {
     setCategory(newCategory);
     setCurrentPage(1); // รีเซ็ตหน้าทันทีที่กดเปลี่ยนหมวดหมู่
@@ -34,6 +67,7 @@ export default function Shop() {
     setCurrentPage(1); // รีเซ็ตหน้าทันทีที่กดเปลี่ยนการเรียงลำดับ
   };
 
+  // Logic การกรองและเรียงลำดับ
   const displayProducts = useMemo(() => {
     let processedData = [...products];
 
@@ -46,16 +80,16 @@ export default function Shop() {
 
     // 2. Sort by Price
     if (sortOption === "price-low") {
-      processedData.sort((a, b) => parsePrice(a.price) - parsePrice(b.price));
+      processedData.sort((a, b) => a.price - b.price);
     } else if (sortOption === "price-high") {
-      processedData.sort((a, b) => parsePrice(b.price) - parsePrice(a.price));
+      processedData.sort((a, b) => b.price - a.price);
     } else {
       // Default: เรียงตาม ID
       processedData.sort((a, b) => a.id - b.id);
     }
 
     return processedData; // ส่งค่ากลับไปใส่ตัวแปร displayProducts
-  }, [category, sortOption]);
+  }, [category, sortOption, products]);
 
   //  คำนวณ index สำหรับตัดแบ่งข้อมูล
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -70,6 +104,15 @@ export default function Shop() {
 
   // ฟังก์ชันเปลี่ยนหน้า
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  //การเช็ค Loading
+  if (loading) {
+    return (
+      <div className="h-screen flex justify-center items-center text-2xl">
+        Loading Production...🕑
+      </div>
+    );
+  }
 
   return (
     <>
@@ -145,10 +188,3 @@ export default function Shop() {
     </>
   );
 }
-
-// if click at "Add to cart" button both of shop.jsx and ProductDetail.jsx  i want navigate to and add the list of production in the cart.jsx
-
-// ✦ I'll implement "Add to Cart" by first creating a CartContext.jsx file in a new src/context directory. This context will manage cart items and an addToCart function. Next, I'll wrap
-//   my app in main.jsx with the CartProvider. Then, in both Card.jsx and ProductDetail.jsx, I'll use useContext to get addToCart, create a function to add the product to the cart and
-//   navigate to /cart, and attach this to the "Add to Cart" button's onClick event. Finally, I'll update Cart.jsx to consume the cartItems from the context and display the products and
-//   total price. I'm starting with creating CartContext.jsx.

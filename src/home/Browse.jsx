@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import CategoryMobile from "./CategoryMobile";
 import CategoryDesktop from "./CategoryDesktop";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Browse() {
+
   // const [category, setCategory] = useState([
   //   {
   //     id: "1",
@@ -21,6 +23,12 @@ export default function Browse() {
   //     name: "Accessories",
   //   },
   // ]);
+
+  const navigate = useNavigate(); 
+  const handleCategoryClick = (categoryName) =>{
+    navigate('/shop', {state : {selectedCategory: categoryName}});
+  }
+
 
   const url = "https://jsonplaceholder.typicode.com/posts";
   
@@ -98,7 +106,21 @@ export default function Browse() {
             />
           </div>
           <span className="inline-block mt-8 text-xl  text-[#447F98] font-bold cursor-pointer ">
-            Desk
+            Ergonomic Desk
+          </span>
+        </div>
+
+        {/* Item 3: Accessories */}
+        <div className="flex-none duration-700 ease-in-out flex flex-col items-center">
+          <div>
+            <img
+              src=".\img-prod\lamp.png"
+              alt="Accessories"
+              className="rounded-xl block w-[250px] h-[300px] object-cover cursor-pointer hover:-translate-y-3 transition duration-300 hover:shadow-xl"
+            />
+          </div>
+          <span className="inline-block mt-8 text-xl  text-[#447F98] font-bold cursor-pointer ">
+            Accessories
           </span>
         </div>
 
@@ -121,6 +143,7 @@ export default function Browse() {
               src="./img-prod/Blue Gaming Chair - Pastel Series.jpeg"
               alt="Ergonomic Chair"
               className="rounded-xl w-[350px] h-[400px] cursor-pointer hover:-translate-y-3 transition duration-300 hover:shadow-xl"
+              onClick={() => handleCategoryClick("Ergonomic Chair")}
             />
           </div>
           <span className="text-xl mt-8 text-[#447F98] font-bold cursor-pointer">
@@ -132,12 +155,27 @@ export default function Browse() {
           <div>
             <img
               src="./img-prod/White gaming setup inspiration _ Secretlab.jpeg"
-              alt="Desk"
+              alt="Ergonomic Desk"
               className="rounded-xl w-[350px] h-[400px] cursor-pointer hover:-translate-y-3 transition duration-300 hover:shadow-xl"
+              onClick={() => handleCategoryClick("Ergonomic Desk")}
             />
           </div>
           <span className="text-xl mt-8 text-[#447F98] font-bold cursor-pointer">
-            Desk
+            Ergonomic Desk
+          </span>
+        </div>
+
+        <div className="flex flex-col items-center ">
+          <div>
+            <img
+              src="./img-prod/lamp.png"
+              alt="Accessories"
+              className="rounded-xl w-[350px] h-[400px] cursor-pointer hover:-translate-y-3 transition duration-300 hover:shadow-xl"
+              onClick={() => handleCategoryClick("Accessories")}
+            />
+          </div>
+          <span className="text-xl mt-8 text-[#447F98] font-bold cursor-pointer">
+            Accessories
           </span>
         </div>
 

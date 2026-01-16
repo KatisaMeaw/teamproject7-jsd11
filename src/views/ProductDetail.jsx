@@ -1,15 +1,50 @@
+import React,{useState, useEffect} from 'react';
 import { useParams } from 'react-router-dom';
-import { products } from '../data';
 import Footer from '../components/Footer';
 import SubFooter from '../components/SubFooter';
 import SubNavbar from '../components/SubNavbar';
+import axios from 'axios'
 
 export default function ProductDetail() {
+  const apiBase = "http://localhost:3000/api/v1";
   const { id } = useParams();
-  const product = products.find((p) => p.id === parseInt(id));
+ 
+  // สร้าง state มารอรับข้อมูล
+  const [product, setProduct] = useState(null); //เริ่มต้นยังไม่มีของ
+  const [loading, setLoading] = useState(true); // บอกว่ากำลังโหลด
+  
+  //useEffect ดึงสินค้าชิ้นเดียว
+  useEffect(()=>{
+    const fetchSingleProduct = async ()=>{
+      try {
+        setLoading(true);
+        console.log("Fetching ID:", id);
+
+        //ยิง api โดยส่งเลือกจาก id
+        const response = await axios.get(`${apiBase}/products/${id}`)
+
+        setProduct(response.data) //เก็บข้อมูลที่ได้ใส่ใน State นี้
+        setLoading(false);
+
+      } catch (error) {
+        console.error("Error fetching product:", error);
+        setLoading(false);
+      }
+    };
+    if (id) { // เช็คว่ามี id ถึงจะยิง
+        fetchSingleProduct();
+    }
+    fetchSingleProduct();
+  },[id]); // หมายถึงถ้า id ใน URK เปลี่ยน ให้ดึงข้อมูลทันที
+
+  
+  //เช็คสถานะก่อนแสดงผล
+  if(loading){
+    return<div className='h-screen flex justify-center items-center text-2xl'>Loading Product...🕑</div>;
+  }
 
   if (!product) {
-    return <div>Product not found</div>;
+    return <div className="h-screen flex justify-center items-center text-2xl">Product not found ❌</div>;
   }
 
   return (
@@ -32,7 +67,7 @@ export default function ProductDetail() {
         <div className="flex flex-col gap-6">
           <div>
             <h1 className="text-4xl font-bold text-gray-900 mb-2">{product.name}</h1>
-            <p className="text-2xl text-gray-500 font-medium">THB {product.price}</p>
+            <p className="text-2xl text-gray-500 font-medium">THB {product.price.toLocaleString()}</p>
           </div>
           <div className="flex item-center gap-4">
             <div className="flex text-yellow-400">
@@ -45,9 +80,9 @@ export default function ProductDetail() {
             <span className="text-sm text-gray-500">5 Customer Review</span>
           </div>
           <p className="text-gray-600 leading-relaxed">
-            {product.description}
+            {product.description || "No decription available."}
           </p>
-
+          {/* Color Section
           <div className="space-y-5 mt-6">
             <div>
               <span className="block text-gray-400 text-sm font-medium mb-2">
@@ -65,7 +100,7 @@ export default function ProductDetail() {
                 ></button>
               </div>
             </div>
-          </div>
+          </div> */}
 
           <div className="flex flex-row gap-5 mt-8">
             <div className="flex items-center border border-gray-300 rounded-lg">
@@ -99,20 +134,20 @@ export default function ProductDetail() {
             className="mt-8 pt-8 border-t border-gray-200 text-sm text-gray-500 space-y-3"
           >
             <div className="flex">
-              <span className="w-24 text-gray-400">SKU</span>
+              <span className="w-24 text-gray-800">SKU</span>
               <span>: SS00{product.id}</span>
             </div>
             <div className="flex">
-              <span className="w-24 text-gray-400">Category</span>
+              <span className="w-24 text-gray-800">Category</span>
               <span>: {product.category}</span>
             </div>
             <div className="flex">
-              <span className="w-24 text-gray-400">Tags</span>
+              <span className="w-24 text-gray-800">Tags</span>
               <span>: {product.category}, Home, Shop</span>
             </div>
             <div className="flex items-center mt-6">
-              <span className="w-24 text-gray-400">Share</span>
-              <span className="text-gray-400 mx-2">:</span>
+              <span className="w-24 text-gray-800">Share</span>
+              <span className="text-gray-800 mx-2">:</span>
               <div className="flex gap-4">
                 <img src="/icon/akar-icons_facebook-fill.png" alt="Facebook" className="w-8 h-8"/>
                 <img src="/icon/ant-design_twitter-circle-filled.png" alt="Twitter" className="w-8 h-8"/>
