@@ -22,7 +22,7 @@ const UserProfile = () => {
       try {
         axios.defaults.withCredentials = true;
 
-        const url = `${apiBase}/${userId}`;
+        const url = `${apiBase}/users/${userId}`;
         console.log("กำลังดึงข้อมูลจาก:", url);
 
         const response = await axios.get(url);
@@ -74,7 +74,7 @@ const UserProfile = () => {
         return;
       }
       console.log("กำลังบันทึกข้อมูลไปที่ ID:", userId);
-      const url = `${apiBase}/${userId}`;
+      const url = `${apiBase}/users/${userId}`;
       const response = await axios.patch(url, formData);
 
       if (response.data.success) {
