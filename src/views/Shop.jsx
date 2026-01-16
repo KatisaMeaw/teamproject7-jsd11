@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import axios from "axios"; // ✅ เปลี่ยนมาใช้ axios
+import axios from "axios";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
 import SubFooter from "../components/SubFooter";
@@ -21,14 +21,13 @@ export default function Shop() {
   const [sortOption, setSortOption] = useState("default");
   const [loading, setLoading] = useState(true);
 
-  // ✅ 1. ดึงข้อมูลสินค้าด้วย axios
+  // ดึงข้อมูลสินค้าด้วย axios
   useEffect(() => {
     const fetchAllProducts = async () => {
       setLoading(true);
       try {
-        // ใช้ axios.get แทน fetch
         const response = await axios.get("http://localhost:3000/api/v1/products");
-        
+
         // axios จะเก็บ data ไว้ใน response.data โดยตรง
         const result = response.data;
         setAllProducts(result.data || result);
@@ -63,7 +62,7 @@ export default function Shop() {
     } else if (sortOption === "price-high") {
       processedData.sort((a, b) => parsePrice(b.price) - parsePrice(a.price));
     } else {
-      // ✅ เรียงตาม _id ของ MongoDB (ป้องกัน ID แบบเก่าหลุดมา)
+      // เรียงตาม _id ของ MongoDB (ป้องกัน ID แบบเก่าหลุดมา)
       processedData.sort((a, b) => String(a._id).localeCompare(String(b._id)));
     }
 
@@ -98,7 +97,7 @@ export default function Shop() {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 p-16">
             {currentProducts.map((product) => (
-              // ✅ ใช้ product._id เพื่อเชื่อมต่อไปยัง ProductDetail อย่างถูกต้อง
+              // ใช้ product._id เพื่อเชื่อมต่อไปยัง ProductDetail อย่างถูกต้อง
               <Link key={product._id} to={`/product/${product._id}`}>
                 <Card product={product} />
               </Link>
@@ -106,7 +105,7 @@ export default function Shop() {
           </div>
         )}
 
-        {/* --- PAGINATION (คงเดิม) --- */}
+        {/* --- PAGINATION --- */}
         {totalPages > 1 && (
           <div className="flex justify-center items-center mt-12 gap-5 my-10">
             {[...Array(totalPages)].map((_, index) => {

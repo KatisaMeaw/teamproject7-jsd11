@@ -12,7 +12,7 @@ function Card({ product }) {
       e.preventDefault();
       e.stopPropagation();
     }
-    
+
     // เปลี่ยนจาก .id เป็น ._id (MongoDB ID)
     navigate(`/product/${product._id}`);
   };
@@ -28,7 +28,7 @@ function Card({ product }) {
           alt={product.name}
           className="w-full h-80 object-cover"
           // เผื่อกรณีรูปภาพจาก DB โหลดไม่ได้
-          onError={(e) => { e.target.src = 'https://via.placeholder.com/400x400?text=No+Image'; }}
+          //onError={(e) => { e.target.src = 'https://via.placeholder.com/400x400?text=No+Image'; }}
         />
 
         {product.discount && (

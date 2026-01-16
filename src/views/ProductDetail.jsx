@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios"; // ✅ เปลี่ยนมาใช้ axios
+import axios from "axios"; //
 import Footer from "../components/Footer";
 import SubFooter from "../components/SubFooter";
 import SubNavbar from "../components/SubNavbar";
@@ -12,32 +12,30 @@ export default function ProductDetail() {
   const navigate = useNavigate();
 
   const [quantity, setQuantity] = useState(1);
-  const [product, setProduct] = useState(null); 
+  const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
-      // ✅ 1. ตรวจสอบ ID เบื้องต้นเพื่อป้องกัน Infinite Loop (cite: image_db1c3c.png)
       if (!id || id === "undefined" || id.length < 10) {
         setLoading(false);
         setError("Invalid Product ID format");
-        return; 
+        return;
       }
 
       setLoading(true);
       try {
-        // ✅ 2. ใช้ axios.get แทน fetch
         const response = await axios.get(`http://localhost:3000/api/v1/products/${id}`);
-        
+
         // axios จะเก็บข้อมูลไว้ใน property .data โดยอัตโนมัติ
         const result = response.data;
         const data = result.data || result;
-        
+
         setProduct(data);
         setError(null);
       } catch (err) {
-        // ✅ 3. การจัดการ Error ของ axios
+        // การจัดการ Error ของ axios
         console.error("Error fetching product:", err);
         const errorMessage = err.response?.data?.message || err.message || "Product not found";
         setError(errorMessage);
@@ -57,7 +55,7 @@ export default function ProductDetail() {
     );
   }
 
-  // ✅ แสดงข้อความแจ้งเตือนถ้าหาไม่เจอ (ป้องกันหน้าขาวใน image_dac604.png)
+  // แสดงข้อความแจ้งเตือนถ้าหาไม่เจอ 
   if (error || !product) {
     return (
       <div className="min-h-screen flex flex-col justify-center items-center text-red-500 gap-4">
@@ -84,7 +82,7 @@ export default function ProductDetail() {
 
     addToCart({
       ...product,
-      id: productId, 
+      id: productId,
       quantity: quantity,
     });
 
@@ -97,7 +95,7 @@ export default function ProductDetail() {
       <div className="flex justify-center p-6">
         <div className="bg-white p-6 md:p-10 rounded-2xl shadow-xl w-full max-w-6xl">
           <div className="bg-gray-50 grid grid-cols-1 md:grid-cols-2 gap-10 p-6 rounded-xl">
-            
+
             {/* 🖼️ Picture Section */}
             <div className="flex justify-center items-center bg-white rounded-lg p-4 shadow-sm">
               <img
@@ -115,12 +113,12 @@ export default function ProductDetail() {
                 <h1 className="text-4xl font-bold text-gray-900 mb-2">
                   {product.name}
                 </h1>
-                {/* ✅ ป้องกัน toLocaleString พัง (cite: image_daafc4.png) */}
+                {/* ป้องกัน toLocaleString ผิดพลาด */}
                 <p className="text-2xl text-[#447F98] font-semibold">
                   THB {(Number(product.price || 0)).toLocaleString()}
                 </p>
               </div>
-              
+
               <div className="flex items-center gap-4">
                 <div className="flex text-yellow-400">
                   <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span>
@@ -128,7 +126,7 @@ export default function ProductDetail() {
                 <div className="h-5 w-px bg-gray-300"></div>
                 <span className="text-sm text-gray-500">5 Customer Review</span>
               </div>
-              
+
               <p className="text-gray-600 leading-relaxed min-h-[100px]">
                 {product.description || "No description available for this product."}
               </p>

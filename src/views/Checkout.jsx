@@ -101,7 +101,7 @@ const Checkout = () => {
       totalPrice: Number(finalTotal || 0),
       isPaid: false,      // ค่าเริ่มต้นตาม Schema
       status: "Pending",  // ค่าเริ่มต้นตาม Schema
-      
+
       // ข้อมูลเพิ่มเติม (ถ้า Backend ไม่ได้กำหนดใน Schema จะไม่ถูกบันทึก)
       paymentMethod: formData.paymentMethod,
       additionalInfo: formData.additionalInfo,
@@ -124,14 +124,13 @@ const Checkout = () => {
     } catch (error) {
       // ✅ จัดการ Error แบบ axios
       const errorMessage = error.response?.data?.message || "ข้อมูลไม่ครบถ้วน หรือระบบมีปัญหา";
-      
+
       // ถ้า Error บอกว่าขาด product แสดงว่า ID ในตะกร้าหาย
       if (errorMessage.includes("product")) {
         alert("เกิดข้อผิดพลาด: ข้อมูลสินค้าในตะกร้าไม่สมบูรณ์ กรุณาล้างตะกร้าแล้วเลือกสินค้าใหม่อีกครั้ง");
       } else {
         alert("เกิดข้อผิดพลาด: " + errorMessage);
       }
-      
       console.error("Checkout Error:", error.response || error);
     } finally {
       setLoading(false);
