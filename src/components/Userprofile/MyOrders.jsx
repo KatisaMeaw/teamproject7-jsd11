@@ -1,15 +1,18 @@
 import React from 'react'
+import OrderTabs from "./OrderTabs.jsx";
 
 const OrderHistoryCard = () => {
   return (
-    <div className=" w-2/3 border border-[#E4E7E9] py-10 mb-6">
-        <div className="flex justify-between items-center bg-[#FDFAE7] border border-[#F8EBAA] w-[90%] mx-auto py-10">
+    <div className="p-4">
+    <OrderTabs />
+    <div className=" border border-[#E4E7E9] py-10 mb-6 mt-10">
+        <div className="flex justify-between items-center bg-[#FDFAE7] border border-[#F8EBAA] w-[95%] mx-auto py-10">
         <div className="text-xl ml-8 font-medium">#96459761<div className="text-base font-normal mt-2">4 Products • Order Placed in 17 Jan, 2026 at 7:32 PM</div> </div>
         <div className="text-3xl font-bold mr-8 text-[#447F98]">$3,000.00</div>
         </div>
 
-        <p className="ml-20 mt-4">Order expected arrival<span className="font-semibold"> 23 Jan, 2021</span></p>
-        <h2 className="ml-20 mt-10 text-xl font-semibold">Product<span className="text-gray-500"> (02)</span></h2>
+        <p className="ml-10 mt-4">Order expected arrival<span className="font-semibold"> 23 Jan, 2021</span></p>
+        <h2 className="ml-10 mt-10 text-xl font-semibold">Product<span className="text-gray-500"> (02)</span></h2>
 
 
             <div className="grid grid-cols-4 p-4 border border-[#E7EAEB] bg-[#F2F4F5] mt-8 text-sm font-semibold">
@@ -24,7 +27,7 @@ const OrderHistoryCard = () => {
                     <img
               src="./img-prod/chair1.jpeg"
               alt=""
-              className="rounded-xl w-20 h-30"
+              className="rounded-xl w-20 h-20"
             />
                 
             <div className="text-sm text-[#447F98] font-medium cursor-pointer">Syltherine
@@ -41,7 +44,7 @@ const OrderHistoryCard = () => {
                     <img
               src="./img-prod/chair1.jpeg"
               alt=""
-              className="rounded-xl w-20 h-30"
+              className="rounded-xl w-20 h-20"
             />
                 
             <div className="text-sm text-[#447F98] font-medium cursor-pointer">Syltherine
@@ -74,6 +77,7 @@ const OrderHistoryCard = () => {
 
             </div>
 
+    </div>
     </div>
   )
 }
