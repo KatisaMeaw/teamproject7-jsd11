@@ -1,10 +1,14 @@
-import { Outlet } from "react-router-dom";
+import { useLocation, Outlet } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { useEffect, useState } from "react";
 import axios from "axios"
+import Bottombar from "../components/Bottombar";
 
 export function Layout() {
   const apiBase = import.meta.env.VITE_API_URL;
+
+  const location = useLocation();
+  const isAdminPage = location.pathname.startsWith("/admin"); 
 
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
@@ -61,10 +65,13 @@ export function Layout() {
       console.log(error);
     } finally {
       setUser(null);
+
+      window.location.href = "/";
     }
   };
   return (
     <div>
+      {!isAdminPage && (
       <Navbar
         user={user}
         authLoading={authLoading}
@@ -72,9 +79,13 @@ export function Layout() {
         login={login}
         logout={logout}
       />
-      <section>
-        <Outlet context={{ user, authLoading, apiBase, login }} />
+      )}
+      <section className="pb-16 md:pb-0">
+        <Outlet context={{ user, authLoading, apiBase, login, logout }} />
       </section>
+      <Bottombar
+      user={user}
+      />
     </div>
   );
 }

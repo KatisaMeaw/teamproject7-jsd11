@@ -3,6 +3,7 @@
 export const Form = ({
   formData,
   setFormData,
+  hasSubmitted,
   setHasSubmitted,
   submitSuccess,
   setSubmitSuccess,
@@ -134,7 +135,7 @@ export const Form = ({
                 } `}
               />
 
-              {touched.name && nameError && (
+              {(touched.name || hasSubmitted) && nameError && (
                 <p className="text-red-500  mt-1 px-2">{nameError}</p>
               )}
             </div>
@@ -160,7 +161,7 @@ export const Form = ({
                 }`}
               />
 
-              {touched.email && emailError && (
+              {(touched.email || hasSubmitted) && emailError && (
                 <p className="text-red-500  mt-1 px-2">{emailError}</p>
               )}
             </div>
@@ -191,7 +192,7 @@ export const Form = ({
                     : ""
                 }`}
               />
-              {touched.mobileNumber && mobileNumberError && (
+              {(touched.mobileNumber || hasSubmitted) && mobileNumberError && (
                 <p className="text-red-500  mt-1 px-2">{mobileNumberError}</p>
               )}
             </div>
@@ -248,7 +249,7 @@ export const Form = ({
                 }  `}
               />
 
-              {touched.password && passwordError && (
+              {(touched.password || hasSubmitted) && passwordError && (
                 <p className="text-red-500  mt-1 px-2">{passwordError}</p>
               )}
             </div>
@@ -283,7 +284,7 @@ export const Form = ({
                 } `}
               />
 
-              {touched.confirmPassword && confirmPasswordError && (
+              {(touched.confirmPassword || hasSubmitted) && confirmPasswordError && (
                 <p className="text-red-500  mt-1 px-2">
                   {confirmPasswordError}
                 </p>

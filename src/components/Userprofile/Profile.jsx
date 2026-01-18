@@ -91,8 +91,8 @@ const UserProfile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white p-8 flex justify-center">
-      <div className="w-full max-w-5xl">
+    <div className="min-h-screen bg-white flex ">
+      <div className="w-full ml-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
           <div className="flex items-center gap-6">
             <div className="relative group cursor-pointer">
