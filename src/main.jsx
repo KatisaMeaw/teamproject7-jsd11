@@ -49,9 +49,9 @@ const router = createBrowserRouter([
       {
         path: "/admin",
         element: (
-          <AdminRoute>
+        //   <AdminRoute>
             <AdminDashboard />
-          </AdminRoute>
+        //   </AdminRoute>
         ),
         children: [{ path: "inventory", element: <AdminInventory /> }],
       },

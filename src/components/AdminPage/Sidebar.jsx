@@ -3,7 +3,6 @@ import {
   ChevronDown,
   ChevronLeft, // เพิ่ม import
   ChevronRight, // เพิ่ม import
-  CreditCard,
   LayoutDashboard,
   Package,
   Settings,
@@ -21,16 +20,6 @@ const menuItems = [
     label: "Dashboard",
     active: true,
     badge: "New",
-  },
-  {
-    id: "analytics",
-    icon: BarChart3,
-    label: "Analytics",
-    submenu: [
-      { id: "overview", label: "Overview" },
-      { id: "reports", label: "Reports" },
-      { id: "insights", label: "Insights" },
-    ],
   },
   {
     id: "users",
