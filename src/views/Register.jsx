@@ -118,39 +118,67 @@ const Register = () => {
     setLoading(true);
     try {
       if (mode === "signup") {
-        const url = apiBase.endsWith('/register') ? apiBase : `${apiBase}/register`;
+        const url = `${apiBase}/users/register`;
+        // const url = apiBase.endsWith("/users/register")
+        //   ? `${apiBase}/users`
+        //   : `${apiBase}/users/register`;
         const response = await axios.post(url, formData);
 
-        if (response.data.success || response.status === 200 || response.status === 201) {
+        if (
+          response.data.success ||
+          response.status === 200 ||
+          response.status === 201
+        ) {
           setSubmitSuccess(
             "Account created successfully! You can now sign in to your account."
           );
+          setFormData({
+            name: "",
+            email: "",
+            mobileNumber: "",
+            dob: "",
+            password: "",
+            confirmPassword: "",
+          });
+          setTouched({});
         }
-        setFormData({
-          name: "",
-          email: "",
-          mobileNumber: "",
-          dob: "",
-          password: "",
-          confirmPassword: "",
-        });
-        setTouched({});
       } else {
-       const isSuccess = await login({
+        const loginUrl = `${apiBase}/users/auth/cookie/login`;
+
+        console.log("กำลัง Login ไปที่:", loginUrl);
+
+        const response = await axios.post(loginUrl, {
           email: formData.email,
           password: formData.password,
         });
-        if (isSuccess) {
-          navigate("/userprofile"); // ถ้า Login ผ่าน ให้ย้ายหน้า
+
+        if (!response.data.error) {
+          const targetUser = response.data.user || response.data.data;
+
+          if (targetUser && targetUser._id) {
+            localStorage.setItem("userId", targetUser._id);
+            console.log("✅ Login สำเร็จ! บันทึก ID:", targetUser._id);
+
+            await login({
+              email: formData.email,
+              password: formData.password,
+            });
+
+            navigate("/");
+          } else {
+            alert("Login สำเร็จ แต่ไม่พบ User ID ส่งกลับมา");
+          }
         } else {
-          alert("อีเมลหรือรหัสผ่านไม่ถูกต้อง"); // ถ้าไม่ผ่าน ให้แจ้งเตือน
+          alert(response.data.message || "อีเมลหรือรหัสผ่านไม่ถูกต้อง");
         }
       }
     } catch (error) {
       const errorMsg =
+        error.response?.data?.message ||
         error.response?.data?.error ||
-        "Failed to create account. Please try again.";
+        "Failed. Please try again.";
       alert(errorMsg);
+      console.error(error);
     } finally {
       setLoading(false);
       setHasSubmitted(false);
@@ -180,6 +208,7 @@ const Register = () => {
         passwordError={passwordError}
         confirmPasswordError={confirmPasswordError}
         isFormValid={isFormValid}
+        hasSubmitted={hasSubmitted}
       />
 
       <div className="hidden md:block">
@@ -194,8 +223,3 @@ const Register = () => {
 
 export default Register;
 
-//  <Link to="/userprofile">
-//             <span className="text-[#447F98] font-bold cursor-pointer ml-1">
-//               Sign in
-//             </span>
-//             </Link>
