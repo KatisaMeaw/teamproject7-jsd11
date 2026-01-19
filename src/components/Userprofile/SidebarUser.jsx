@@ -37,18 +37,13 @@ const SidebarUser = () => {
   // ส่วนที่ 2: ดึงข้อมูล User (ทำงานครั้งเดียว และแก้ Infinite Loop แล้ว)
   useEffect(() => {
     const fetchUserData = async () => {
-      console.log("🚀 SidebarUser: เริ่มทำงาน...");
 
       const userId = localStorage.getItem("userId");
       const token = localStorage.getItem("token"); // เก็บไว้เผื่อมี แต่ไม่บังคับ
 
-      console.log(
-        `🔎 Check: UserID=${userId}, Token=${token ? "มี" : "ไม่มี (ใช้ Cookie แทน)"}`,
-      );
 
       // แก้ไข: เช็คแค่ userId ก็พอ ถ้าไม่มี userId ถึงจะหยุด
       if (!userId) {
-        console.warn("❌ SidebarUser: หยุดทำงานเพราะไม่พบ UserID");
         setUserName("Guest");
         return;
       }
@@ -68,14 +63,12 @@ const SidebarUser = () => {
 
         const response = await axios.get(url, config);
 
-        console.log("✅ SidebarUser Success:", response.data);
 
         const userData = response.data.data || response.data;
         if (userData && userData.name) {
           setUserName(userData.name);
         }
       } catch (error) {
-        console.error("🔥 SidebarUser Error:", error);
         // ถ้า Error 401 แสดงว่า Cookie หมดอายุ
         if (error.response && error.response.status === 401) {
           logout();
@@ -119,7 +112,6 @@ const SidebarUser = () => {
       {/* Overlay */}
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-1040 md:hidden"
           onClick={closeMobileMenu}
         />
       )}
@@ -133,7 +125,7 @@ const SidebarUser = () => {
     bg-white shadow-xl md:shadow-none p-6
     overflow-y-auto
     transition-transform duration-300 ease-in-out z-40
-    w-64 top-16 left-0
+    w-100 top-16 left-0
     ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"}
     md:translate-x-0
         `}
@@ -178,7 +170,7 @@ const SidebarUser = () => {
             })}
           </nav>
 
-          <div className="border-t border-gray-200 pt-4 space-y-2 mt-4">
+          <div className="border-t border-gray-200 pb-32 pt-4 space-y-2 mt-4">
             {subMenuItem.map((item) => (
               <a
                 key={item.name}
@@ -188,7 +180,7 @@ const SidebarUser = () => {
                   if (item.name === "Logout") logout();
                   closeMobileMenu();
                 }}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200"
+                className="flex items-center gap-3 px-4 py-3  rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200"
               >
                 <item.icon size={20} />
                 <span className="font-medium">{item.name}</span>
