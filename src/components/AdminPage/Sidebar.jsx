@@ -1,16 +1,10 @@
 import {
-  BarChart3,
-  ChevronDown,
-  ChevronLeft, // เพิ่ม import
-  ChevronRight, // เพิ่ม import
   LayoutDashboard,
   Package,
   Settings,
   ShoppingBag,
-  Users,
   Zap,
 } from 'lucide-react';
-import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const menuItems = [
@@ -19,34 +13,11 @@ const menuItems = [
     icon: LayoutDashboard,
     label: "Dashboard",
     active: true,
-    badge: "New",
-  },
-  {
-    id: "users",
-    icon: Users,
-    label: "Users",
-    count: "2.4k",
-    submenu: [
-      { id: "all-users", label: "All Users" },
-      { id: "roles", label: "Roles & Permission" },
-      { id: "activity", label: "User Activity" },
-    ],
-  },
-  {
-    id: "e-commerce",
-    icon: ShoppingBag,
-    label: "E-commerce",
-    submenu: [
-      { id: "products", label: "Products" },
-      { id: "orders", label: "Orders" },
-      { id: "customers", label: "Customers" },
-    ],
   },
   {
     id: "inventory",
     icon: Package,
     label: "Inventory",
-    count: "847",
   },
   {
     id: "settings",
@@ -55,20 +26,7 @@ const menuItems = [
   },
 ];
 
-function Sidebar({ collapsed, onToggle, currentPage, onPageChange }) {
-  const [expandedItems, setExpandedItems] = useState(new Set(["analytics"]));
-
-  const toggleExpended = (itemid) => {
-    const newExpended = new Set(expandedItems);
-
-    if (newExpended.has(itemid)) {
-      newExpended.delete(itemid);
-    } else {
-      newExpended.add(itemid);
-    }
-
-    setExpendedItems(newExpended);
-  };
+function Sidebar({ collapsed, currentPage }) {
 
   return (
     <div
@@ -93,72 +51,34 @@ function Sidebar({ collapsed, onToggle, currentPage, onPageChange }) {
             </div>
           )}
         </div>
-
-        {/* --- ส่วนที่แก้ไข: เพิ่มปุ่ม Toggle เพื่อเรียกใช้ onToggle --- */}
-        <button 
-            onClick={onToggle}
-            className="p-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 transition-colors"
-        >
-            {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
-        </button>
-        {/* -------------------------------------------------------- */}
-
       </div>
 
       {/* Navigation and Dynamics Menus */}
       <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
         {menuItems.map((item) => {
-          return (<div key={item.id}>
+          return (
+          <div key={item.id}>
             <button
-              className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 ${currentPage === item.id || item.active ? "bg-linear-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/25": "text-slate-600  dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50"
+              className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 ${currentPage === item.id ? "bg-linear-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/25": "text-slate-600  dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50"
               }`}
-              onClick={() => {
-                if (item.submenu) {
-                  toggleExpended(item.id);
-                } else {
-                  onPageChange(item.id);
-                }
-              }}
             >
               <div className='flex items-center space-x-3'>
                 <item.icon className={'w-5 h-5'} />
-                {/* Condition Rendering */}
 
+                {/* Condition Rendering */}
                 {!collapsed && (
                   <>
-                  <Link to={item.id}>
+                    <Link to={`/admin/${item.id}`}>
                     <span className='font-medium ml-2'>{item.label}</span></Link>
                       {item.badge && (
                     <span className='px-2 py-1 text-xs bg-red-500 text-white rounded-full'>
                       {item.badge}
                     </span>
                     )}
-
-                    {item.count && (
-                      <span className='px-2 py-1 text-xs bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full'>
-                        {item.count}
-                      </span>
-                    )}
                   </>
                 )}
               </div>
-              {!collapsed && item.submenu && (
-                <ChevronDown className={`w-4 h-4 transition-transform `}/>
-              )}
             </button>
-
-            {/* Sub Menus */}
-            {!collapsed && item.submenu && expandedItems.has(item.id) && (
-              <div className='ml-8 mt-2 space-y-1'>
-                {item.submenu.map((subitem) => {
-                  return (
-                    <button key={subitem.id} className='w-full text-left p-2 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/50 rounded-lg transition-all'>
-                      {subitem.label}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
           </div>
           );
         })}
