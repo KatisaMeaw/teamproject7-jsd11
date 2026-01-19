@@ -74,11 +74,7 @@ const UserProfile = () => {
         return;
       }
       console.log("กำลังบันทึกข้อมูลไปที่ ID:", userId);
-<<<<<<< HEAD:src/components/UserProfile.jsx
-      const url = `${apiBase}/${userId}`;
-=======
       const url = `${apiBase}/users/${userId}`;
->>>>>>> 147caa49da6992da1ac05b35007fe686815bac0f:src/components/Userprofile/Profile.jsx
       const response = await axios.patch(url, formData);
 
       if (response.data.success) {
