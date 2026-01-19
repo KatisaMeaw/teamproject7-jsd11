@@ -19,7 +19,7 @@ const Cart = () => {
 
   // ✅ เปลี่ยนจาก id เป็น _id เพื่อรองรับ MongoDB
   const handleQuantityChange = (id, value) => {
-    const qty = parseInt(value);
+    const qty = parseInt(value, 10);
     if (qty < 1 || isNaN(qty)) {
       if (window.confirm("Do you want to remove this item from the cart?")) {
         removeItem(id);

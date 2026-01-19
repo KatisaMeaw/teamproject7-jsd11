@@ -74,7 +74,7 @@ const Checkout = () => {
     // ✅ ปรับโครงสร้างข้อมูลให้ตรงกับ Order Schema ของคุณ
     const orderData = {
       // 1. เชื่อมโยงผู้ใช้ (ถ้ายังไม่ทำระบบ Login ให้ส่งเป็น null หรือค่าที่เหมาะสม)
-      user: null, //
+      user: user.id, //
 
       // 2. รายการสินค้า (map ให้ตรงกับ schema ของ orderItems)
       orderItems: cartItems.map((item) => {
