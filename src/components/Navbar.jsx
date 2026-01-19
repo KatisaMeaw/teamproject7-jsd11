@@ -5,7 +5,6 @@ import { MdOutlineLogout } from "react-icons/md";
 export function Navbar({logout,user}) {
   const [isOpen, setIsOpen] = useState(false);
 
-
   return (
     <nav className="sticky top-0 flex justify-between items-center shadow-md p-4 bg-white z-50">
       <Link to="/" className="flex items-center">
