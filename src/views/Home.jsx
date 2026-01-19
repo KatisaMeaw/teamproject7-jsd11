@@ -4,8 +4,8 @@ import Hero from '../home/Hero'
 import Browse from "../home/Browse"
 import Explore from '../home/Explore';
 import Footer from  "../components/Footer"
-import SidebarUser from "../components/SidebarUser";
-import OrderTabs from "../components/OrderTabs";
+import SidebarUser from "../components/Userprofile/SidebarUser";
+import OrderTabs from "../components/Userprofile/OrderTabs";
 
 const Home = () => {
   return (

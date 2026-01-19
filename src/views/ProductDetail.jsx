@@ -1,71 +1,72 @@
-<<<<<<< HEAD
 import React,{useState, useEffect} from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Footer from '../components/Footer';
 import SubFooter from '../components/SubFooter';
 import SubNavbar from '../components/SubNavbar';
 import axios from 'axios'
-=======
-import { useState } from 'react'; // 1. เพิ่ม useState
-import { products } from '../data';
-import Footer from '../components/Footer';
-import SubFooter from '../components/SubFooter';
-import SubNavbar from '../components/SubNavbar';
 import { useCart } from "../hooks/useCart";
-import { useParams, useNavigate } from 'react-router-dom';
->>>>>>> 3825a47757f36928781bbfb8e8fb1e9b503f6237
 
 export default function ProductDetail() {
+  
   const apiBase = "http://localhost:3000/api/v1";
-  const { id } = useParams();
-<<<<<<< HEAD
- 
-  // สร้าง state มารอรับข้อมูล
-  const [product, setProduct] = useState(null); //เริ่มต้นยังไม่มีของ
-  const [loading, setLoading] = useState(true); // บอกว่ากำลังโหลด
+  const { id } = useParams(); 
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
+
+  const [quantity, setQuantity] = useState(1);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
   //useEffect ดึงสินค้าชิ้นเดียว
   useEffect(()=>{
     const fetchSingleProduct = async ()=>{
-      try {
-        setLoading(true);
-        console.log("Fetching ID:", id);
+       if (!id || id === "undefined" || id.length < 10) {
+        setLoading(false);
+        setError("Invalid Product ID format");
+        return;
+      }
 
-        //ยิง api โดยส่งเลือกจาก id
+      setLoading(true);
+      try {
         const response = await axios.get(`${apiBase}/products/${id}`)
 
-        setProduct(response.data) //เก็บข้อมูลที่ได้ใส่ใน State นี้
-        setLoading(false);
+        // axios จะเก็บข้อมูลไว้ใน property .data โดยอัตโนมัติ
+        const result = response.data;
+        const data = result.data || result;
 
-      } catch (error) {
-        console.error("Error fetching product:", error);
+        setProduct(data);
+        setError(null);
+      } catch (err) {
+        // การจัดการ Error ของ axios
+        console.error("Error fetching product:", err);
+        const errorMessage = err.response?.data?.message || err.message || "Product not found";
+        setError(errorMessage);
+      } finally {
         setLoading(false);
       }
     };
-    if (id) { // เช็คว่ามี id ถึงจะยิง
-        fetchSingleProduct();
-    }
-    fetchSingleProduct();
-  },[id]); // หมายถึงถ้า id ใน URK เปลี่ยน ให้ดึงข้อมูลทันที
 
+    fetchSingleProduct();
+  }, [id]);
   
   //เช็คสถานะก่อนแสดงผล
   if(loading){
     return<div className='h-screen flex justify-center items-center text-2xl'>Loading Product...🕑</div>;
   }
 
-  if (!product) {
-    return <div className="h-screen flex justify-center items-center text-2xl">Product not found ❌</div>;
-=======
-  const { addToCart } = useCart();
-  const navigate = useNavigate(); // 2. ประกาศตัวแปร navigate
-
-  const [quantity, setQuantity] = useState(1);
-  const product = products.find((p) => p.id === parseInt(id));
-
-  if (!product) {
-    return <div className="min-h-screen flex justify-center items-center">Product not found</div>;
->>>>>>> 3825a47757f36928781bbfb8e8fb1e9b503f6237
+  if (error || !product) {
+    return (
+      <div className="min-h-screen flex flex-col justify-center items-center text-red-500 gap-4">
+        <p className="text-xl font-bold">Error: {error}</p>
+        <button 
+          onClick={() => navigate("/shop")}
+          className="text-blue-500 underline"
+        >
+          Back to Shop
+        </button>
+      </div>
+    );
   }
 
   // ฟังก์ชันเพิ่ม-ลดจำนวน
@@ -74,8 +75,14 @@ export default function ProductDetail() {
 
   // 3. ปรับฟังก์ชันส่งข้อมูล
   const handleAddToCart = () => {
+    const productId = product._id || product.id; 
+    if (!productId) {
+      alert("Cannot add to cart: Missing Product ID");
+      return;
+    }
+
     // ส่งข้อมูลไปที่ Context
-    addToCart({ ...product, quantity: quantity });
+    addToCart({ ...product, id: productId, quantity: quantity });
     // สั่งให้เปลี่ยนหน้าไปยังหน้า cart ทันที
     navigate('/cart'); 
   };
@@ -92,25 +99,15 @@ export default function ProductDetail() {
                 src={product.image}
                 alt={product.name}
                 className="w-full h-auto rounded-xl object-cover"
-                style={{ maxWidth: '400px' }}
+                style={{ maxWidth: '400px', minHeight: "300px" }}
               />
             </div>
 
-<<<<<<< HEAD
         {/* content section */}
         <div className="flex flex-col gap-6">
           <div>
             <h1 className="text-4xl font-bold text-gray-900 mb-2">{product.name}</h1>
-            <p className="text-2xl text-gray-500 font-medium">THB {product.price.toLocaleString()}</p>
-=======
-            {/* content section */}
-            <div className="flex flex-col gap-6">
-              <div>
-                <h1 className="text-4xl font-bold text-gray-900 mb-2">{product.name}</h1>
-                <p className="text-2xl text-gray-500 font-medium">
-                   THB {product.price.toLocaleString()}
-                </p>
->>>>>>> 3825a47757f36928781bbfb8e8fb1e9b503f6237
+            <p className="text-2xl text-gray-500 font-medium">THB {(Number(product.price || 0)).toLocaleString()}</p>
           </div>
           <div className="flex item-center gap-4">
             <div className="flex text-yellow-400">
@@ -125,25 +122,6 @@ export default function ProductDetail() {
           <p className="text-gray-600 leading-relaxed">
             {product.description || "No decription available."}
           </p>
-          {/* Color Section
-          <div className="space-y-5 mt-6">
-            <div>
-              <span className="block text-gray-400 text-sm font-medium mb-2">
-                Color
-              </span>
-              <div className="flex gap-3">
-                <button
-                  className="w-8 h-8 rounded-full bg-red-300 hover:ring-2 hover:ring-offset-2 hover:ring-gray-300 transition"
-                ></button>
-                <button
-                  className="w-8 h-8 rounded-full bg-black hover:ring-2 hover:ring-offset-2 hover:ring-gray-300 transition"
-                ></button>
-                <button
-                  className="w-8 h-8 rounded-full bg-teal-200 hover:ring-2 hover:ring-offset-2 hover:ring-gray-300 transition"
-                ></button>
-              </div>
-            </div>
-          </div> */}
 
           <div className="flex flex-row gap-5 mt-8">
                 {/* ตัวปรับจำนวนสินค้า */}
@@ -181,11 +159,11 @@ export default function ProductDetail() {
           >
             <div className="flex">
               <span className="w-24 text-gray-800">SKU</span>
-              <span>: SS00{product.id}</span>
+              <span>: {product._id ? String(product._id).substring(0, 8).toUpperCase() : "N/A"}</span>
             </div>
             <div className="flex">
               <span className="w-24 text-gray-800">Category</span>
-              <span>: {product.category}</span>
+              <span>: {product.category || "General"}</span>
             </div>
             <div className="flex">
               <span className="w-24 text-gray-800">Tags</span>

@@ -118,9 +118,10 @@ const Register = () => {
     setLoading(true);
     try {
       if (mode === "signup") {
-        const url = apiBase.endsWith("/register")
-          ? apiBase
-          : `${apiBase}/register`;
+        const url = `${apiBase}/users/register`;
+        // const url = apiBase.endsWith("/users/register")
+        //   ? `${apiBase}/users`
+        //   : `${apiBase}/users/register`;
         const response = await axios.post(url, formData);
 
         if (
@@ -142,7 +143,7 @@ const Register = () => {
           setTouched({});
         }
       } else {
-        const loginUrl = `${apiBase}/auth/cookie/login`;
+        const loginUrl = `${apiBase}/users/auth/cookie/login`;
 
         console.log("กำลัง Login ไปที่:", loginUrl);
 
@@ -163,7 +164,7 @@ const Register = () => {
               password: formData.password,
             });
 
-            navigate("/userprofile");
+            navigate("/");
           } else {
             alert("Login สำเร็จ แต่ไม่พบ User ID ส่งกลับมา");
           }
@@ -207,6 +208,7 @@ const Register = () => {
         passwordError={passwordError}
         confirmPasswordError={confirmPasswordError}
         isFormValid={isFormValid}
+        hasSubmitted={hasSubmitted}
       />
 
       <div className="hidden md:block">
@@ -221,8 +223,3 @@ const Register = () => {
 
 export default Register;
 
-//  <Link to="/userprofile">
-//             <span className="text-[#447F98] font-bold cursor-pointer ml-1">
-//               Sign in
-//             </span>
-//             </Link>

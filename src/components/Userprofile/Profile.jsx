@@ -22,7 +22,11 @@ const UserProfile = () => {
       try {
         axios.defaults.withCredentials = true;
 
+<<<<<<< HEAD:src/components/UserProfile.jsx
         const url = `${apiBase}/${userId}`;
+=======
+        const url = `${apiBase}/users/${userId}`;
+>>>>>>> 147caa49da6992da1ac05b35007fe686815bac0f:src/components/Userprofile/Profile.jsx
         console.log("กำลังดึงข้อมูลจาก:", url);
 
         const response = await axios.get(url);
@@ -74,7 +78,11 @@ const UserProfile = () => {
         return;
       }
       console.log("กำลังบันทึกข้อมูลไปที่ ID:", userId);
+<<<<<<< HEAD:src/components/UserProfile.jsx
       const url = `${apiBase}/${userId}`;
+=======
+      const url = `${apiBase}/users/${userId}`;
+>>>>>>> 147caa49da6992da1ac05b35007fe686815bac0f:src/components/Userprofile/Profile.jsx
       const response = await axios.patch(url, formData);
 
       if (response.data.success) {
@@ -91,8 +99,8 @@ const UserProfile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white p-8 flex justify-center">
-      <div className="w-full max-w-5xl">
+    <div className="min-h-screen bg-white flex ">
+      <div className="w-full ml-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
           <div className="flex items-center gap-6">
             <div className="relative group cursor-pointer">

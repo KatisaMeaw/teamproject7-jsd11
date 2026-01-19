@@ -11,15 +11,20 @@ import { LuMapPin } from "react-icons/lu";
 import { HiOutlineTicket, HiArchive } from "react-icons/hi";
 import { BsCreditCard } from "react-icons/bs";
 import { CiSettings } from "react-icons/ci";
+import Profile from "./Profile.jsx";
+import MyOrders from "./MyOrders.jsx";
+import { useOutletContext } from "react-router-dom";
 
 const SidebarUser = () => {
   // สร้าง State เพื่อเก็บว่าหน้าไหน Active อยู่ (ตัวอย่างให้ Profile เป็นหน้าแรก)
-  const [activeMenu, setActiveMenu] = useState("");
+  const [activeMenu, setActiveMenu] = useState("Profile");
+
+  const {logout} = useOutletContext();
 
   const mainMenuItem = [
-    // แก้ไข: เก็บชื่อ Component เฉยๆ ไม่ต้องมี < />
+    // แก้ไข: เก็บชื่อ Component เฉยๆ ไม่ต้องมี <div />
     { name: "Profile", icon: FaHome },
-    { name: "My Order", icon: MdOutlineShoppingCart },
+    { name: "My Orders", icon: MdOutlineShoppingCart },
     { name: "Address", icon: LuMapPin },
     { name: "Coupon Code", icon: HiOutlineTicket },
     { name: "Archived orders", icon: HiArchive },
@@ -32,8 +37,26 @@ const SidebarUser = () => {
     { name: "Customer Support", icon: MdSupportAgent },
     { name: "Logout", icon: MdOutlineLogout },
   ];
+  
+
+const renderContent = () => {
+    switch (activeMenu) {
+      case "Profile":
+        return (
+          <Profile/>
+        );
+        case "My Orders":
+        return (
+          <MyOrders/>
+        );
+
+      default:
+        return <Profile/>;
+    }
+  };
 
   return (
+    <div className="flex">
     <aside className="w-64 min-h-screen p-6">
       <div>
         {/* Header */}
@@ -82,6 +105,15 @@ const SidebarUser = () => {
           <a
             key={item.name}
             href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              if(item.name === "Logout"){
+                logout();
+              }
+              return null;
+            }}
+            
+            
             className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200"
           >
             {/* เรียกใช้ Component Icon อย่างถูกต้อง */}
@@ -91,6 +123,11 @@ const SidebarUser = () => {
         ))}
       </div>
     </aside>
+
+    <main className="flex-1 ">
+      {renderContent()} 
+    </main>
+    </div>
   );
 };
 

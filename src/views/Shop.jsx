@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo } from "react";
+import axios from "axios";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
 import SubFooter from "../components/SubFooter";
 import SubNavbar from "../components/SubNavbar";
 import FilterBar from "../shop/FilterBar";
 import { Link, useLocation } from "react-router-dom";
-import axios from "axios";
 
 export default function Shop() {
 
@@ -59,50 +59,38 @@ export default function Shop() {
   // ฟังก์ชัน Reset Page เมื่อเปลี่ยน Filter
   const handleCategoryChange = (newCategory) => {
     setCategory(newCategory);
-    setCurrentPage(1); // รีเซ็ตหน้าทันทีที่กดเปลี่ยนหมวดหมู่
+    setCurrentPage(1);
   };
 
   const handleSortChange = (newSort) => {
     setSortOption(newSort);
-    setCurrentPage(1); // รีเซ็ตหน้าทันทีที่กดเปลี่ยนการเรียงลำดับ
+    setCurrentPage(1);
   };
 
   // Logic การกรองและเรียงลำดับ
   const displayProducts = useMemo(() => {
     let processedData = [...products];
 
-    // 1. Filter by Category
     if (category !== "All") {
-      processedData = processedData.filter(
-        (item) => item.category === category
-      );
+      processedData = processedData.filter((item) => item.category === category);
     }
 
-    // 2. Sort by Price
     if (sortOption === "price-low") {
       processedData.sort((a, b) => a.price - b.price);
     } else if (sortOption === "price-high") {
       processedData.sort((a, b) => b.price - a.price);
     } else {
-      // Default: เรียงตาม ID
-      processedData.sort((a, b) => a.id - b.id);
+      // เรียงตาม _id ของ MongoDB (ป้องกัน ID แบบเก่าหลุดมา)
+      processedData.sort((a, b) => String(a._id).localeCompare(String(b._id)));
     }
 
     return processedData; // ส่งค่ากลับไปใส่ตัวแปร displayProducts
   }, [category, sortOption, products]);
 
-  //  คำนวณ index สำหรับตัดแบ่งข้อมูล
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentProducts = displayProducts.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
-
-  // คำนวณจำนวนหน้าทั้งหมด
+  const currentProducts = displayProducts.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(displayProducts.length / itemsPerPage);
-
-  // ฟังก์ชันเปลี่ยนหน้า
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   //การเช็ค Loading
@@ -117,8 +105,6 @@ export default function Shop() {
   return (
     <>
       <SubNavbar />
-
-      {/* ส่ง Props ไปให้ FilterBar ควบคุม */}
       <FilterBar
         category={category}
         setCategory={handleCategoryChange}
@@ -129,7 +115,6 @@ export default function Shop() {
       />
 
       <div className="container mx-auto">
-        {/* เช็คว่ามีสินค้าไหม */}
         {displayProducts.length === 0 ? (
           <div className="text-center p-20 text-gray-500 text-xl">
             No products found in this category.
@@ -137,18 +122,17 @@ export default function Shop() {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 p-16">
             {currentProducts.map((product) => (
-              <Link key={product.id} to={`/shop/${product.id}`}>
+              // ใช้ product._id เพื่อเชื่อมต่อไปยัง ProductDetail อย่างถูกต้อง
+              <Link key={product._id} to={`/product/${product._id}`}>
                 <Card product={product} />
               </Link>
             ))}
           </div>
         )}
 
-        {/* --- PAGINATION BUTTONS ปุ่มเปลี่ยนหน้าเรียงกัน --- */}
-        {/*แสดงเมื่อมีจำนวนหน้ามากกว่า 1 หน้า*/}
+        {/* --- PAGINATION --- */}
         {totalPages > 1 && (
           <div className="flex justify-center items-center mt-12 gap-5 my-10">
-            {/* create dynamic button */}
             {[...Array(totalPages)].map((_, index) => {
               const pageNum = index + 1;
               return (
@@ -156,26 +140,18 @@ export default function Shop() {
                   key={pageNum}
                   onClick={() => paginate(pageNum)}
                   className={`w-12 h-12 rounded font-bold text-lg transition duration-300 ${
-                    currentPage === pageNum
-                      ? "bg-[#B88E2F] text-white"
-                      : "bg-[#d6ebf3] text-gray-800 hover:bg-[#B88E2F] hover:text-white"
+                    currentPage === pageNum ? "bg-[#B88E2F] text-white" : "bg-[#d6ebf3] text-gray-800"
                   }`}
                 >
                   {pageNum}
                 </button>
               );
             })}
-
-            {/* ปุ่ม Next */}
             <button
-              onClick={() =>
-                setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev))
-              }
-              disabled={currentPage === totalPages} //ปิดปุ่มเมื่อถึงหน้าสุดท้าย
+              onClick={() => setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev))}
+              disabled={currentPage === totalPages}
               className={`px-6 h-12 rounded font-bold text-lg transition duration-300 ${
-                currentPage === totalPages
-                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  : "bg-[#d6ebf3] text-gray-800 hover:bg-[#B88E2F] hover:text-white"
+                currentPage === totalPages ? "bg-gray-200 text-gray-400" : "bg-[#d6ebf3] text-gray-800"
               }`}
             >
               Next

@@ -1,10 +1,14 @@
-import { Outlet } from "react-router-dom";
+import { useLocation, Outlet } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { useEffect, useState } from "react";
 import axios from "axios"
+import Bottombar from "../components/Bottombar";
 
 export function Layout() {
   const apiBase = import.meta.env.VITE_API_URL;
+
+  const location = useLocation();
+  const isAdminPage = location.pathname.startsWith("/admin"); 
 
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
@@ -15,7 +19,7 @@ export function Layout() {
       setAuthLoading(true);
 
       try {
-        const response = await axios.get(`${apiBase}/auth/cookie/me`, {
+        const response = await axios.get(`${apiBase}/users/auth/cookie/me`, {
           withCredentials: true,
         });
 
@@ -36,7 +40,7 @@ export function Layout() {
 
     try {
       const response = await axios.post(
-        `${apiBase}/auth/cookie/login`,
+        `${apiBase}/users/auth/cookie/login`,
         { email, password },
         // if user have token in the cookies, it will attach token with http request.
         { withCredentials: true }
@@ -56,15 +60,18 @@ export function Layout() {
   const logout = async () => {
     setAuthError(null);
     try {
-      await axios.post(`${apiBase}/auth/cookie/logout`, {}, { withCredentials: true });
+      await axios.post(`${apiBase}/users/auth/cookie/logout`, {}, { withCredentials: true });
     } catch (error) {
       console.log(error);
     } finally {
       setUser(null);
+
+      window.location.href = "/";
     }
   };
   return (
     <div>
+      {!isAdminPage && (
       <Navbar
         user={user}
         authLoading={authLoading}
@@ -72,9 +79,13 @@ export function Layout() {
         login={login}
         logout={logout}
       />
-      <section>
-        <Outlet context={{ user, authLoading, apiBase, login }} />
+      )}
+      <section className="pb-16 md:pb-0">
+        <Outlet context={{ user, authLoading, apiBase, login, logout }} />
       </section>
+      <Bottombar
+      user={user}
+      />
     </div>
   );
 }

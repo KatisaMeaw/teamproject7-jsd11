@@ -17,6 +17,9 @@ export default function SubNavbar() {
         return "Checkout";
       case "/cart":
         return "Cart";
+      case "/userprofile":
+        return "User Profile";
+
       default:
         return path.replace("/", "").charAt(0).toUpperCase() + path.slice(2);
     }
