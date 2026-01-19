@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const UserProfile = () => {
-  // 1. เพิ่ม state สำหรับเก็บ URL รูปภาพ (profileImage)
+  const apiBase = import.meta.env.VITE_API_URL;
+  const userId = localStorage.getItem("userId");
+
   const [formData, setFormData] = useState({
-    fullName: "",
+    name: "",
     nickName: "",
     gender: "",
     country: "",
@@ -13,7 +16,38 @@ const UserProfile = () => {
     profileImage: null, // เก็บ URL ของรูปที่อัปโหลด
   });
 
-  // 2. ฟังก์ชันจัดการการอัปโหลดรูป
+  useEffect(() => {
+    if (!userId) return;
+    const fetchUserData = async () => {
+      try {
+        axios.defaults.withCredentials = true;
+
+        const url = `${apiBase}/${userId}`;
+        console.log("กำลังดึงข้อมูลจาก:", url);
+
+        const response = await axios.get(url);
+        const userData = response.data.data || response.data; // กันพลาดตำแหน่งข้อมูล
+
+        console.log("✅ ได้ข้อมูลมาแล้ว:", userData);
+
+        setFormData((prev) => ({
+          ...prev,
+          name: userData.name || "",
+          email: userData.email || "",
+          nickName: userData.nickName || "",
+          gender: userData.gender || "",
+          country: userData.country || "",
+          language: userData.language || "",
+          timeZone: userData.timeZone || "",
+        }));
+      } catch (error) {
+        console.error("❌ ดึงข้อมูลไม่สำเร็จ:", error);
+      }
+    };
+
+    fetchUserData();
+  }, [apiBase, userId]);
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -33,9 +67,27 @@ const UserProfile = () => {
     });
   };
 
-  const handleSave = () => {
-    console.log("Data to save:", formData);
-    alert("บันทึกข้อมูลแล้ว");
+  const handleSave = async () => {
+    try {
+      if (!userId) {
+        alert("ไม่พบ User ID");
+        return;
+      }
+      console.log("กำลังบันทึกข้อมูลไปที่ ID:", userId);
+      const url = `${apiBase}/${userId}`;
+      const response = await axios.patch(url, formData);
+
+      if (response.data.success) {
+        alert("บันทึกข้อมูลเรียบร้อยแล้ว! 🎉");
+        console.log("Update Success:", response.data);
+      }
+    } catch (error) {
+      console.error("Update Failed:", error);
+      alert(
+        "เกิดข้อผิดพลาดในการบันทึก: " +
+          (error.response?.data?.message || error.message)
+      );
+    }
   };
 
   return (
@@ -110,7 +162,7 @@ const UserProfile = () => {
 
             <div>
               <h1 className="text-2xl font-bold text-gray-900">
-                {formData.fullName || "Your Name"}
+                {formData.name || "Your Name"}
               </h1>
               <p className="text-gray-500">
                 {formData.email || "email@example.com"}
@@ -130,8 +182,8 @@ const UserProfile = () => {
             <label className="text-gray-700 font-medium">Full Name</label>
             <input
               type="text"
-              name="fullName"
-              value={formData.fullName}
+              name="name"
+              value={formData.name}
               onChange={handleChange}
               placeholder="Enter your full name"
               className="w-full bg-gray-50 border border-gray-100 rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-100"
@@ -234,7 +286,7 @@ const UserProfile = () => {
                 type="email"
                 name="email"
                 value={formData.email}
-                onChange={handleChange}
+                readOnly
                 placeholder="Enter your email address"
                 className="w-full bg-gray-50 border border-gray-200 rounded px-3 py-2 text-gray-900 focus:outline-none focus:border-blue-500 focus:bg-white transition"
               />
