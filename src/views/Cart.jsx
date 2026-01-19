@@ -67,11 +67,12 @@ const Cart = () => {
                         </span>
                       </div>
 
-                      {/* ✅ เพิ่ม || 0 ป้องกัน toLocaleString พัง */}
+                      {/* ราคาต่อชิ้น */}
                       <div className="text-gray-500">
-                        THB {(item.price || 0).toLocaleString()}
+                        THB {item.price.toLocaleString()}
                       </div>
 
+                      {/* ตัวปรับจำนวน */}
                       <div className="flex justify-center">
                         <input
                           type="number"

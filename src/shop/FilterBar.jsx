@@ -23,7 +23,7 @@ function FilterBar({
           >
             <option value="All">All Category</option>
             <option value="Ergonomic Chair">Ergonomic Chair</option>
-            <option value="Table">Table</option>
+            <option value="Ergonomic Desk">Ergonomic Desk</option>
             <option value="Accessories">Accessories</option>
           </select>
         </div>
