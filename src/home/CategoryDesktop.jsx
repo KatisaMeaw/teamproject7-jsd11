@@ -12,7 +12,7 @@ const CategoryDesktop = ({ userId, title }) => {
               alt={title}
               className="rounded-xl block object-cover w-[350px] h-[400px] cursor-pointer hover:-translate-y-3 transition duration-300 hover:shadow-xl"
             />
-            <span className="inline-block text-xl mt-8 text-[#447F98] font-bold cursor-pointer">
+            <span className="inline-block text-xl text-shadow-sm mt-8 text-[#447F98] font-bold cursor-pointer">
               {title}
             </span>
           </div>

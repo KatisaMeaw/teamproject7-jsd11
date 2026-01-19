@@ -1,110 +1,26 @@
 // import React, { useState } from 'react'
 
-import { useState } from "react";
-
 export const Form = ({
   formData,
   setFormData,
+  hasSubmitted,
   setHasSubmitted,
   submitSuccess,
   setSubmitSuccess,
   loading,
-  setLoading,
+  handleSubmit,
+  mode,
+  setMode,
+  touched,
+  setTouched,
+  nameError,
+  emailError,
+  mobileNumberError,
+  dobError,
+  passwordError,
+  confirmPasswordError,
+  isFormValid,
 }) => {
-  const nameParts = formData.name.trim().split(/\s+/);
-  const hasNumber = /\d/.test(formData.name);
-  const isEachPartLongEnough = nameParts.every((part) => part.length >= 2);
-  const minBirthday = new Date(
-    new Date().getFullYear() - 18,
-    new Date().getMonth(),
-    new Date().getDate()
-  )
-    .toISOString()
-    .split("T")[0];
-
-  const nameError =
-    formData.name.length !== 0 &&
-    (!formData.name.includes(" ") || hasNumber || !isEachPartLongEnough)
-      ? "Invalid name. Please try again."
-      : null;
-
-  const emailError =
-    formData.email.length !== 0 &&
-    //ประกอบด้วย 3 อย่าง 
-    //1.หน้า @ ต้องมีตัวอักษร ตัวเลข หรือสัญลักษณ์ที่กำหนด
-    //2.หลัง @ ตามด้วยชื่อโดเมน
-    //3. มีจุด . ต่อท้าย ตามด้วยอักษร 2 ตัวด้านหลัง
-    !/^[a-zA-Z0-9][a-zA-Z0-9._-]{1,}@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)
-      ? "Please enter a valid email address"
-      : null;
-  const mobileNumberError =
-    formData.mobileNumber.length > 0 &&
-    (formData.mobileNumber[0] !== "0" ||
-      formData.mobileNumber.length !== 10 ||
-      !/^\d+$/.test(formData.mobileNumber))
-      ? "Please enter a valid phone number"
-      : null;
-  const dobError =
-    formData.dob.length !== 0 && formData.dob > minBirthday
-      ? "You must be at least 18 years old to register."
-      : null;
-  const passwordError =
-    formData.password.length !== 0 && (formData.password.length < 8 ||
-    !/(?=.*[a-zA-Z])(?=.*[0-9])/.test(formData.password)) // ต้องมีทั้งตัวอักษรและตัวเลข
-      ? "Your password must be at least 8 characters long"
-      : null;
-  const confirmPasswordError =
-    formData.confirmPassword.length > 0 &&
-    formData.confirmPassword !== formData.password
-      ? "Passwords do NOT match"
-      : null;
-
-      const [mode, setMode] = useState("signin");
-
-      const [touched, setTouched] = useState({});
-
-  const isFormValid = mode === "signup" 
-  ? (!nameError && !emailError && !mobileNumberError && !dobError && !passwordError && !confirmPasswordError && formData.name.trim() !== "" && formData.email.trim() !== "" && formData.mobileNumber.trim() !== "" && formData.dob.trim() !== "" &&  formData.password.trim() !== "" && formData.confirmPassword.trim() !== "")
-  : (!emailError && !passwordError && formData.email.trim() !== "" && formData.password.trim() !== "");
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    setTouched({
-    name: true,
-    email: true,
-    mobileNumber: true,
-    dob: true,
-    password: true,
-    confirmPassword: true
-    })
-    setHasSubmitted(true);
-    setSubmitSuccess("");
-
-    if (!isFormValid) return;
-
-    if(mode ==="signup"){
-      setLoading(true);
-      setSubmitSuccess("Account created successfully! You can now sign in to your account.");
-      setFormData((prev) => ({
-      ...prev,
-      name: "",
-      email: "",
-      mobileNumber: "",
-      dob: "",
-      password: "",
-      confirmPassword: "",
-    }));
-    setLoading(false);
-
-    } else {
-      setLoading(true)
-      console.log("Signing in...")
-      setLoading(false)
-    }
-    
-    setHasSubmitted(false);
-  }
-
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -112,27 +28,25 @@ export const Form = ({
   };
 
   const handleBlur = (e) => {
-    const {name} = e.target;
-    setTouched((prev)=> ({...prev, [name]:true}));
+    const { name } = e.target;
+    setTouched((prev) => ({ ...prev, [name]: true }));
   };
 
   const toggleMode = (newMode) => {
     setMode(newMode);
     setSubmitSuccess("");
     setHasSubmitted(false);
-    setTouched({})
+    setTouched({});
 
     setFormData({
-    name: "",
-    email: "",
-    mobileNumber: "",
-    dob: "",
-    password: "",
-    confirmPassword: "",
+      name: "",
+      email: "",
+      mobileNumber: "",
+      dob: "",
+      password: "",
+      confirmPassword: "",
     });
   };
-
-
 
   return (
     <form onSubmit={handleSubmit}>
@@ -195,8 +109,14 @@ export const Form = ({
         <h3 className="text-[#A0AEC0] text-xl">or</h3>
 
         <div className="mt-10 flex flex-col md:gap-x-4 w-[95%]">
-          <div className={`overflow-hidden transition-all duration-500 ease-in-out 
-          ${mode === "signup" ? "max-h-32 opacity-100 mb-4" : "max-h-0 opacity-0"}`}>
+          <div
+            className={`overflow-hidden transition-all duration-500 ease-in-out 
+          ${
+            mode === "signup"
+              ? "max-h-32 opacity-100 mb-4"
+              : "max-h-0 opacity-0"
+          }`}
+          >
             <label htmlFor="fullname" className="block text-md  text-[#2D3748]">
               Name
             </label>
@@ -204,16 +124,18 @@ export const Form = ({
               <input
                 name="name"
                 type="text"
-                value={formData.name}
+                value={formData.name || ""}
                 placeholder="Your full name"
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className={`w-full h-10 md:w-95 md:h-12 rounded-lg bg-none  border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] ${
-                  touched.name && nameError ? "border border-red-500 focus:outline-red-500" : ""
+                  touched.name && nameError
+                    ? "border border-red-500 focus:outline-red-500"
+                    : ""
                 } `}
               />
 
-              {touched.name && nameError && (
+              {(touched.name || hasSubmitted) && nameError && (
                 <p className="text-red-500  mt-1 px-2">{nameError}</p>
               )}
             </div>
@@ -221,14 +143,14 @@ export const Form = ({
 
           <div>
             <label htmlFor="email" className="block text-md  text-[#2D3748]">
-             Email
+              Email
             </label>
 
             <div className="mt-2 mb-4">
               <input
                 name="email"
                 type="email"
-                value={formData.email}
+                value={formData.email || ""}
                 placeholder="Your email address"
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -239,14 +161,20 @@ export const Form = ({
                 }`}
               />
 
-              {touched.email && emailError && (
+              {(touched.email || hasSubmitted) && emailError && (
                 <p className="text-red-500  mt-1 px-2">{emailError}</p>
               )}
             </div>
           </div>
 
-          <div className={`overflow-hidden transition-all duration-500 ease-in-out 
-          ${mode === "signup" ? "max-h-32 opacity-100 mb-4" : "max-h-0 opacity-0"}`}>
+          <div
+            className={`overflow-hidden transition-all duration-500 ease-in-out 
+          ${
+            mode === "signup"
+              ? "max-h-32 opacity-100 mb-4"
+              : "max-h-0 opacity-0"
+          }`}
+          >
             <label htmlFor="tel" className="block text-md  text-[#2D3748]">
               Mobile Number
             </label>
@@ -254,7 +182,7 @@ export const Form = ({
               <input
                 name="mobileNumber"
                 type="tel"
-                value={formData.mobileNumber}
+                value={formData.mobileNumber || ""}
                 placeholder="Your mobile number"
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -264,14 +192,20 @@ export const Form = ({
                     : ""
                 }`}
               />
-              {touched.mobileNumber && mobileNumberError && (
+              {(touched.mobileNumber || hasSubmitted) && mobileNumberError && (
                 <p className="text-red-500  mt-1 px-2">{mobileNumberError}</p>
               )}
             </div>
           </div>
 
-          <div className={`overflow-hidden transition-all duration-500 ease-in-out 
-          ${mode === "signup" ? "max-h-32 opacity-100 mb-4" : "max-h-0 opacity-0"}`}>
+          <div
+            className={`overflow-hidden transition-all duration-500 ease-in-out 
+          ${
+            mode === "signup"
+              ? "max-h-32 opacity-100 mb-4"
+              : "max-h-0 opacity-0"
+          }`}
+          >
             <label
               htmlFor="birthdate"
               className="block text-md  text-[#2D3748]"
@@ -282,7 +216,7 @@ export const Form = ({
               <input
                 name="dob"
                 type="date"
-                value={formData.dob}
+                value={formData.dob || ""}
                 placeholder="Your date of birth"
                 onChange={handleChange}
                 className={`w-full h-10 md:w-95 md:h-12 rounded-lg bg-none border border-[#E6EAF1] px-4 md:px-6 py-1.5 text-base text-[#2D3748] outline-1 -outline-offset-1 outline-black/10 placeholder:text-sm placeholder:text-[#border border-[#E6EAF1]] focus:outline-2 focus:-outline-offset-2 focus:outline-[#2D3748] ${
@@ -302,7 +236,7 @@ export const Form = ({
             </label>
             <div className="mt-2 mb-4">
               <input
-                value={formData.password}
+                value={formData.password || ""}
                 name="password"
                 type="password"
                 placeholder="****************"
@@ -315,14 +249,20 @@ export const Form = ({
                 }  `}
               />
 
-              {touched.password && passwordError && (
+              {(touched.password || hasSubmitted) && passwordError && (
                 <p className="text-red-500  mt-1 px-2">{passwordError}</p>
               )}
             </div>
           </div>
 
-          <div className={`overflow-hidden transition-all duration-500 ease-in-out 
-          ${mode === 'signup' ? 'max-h-32 opacity-100 mb-4' : 'max-h-0 opacity-0'}`}>
+          <div
+            className={`overflow-hidden transition-all duration-500 ease-in-out 
+          ${
+            mode === "signup"
+              ? "max-h-32 opacity-100 mb-4"
+              : "max-h-0 opacity-0"
+          }`}
+          >
             <label
               htmlFor="confirmPassword"
               className="block text-md  text-[#2D3748]"
@@ -344,36 +284,43 @@ export const Form = ({
                 } `}
               />
 
-              {touched.confirmPassword && confirmPasswordError && (
+              {(touched.confirmPassword || hasSubmitted) && confirmPasswordError && (
                 <p className="text-red-500  mt-1 px-2">
                   {confirmPasswordError}
                 </p>
               )}
             </div>
-            </div>
-              
-            <label className="inline-flex items-center cursor-pointer mb-4">
-              <input type="checkbox" value="" className="sr-only peer" />
-              <div className="relative w-9 h-5 bg-gray-200   rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#447F98]"></div>
-              <span className="select-none ms-3 text-sm font-medium text-heading">
-                Remember me
-              </span>
-            </label>
-          
-{/* ? "cursor-pointer hover:bg-[#5591A9]"
+          </div>
+
+          <label className="inline-flex items-center cursor-pointer mb-4">
+            <input type="checkbox" value="" className="sr-only peer" />
+            <div className="relative w-9 h-5 bg-gray-200   rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#447F98]"></div>
+            <span className="select-none ms-3 text-sm font-medium text-heading">
+              Remember me
+            </span>
+          </label>
+
+          {/* ? "cursor-pointer hover:bg-[#5591A9]"
                 : "opacity-60 cursor-default" */}
           <button
             type="submit"
             disabled={loading || !isFormValid}
+            
             className={`bg-[#447F98] w-full h-10 md:w-95 md:h-12 rounded-lg text-sm font-bold text-white
-              ${loading || !isFormValid
-              ? "opacity-60 cursor-default"
-              : "cursor-pointer hover:bg-[#5591A9]"
-            }`}
+              
+              ${
+                loading || !isFormValid
+                  ? "opacity-60 cursor-default"
+                  : "cursor-pointer hover:bg-[#5591A9]"
+              }`}
           >
-            {loading 
-                ? (mode === "signup" ? "Registering..." : "Signing In...") 
-                : (mode === "signup" ? "Sign Up" : "Sign In")}
+            {loading
+              ? mode === "signup"
+                ? "Registering..."
+                : "Signing In..."
+              : mode === "signup"
+              ? "Sign Up"
+              : "Sign In"}
           </button>
 
           {mode === "signup" ? (

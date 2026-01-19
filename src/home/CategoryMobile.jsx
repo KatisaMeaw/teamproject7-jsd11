@@ -29,7 +29,7 @@ const CategoryMobile = ({
                   alt={post.title}
                   className="rounded-xl block object-cover w-[250px] h-[300px] cursor-pointer hover:-translate-y-3 transition duration-300 hover:shadow-xl"
                 />
-                <span className="inline-block text-xl mt-8 text-[#447F98] font-bold cursor-pointer">
+                <span className="inline-block text-xl mt-8 text-[#447F98] font-bold cursor-pointer text-shadow-sm">
                   {/* {post.name} */} {post.title}
                 </span>
                 </div>
@@ -58,9 +58,9 @@ const CategoryMobile = ({
           >
             <path
               stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
+              strokelinecap="round"
+              strokelinejoin="round"
+              strokewidth="2"
               d="m15 19-7-7 7-7"
             />
           </svg>
@@ -85,9 +85,9 @@ const CategoryMobile = ({
           >
             <path
               stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
+              strokelinecap="round"
+              strokeinejoin="round"
+              strokewidth="2"
               d="m9 5 7 7-7 7"
             />
           </svg>
