@@ -22,11 +22,7 @@ const UserProfile = () => {
       try {
         axios.defaults.withCredentials = true;
 
-<<<<<<< HEAD:src/components/UserProfile.jsx
-        const url = `${apiBase}/${userId}`;
-=======
         const url = `${apiBase}/users/${userId}`;
->>>>>>> 147caa49da6992da1ac05b35007fe686815bac0f:src/components/Userprofile/Profile.jsx
         console.log("กำลังดึงข้อมูลจาก:", url);
 
         const response = await axios.get(url);
