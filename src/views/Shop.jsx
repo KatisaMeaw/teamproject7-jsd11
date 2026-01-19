@@ -39,22 +39,21 @@ export default function Shop() {
   // ----------------------------------------------------
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      //async ฟังก์ชันนี้มีการทำงานที่ "ต้องรอ"
-      try {
-        // สั่งให้ Axios วิ่งไปที่ URL นี้ แล้ว "หยุดรอ" บรรทัดนี้จนกว่า Server จะตอบกลับมา
-        const response = await axios.get(`${apiBase}/products`);
-        // เมื่อได้ข้อมูลมาให้เก็บใน State
-        setProducts(response.data);
-        console.log(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setLoading(false); //ถึงจะ error ก็ต้องสั่งหยุดหมุน ไม่งั้นหน้าเว็บจะหมุนค้างตลอดกาล
-      }
-    };
-    fetchProducts();
-  }, [apiBase]); // [] แปลว่าทำครั้งเดียวตอนเปิดหน้า
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(`${apiBase}/products`);
+      // แก้ไขบรรทัดนี้: ต้องดึง .data ข้างในออกมาเพื่อให้ได้ Array ของสินค้าจริง
+      const result = response.data;
+      setProducts(result.data || result);
+
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setLoading(false);
+    }
+  };
+  fetchProducts();
+}, [apiBase]); // [] แปลว่าทำครั้งเดียวตอนเปิดหน้า
 
   // ฟังก์ชัน Reset Page เมื่อเปลี่ยน Filter
   const handleCategoryChange = (newCategory) => {
