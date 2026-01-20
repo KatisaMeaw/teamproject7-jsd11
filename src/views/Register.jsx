@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useOutletContext, useNavigate } from "react-router-dom";
+import { useOutletContext, useNavigate, useLocation } from "react-router-dom";
 import SubNavbar from "../components/SubNavbar";
 import SubFooter from "../components/SubFooter";
 import Footer from "../components/Footer";
@@ -8,6 +8,7 @@ import axios from "axios";
 
 const Register = () => {
   const { login } = useOutletContext();
+  const location = useLocation();
   const navigate = useNavigate();
 
   const apiBase = import.meta.env.VITE_API_URL;
@@ -164,7 +165,13 @@ const Register = () => {
               password: formData.password,
             });
 
-            navigate("/");
+            //location.search หมายถึงส่วนที่อยู่ข้างหลัง ? เช่น /login?redirect=/cart
+            //URLSearchParams  เป็นเครื่องมือช่วยดึงข้อมูลออกมาจาก "ข้อความ" ให้กลายเป็น "ตัวแปร" ที่เราใช้งานได้ง่ายๆ
+            const searchParams = new URLSearchParams(location.search);
+            //.get("redirect") คือการสั่งว่าให้ไปหาคำว่า redirect มาแล้วดูว่ามันคู่กับค่าอะไร ในที่นี้คือ /cart และ "/" คือแผนสำรอง
+            const redirectPath = searchParams.get("redirect") || "/";
+
+            navigate(redirectPath);
           } else {
             alert("Login สำเร็จ แต่ไม่พบ User ID ส่งกลับมา");
           }

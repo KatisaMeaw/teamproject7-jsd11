@@ -18,6 +18,7 @@ import UserProfile from "./views/UserProfile.jsx";
 import AdminDashboard from "./views/AdminDashboard.jsx";
 import AdminInventory from "./views/AdminInventory.jsx";
 import { AdminRoute, UserProfileRoute } from "./components/ProtectedRoute.jsx";
+import  About  from "./views/About.jsx";
 
 
 const router = createBrowserRouter([
@@ -33,7 +34,7 @@ const router = createBrowserRouter([
       { path: "/", element: <Home /> },
       { path: "/shop", element: <Shop /> },
       { path: "/login", element: <Register /> },
-      { path: "shop/:id", element: <ProductDetail /> },
+      { path: "product/:id", element: <ProductDetail /> },
       { path: "/cart", element: <Cart /> },
       { path: "/contact", element: <Contact /> },
       { path: "/checkout", element: <Checkout /> },
