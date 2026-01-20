@@ -18,7 +18,7 @@ const CartProvider = ({ children }) => {
   // ----------------------------------
   const checkAuth = async () => {
     try {
-      const res = await axios.get(`${API_URL}/users/auth/me`, {
+      const res = await axios.get(`${API_URL}/users/auth/cookie/me`, {
         withCredentials: true
       });
 
