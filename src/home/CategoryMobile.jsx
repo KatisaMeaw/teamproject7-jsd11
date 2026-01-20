@@ -27,7 +27,7 @@ const CategoryMobile = ({
                   // src={cate.img}
                   src={post.userId}
                   alt={post.title}
-                  className="rounded-xl block object-cover w-[250px] h-[300px] cursor-pointer hover:-translate-y-3 transition duration-300 hover:shadow-xl"
+                  className="rounded-xl block object-cover w-62.5 h-75 cursor-pointer hover:-translate-y-3 transition duration-300 hover:shadow-xl"
                 />
                 <span className="inline-block text-xl mt-8 text-[#447F98] font-bold cursor-pointer text-shadow-sm">
                   {/* {post.name} */} {post.title}
@@ -58,9 +58,9 @@ const CategoryMobile = ({
           >
             <path
               stroke="currentColor"
-              strokelinecap="round"
-              strokelinejoin="round"
-              strokewidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
               d="m15 19-7-7 7-7"
             />
           </svg>
@@ -85,9 +85,9 @@ const CategoryMobile = ({
           >
             <path
               stroke="currentColor"
-              strokelinecap="round"
-              strokeinejoin="round"
-              strokewidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
               d="m9 5 7 7-7 7"
             />
           </svg>

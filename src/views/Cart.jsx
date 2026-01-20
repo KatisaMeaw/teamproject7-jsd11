@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
 import SubNavbar from "../components/SubNavbar";
 import SubFooter from "../components/SubFooter";
@@ -6,6 +6,8 @@ import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
+
+  const {user} = useOutletContext();
   const navigate = useNavigate();
   const { cartItems, updateQuantity, removeItem, subtotal } = useCart();
 
@@ -39,6 +41,24 @@ const Cart = () => {
     <>
       <SubNavbar />
       <main className="max-w-7xl mx-auto px-4 py-12 min-h-[60vh]">
+        {!user ? (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="w-40 h-40 mb-6 bg-gray-50 rounded-full flex items-center justify-center">
+            <svg className="w-20 h-20 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+          </div>
+          <h3 className="text-2xl font-bold text-gray-800 mb-2">Please log in to see your cart</h3>
+          <p className="text-gray-500 mb-8 max-w-sm">Log in now to view the items you have added or to start a new order.</p>
+          
+          <div className="flex flex-col sm:flex-row gap-4">
+            
+            <Link to="/login?redirect=/cart" className="bg-[#447F98] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#5591A9] shadow-md transition-all">
+              Login / Sign Up
+            </Link>
+          </div>
+        </div>
+      ) : (
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="lg:w-2/3">
             <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
@@ -155,6 +175,7 @@ const Cart = () => {
             </div>
           </div>
         </div>
+        )}
       </main>
       <SubFooter />
       <Footer />

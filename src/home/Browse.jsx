@@ -6,24 +6,6 @@ import { useNavigate } from "react-router-dom";
 
 export default function Browse() {
 
-  // const [category, setCategory] = useState([
-  //   {
-  //     id: "1",
-  //     img: "./img-prod/Blue Gaming Chair - Pastel Series.jpeg",
-  //     name: "Ergonomic Chair",
-  //   },
-  //   {
-  //     id: "2",
-  //     img: "./img-prod/White gaming setup inspiration _ Secretlab.jpeg",
-  //     name: "Table",
-  //   },
-  //   {
-  //     id: "3",
-  //     img: "./img-prod/Desk Ideas for the Perfect Home Office Setup.jpeg",
-  //     name: "Accessories",
-  //   },
-  // ]);
-
   const navigate = useNavigate(); 
   const handleCategoryClick = (categoryName) =>{
     navigate('/shop', {state : {selectedCategory: categoryName}});
