@@ -18,7 +18,7 @@ function OurProduct() {
       try {
         // ดึงข้อมูลทั้งหมด 60 ตัว
         const response = await axios.get(`${apiBase}/products`);
-        const allData = response.data;
+        const allData = response.data.data || response.data;
 
         // shuffle ข้อมูลตำแหน่งcard
         // [...allData]ดึงdataทั้งหมดแบบไม่กระทบต้นฉบับ
@@ -34,17 +34,17 @@ function OurProduct() {
         console.error("Error fetching random products:" ,error);
       }
     };
-    fetchRandomProDucts
+    fetchRandomProDucts()
   },[]); // [] แปลว่าทำครั้งเดียว
 
   return (
     <>
-      <div className="p-15 flex flex-col justify-center items-center ">
+      <div className="p-16 flex flex-col justify-center items-center ">
         <h1 className="text-2xl md:text-3xl font-bold text-[#447F98]">
           Our Products
         </h1>
       </div>
-      <div className="mb-15 w-full">
+      <div className="mb-16 w-full">
         <div className="container mx-auto ">
           {/* Grid Layout: แสดง 4 column */}
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-6 md:px-0 ">
@@ -57,7 +57,6 @@ function OurProduct() {
               <Card product={item}/>
             </Link>
           ))}
-          
           </div>
         </div>
       </div>
@@ -71,8 +70,6 @@ function OurProduct() {
       </div>
     </>
   );
-
-  
 }
 
 export default OurProduct;
