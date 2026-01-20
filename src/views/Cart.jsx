@@ -62,7 +62,7 @@ const Cart = () => {
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="lg:w-2/3">
             <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-              <div className="grid grid-cols-4 p-4 bg-blue-50/50 font-bold text-sm text-gray-700">
+              <div className="hidden md:grid grid-cols-4 p-4 bg-blue-50/50 font-bold text-sm text-gray-700">
                 <div>Product</div>
                 <div>Price</div>
                 <div className="text-center">Quantity</div>
@@ -74,13 +74,13 @@ const Cart = () => {
                   {cartItems.map((item) => (
                     <div
                       key={item._id || item.id} // ✅ รองรับทั้ง _id และ id
-                      className="grid grid-cols-4 items-center border-t border-gray-100 py-6 px-4 text-sm hover:bg-gray-50 transition-colors"
+                      className="grid grid-cols-2 md:grid-cols-4 items-center border-t border-gray-100 py-6 px-4 text-sm hover:bg-gray-50 transition-colors"
                     >
-                      <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-4 col-span-2 md:col-span-1">
                         <img
                           src={item.image}
                           alt={item.name}
-                          className="w-16 h-16 object-cover border rounded-md bg-white"
+                          className="w-16 h-16 object-cover border rounded-md bg-white shrink-0"
                         />
                         <span className="font-medium text-gray-800">
                           {item.name}
@@ -89,11 +89,13 @@ const Cart = () => {
 
                       {/* ราคาต่อชิ้น */}
                       <div className="text-gray-500">
+                        <span className="md:hidden text-xs block text-gray-400">Price</span>
                         THB {item.price.toLocaleString()}
                       </div>
 
                       {/* ตัวปรับจำนวน */}
-                      <div className="flex justify-center">
+                      <div className="flex flex-col md:items-center">
+                        <span className="md:hidden text-xs text-gray-400 mb-1">Quantity</span>
                         <input
                           type="number"
                           min="1"
@@ -105,11 +107,15 @@ const Cart = () => {
                         />
                       </div>
 
-                      <div className="flex justify-between items-center pl-4">
+                      <div className="flex justify-between items-center md:pl-4 col-span-2 md:col-span-1 border-t md:border-none pt-4 md:pt-0">
+                        <div>
+                          <span className="md:hidden text-xs block text-gray-400">Subtotal</span>
                         <span className="font-bold text-gray-900">
                           {/* ✅ คำนวณแบบปลอดภัย */}
                           {(Number(item.price || 0) * Number(item.quantity || 0)).toLocaleString()}
                         </span>
+                        </div>
+
                         <button
                           onClick={() => handleRemove(item._id || item.id)}
                           className="text-gray-400 hover:text-red-500 transition-colors p-2"
