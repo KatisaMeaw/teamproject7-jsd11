@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import Sidebar from '../components/AdminPage/Sidebar';
 import Header from '../components/AdminPage/Header';
+import Inventory from '../components/Inventory/Inventory';
 
 function AdminInventory() {
-    const [sideBarCollapsed, setSideBarCollapsed] = useState(false);
+    const [sideBarCollapsed, setSideBarCollapsed] = useState(true);
     const [currentPage, setCurrentPage] = useState("inventory");
 
   return (
@@ -22,7 +23,7 @@ function AdminInventory() {
 
           <main className='flex-1 overflow-y-auto bg-transparent'>
             <div className='p-6 space-y-6'>
-              <h1>INVENTORY PAGE</h1>
+             <Inventory />
             </div>
           </main>
         </div>
