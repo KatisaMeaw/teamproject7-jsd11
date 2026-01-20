@@ -25,7 +25,7 @@ const ActionDropdown = ({ item, onEdit, onDetail, isOpen, onToggle }) => {
                   onDetail(item);
                   onToggle();
                 }}
-                className="flex items-center w-full px-4 py-2 text-sm text-slate-700 hover:text-white dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
+                className="flex items-center w-full px-4 py-2 text-sm text-slate-700 hover:text-gray-500 dark:hover:text-white dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
               >
                 <Eye className="w-4 h-4 mr-2" /> View Detail
               </button>
@@ -34,7 +34,7 @@ const ActionDropdown = ({ item, onEdit, onDetail, isOpen, onToggle }) => {
                   onEdit(item);
                   onToggle();
                 }}
-                className="flex items-center w-full px-4 py-2 text-sm dark:text-slate-200 hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 font-medium"
+                className="flex items-center w-full px-4 py-2 text-sm text-slate-700 hover:text-gray-500 dark:hover:text-white dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
               >
                 <Edit2 className="w-4 h-4 mr-2" /> Edit Item
               </button>

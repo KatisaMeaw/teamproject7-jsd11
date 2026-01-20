@@ -1,53 +1,63 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "./Modal";
 import CreateItemModal from "./CreateItemModal";
 import EditProductModal from "./EditProductModal";
 import ActionDropdown from "./ActionDropdown";
-
-const products = [
-  {
-    id: 1,
-    name: "MacBook Pro",
-    price: "2,499฿",
-    desc: "M3 Max Chip, 32GB RAM",
-    category: "Accessories",
-  },
-  {
-    id: 2,
-    name: "iPad Pro",
-    price: "999฿",
-    desc: "Ultra Retina XDR Display",
-    category: "Accessories",
-  },
-  {
-    id: 3,
-    name: "Magic Mouse",
-    price: "79฿",
-    desc: "Multi-Touch Surface",
-    category: "Accessories",
-  },
-];
+import axios from "axios";
 
 function ProductTable() {
   const [activeProduct, setActiveProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [items, setItems] = useState(products);
+  const [items, setItems] = useState([]);
   const [editingItem, setEditingItem] = useState(null);
   const [activeMenuId, setActiveMenuId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/products`);
+        setItems(response.data.data);
+        setError(null);
+      } catch (err) {
+        console.error(err);
+        setError(err.message);
+        setItems([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleAddItem = (newItem) => {
     // In a real app, you would make an API call here
     const itemWithId = { ...newItem, id: Date.now() };
     setItems([...items, itemWithId]);
-    console.log("New Item Added:", itemWithId);
   };
 
   const handleUpdate = (updatedItem) => {
     setItems(
       items.map((item) => (item.id === updatedItem.id ? updatedItem : item)),
     );
-    console.log("Updated database with:", updatedItem);
   };
+
+  // const dateConvert = (date) => {
+  //   const dateObject = new Date(date);
+
+  //   const options = { year: 'numeric', month: "long", day: "numeric" };
+
+  //   const formattedDate = dateObject.toLocaleDateString(undefined, options);
+
+  //   return formattedDate;
+  // }
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="space-y-6">
@@ -84,13 +94,13 @@ function ProductTable() {
                   Name
                 </th>
                 <th className="text-left p-4 text-sm font-semibold text-slate-600">
-                  Price
+                  Category
                 </th>
                 <th className="text-left p-4 text-sm font-semibold text-slate-600">
                   Description
                 </th>
                 <th className="text-left p-4 text-sm font-semibold text-slate-600">
-                  Category
+                  Price
                 </th>
               </tr>
             </thead>
@@ -100,7 +110,7 @@ function ProductTable() {
                   <tr className="border-b border-slate-200/50 dark:border-slate-700/50 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
                     <td className="p-5" key={index}>
                       <span className="text-sm text-slate-800 dark:text-white">
-                        {item.id}
+                        {item._id}
                       </span>
                     </td>
                     <td className="p-5">
@@ -110,26 +120,26 @@ function ProductTable() {
                     </td>
                     <td className="p-5">
                       <span className="text-sm text-slate-800 dark:text-white">
-                        {item.price}
-                      </span>
-                    </td>
-                    <td className="p-5">
-                      <span className="text-sm text-slate-800 dark:text-white">
-                        {item.desc}
-                      </span>
-                    </td>
-                    <td className="p-5">
-                      <span className="text-sm text-slate-800 dark:text-white">
                         {item.category}
+                      </span>
+                    </td>
+                    <td className="p-5">
+                      <span className="text-sm text-slate-800 dark:text-white">
+                        {item.description}
+                      </span>
+                    </td>
+                    <td className="p-5">
+                      <span className="text-sm text-slate-800 dark:text-white">
+                        {item.price}
                       </span>
                     </td>
                     <td className="p-4 text-right">
                       <ActionDropdown
                         item={item}
-                        isOpen={activeMenuId === item.id}
+                        isOpen={activeMenuId === item._id}
                         onToggle={() =>
                           setActiveMenuId(
-                            activeMenuId === item.id ? null : item.id,
+                            activeMenuId === item._id ? null : item._id,
                           )
                         }
                         onEdit={(val) => setEditingItem(val)}
@@ -150,7 +160,7 @@ function ProductTable() {
           >
             <div className="space-y-3">
               <p className="text-2xl font-bold text-gray-900">
-                {activeProduct?.price}
+                {activeProduct?.role}
               </p>
               <p className="text-gray-600">{activeProduct?.desc}</p>
               <div className="p-3 bg-blue-50 text-blue-700 rounded-md text-sm">
@@ -160,13 +170,13 @@ function ProductTable() {
                 Name: {activeProduct?.name}
               </div>
               <div className="p-3 bg-blue-50 text-blue-700 rounded-md text-sm">
-                Price: {activeProduct?.price}
-              </div>
-              <div className="p-3 bg-blue-50 text-blue-700 rounded-md text-sm">
-                Description: {activeProduct?.desc}
-              </div>
-              <div className="p-3 bg-blue-50 text-blue-700 rounded-md text-sm">
                 Category: {activeProduct?.category}
+              </div>
+              <div className="p-3 bg-blue-50 text-blue-700 rounded-md text-sm">
+                Description: {activeProduct?.description}
+              </div>
+              <div className="p-3 bg-blue-50 text-blue-700 rounded-md text-sm">
+                Price: {activeProduct?.price}
               </div>
             </div>
           </Modal>
