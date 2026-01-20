@@ -4,7 +4,9 @@ import SubNavbar from "../components/SubNavbar";
 import SubFooter from "../components/SubFooter";
 import Footer from "../components/Footer";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_URL;
 const FormInput = ({
   label,
   name,
@@ -33,7 +35,14 @@ const FormInput = ({
 );
 
 const Checkout = () => {
-  const { cartItems, subtotal, clearCart } = useCart();
+  const {
+    cartItems,
+    subtotal,
+    clearCart,
+    isLoggedIn,
+    loading: authLoading,
+  } = useCart();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -61,6 +70,13 @@ const Checkout = () => {
     e.preventDefault();
 
     // ✅ Validation เบื้องต้น
+
+    if (!isLoggedIn) {
+      alert("กรุณาเข้าสู่ระบบก่อนทำการสั่งซื้อสินค้า");
+      // พาไปหน้า Login และอาจจะส่ง state ไปเพื่อบอกว่าหลังจาก login ให้กลับมาที่ checkout
+      navigate("/login", { state: { from: "/checkout" } });
+      return;
+    }
     if (cartItems.length === 0) {
       alert("ตะกร้าของคุณยังไม่มีสินค้า กรุณาเลือกสินค้าก่อนชำระเงิน");
       return;
@@ -74,7 +90,7 @@ const Checkout = () => {
     // ✅ ปรับโครงสร้างข้อมูลให้ตรงกับ Order Schema ของคุณ
     const orderData = {
       // 1. เชื่อมโยงผู้ใช้ (ถ้ายังไม่ทำระบบ Login ให้ส่งเป็น null หรือค่าที่เหมาะสม)
-      user: null, //
+      //user: userId, //
 
       // 2. รายการสินค้า (map ให้ตรงกับ schema ของ orderItems)
       orderItems: cartItems.map((item) => {
@@ -82,9 +98,9 @@ const Checkout = () => {
 
         return {
           product: productId, // ✅ ต้องส่ง ID นี้ไป (Required)
-          name: item.name,    //
+          name: item.name, //
           quantity: Number(item.quantity || 1), //
-          image: item.image,  //
+          image: item.image, //
           price: Number(item.price || 0), //
         };
       }),
@@ -99,8 +115,8 @@ const Checkout = () => {
 
       // 4. สรุปยอดเงินและสถานะ
       totalPrice: Number(finalTotal || 0),
-      isPaid: false,      // ค่าเริ่มต้นตาม Schema
-      status: "Pending",  // ค่าเริ่มต้นตาม Schema
+      isPaid: false, // ค่าเริ่มต้นตาม Schema
+      status: "Pending", // ค่าเริ่มต้นตาม Schema
 
       // ข้อมูลเพิ่มเติม (ถ้า Backend ไม่ได้กำหนดใน Schema จะไม่ถูกบันทึก)
       paymentMethod: formData.paymentMethod,
@@ -110,11 +126,9 @@ const Checkout = () => {
     setLoading(true);
 
     try {
-      // ✅ ใช้ axios.post ตามที่คุณต้องการ
-      const response = await axios.post(
-        "http://localhost:3000/api/v1/orders",
-        orderData
-      );
+      const response = await axios.post(`${API_URL}/orders`, orderData, {
+        withCredentials: true,
+      });
 
       if (response.status === 200 || response.status === 201) {
         alert("สั่งซื้อสำเร็จ!");
@@ -123,11 +137,14 @@ const Checkout = () => {
       }
     } catch (error) {
       // ✅ จัดการ Error แบบ axios
-      const errorMessage = error.response?.data?.message || "ข้อมูลไม่ครบถ้วน หรือระบบมีปัญหา";
+      const errorMessage =
+        error.response?.data?.message || "ข้อมูลไม่ครบถ้วน หรือระบบมีปัญหา";
 
       // ถ้า Error บอกว่าขาด product แสดงว่า ID ในตะกร้าหาย
       if (errorMessage.includes("product")) {
-        alert("เกิดข้อผิดพลาด: ข้อมูลสินค้าในตะกร้าไม่สมบูรณ์ กรุณาล้างตะกร้าแล้วเลือกสินค้าใหม่อีกครั้ง");
+        alert(
+          "เกิดข้อผิดพลาด: ข้อมูลสินค้าในตะกร้าไม่สมบูรณ์ กรุณาล้างตะกร้าแล้วเลือกสินค้าใหม่อีกครั้ง",
+        );
       } else {
         alert("เกิดข้อผิดพลาด: " + errorMessage);
       }
@@ -280,17 +297,21 @@ const Checkout = () => {
 
             <button
               type="submit"
-              disabled={loading || cartItems.length === 0}
+              disabled={loading || cartItems.length === 0 || authLoading}
               className={`w-full mt-8 font-bold py-3 px-8 rounded-lg shadow-md transition duration-300 
-                ${
-                  loading || cartItems.length === 0
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-[#447F98] hover:bg-[#5591A9] text-white cursor-pointer"
-                }`}
+    ${
+      loading || cartItems.length === 0 || authLoading
+        ? "bg-gray-400 cursor-not-allowed"
+        : "bg-[#447F98] hover:bg-[#5591A9] text-white cursor-pointer"
+    }`}
             >
-              {loading
-                ? "PROCESSING..."
-                : `PAY NOW THB ${(finalTotal || 0).toLocaleString()}`}
+              {authLoading
+                ? "CHECKING AUTH..."
+                : !isLoggedIn
+                  ? "LOGIN TO PAY"
+                  : loading
+                    ? "PROCESSING..."
+                    : `PAY NOW THB ${finalTotal.toLocaleString()}`}
             </button>
           </div>
         </form>

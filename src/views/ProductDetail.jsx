@@ -8,7 +8,7 @@ import { useCart } from "../hooks/useCart";
 
 export default function ProductDetail() {
   
-  const apiBase = "http://localhost:3000/api/v1";
+  const apiBase = import.meta.env.VITE_API_URL;
   const { id } = useParams(); 
   const { addToCart } = useCart();
   const navigate = useNavigate();
@@ -82,9 +82,9 @@ export default function ProductDetail() {
     }
 
     // ส่งข้อมูลไปที่ Context
-    addToCart({ ...product, id: productId, quantity: quantity });
+    addToCart({ ...product, _id: productId, quantity: quantity });
     // สั่งให้เปลี่ยนหน้าไปยังหน้า cart ทันที
-    navigate('/cart'); 
+    navigate('/cart');
   };
 
   return (
