@@ -38,24 +38,21 @@ const router = createBrowserRouter([
       { path: "/cart", element: <Cart /> },
       { path: "/contact", element: <Contact /> },
       { path: "/checkout", element: <Checkout /> },
-      { path: "/about", element: <About /> },
-      { path: "/userprofile", 
+      { path: "/userprofile",
         element: (
           <UserProfileRoute>
         <UserProfile />
           </UserProfileRoute>
-      ) 
+      )
     },
       // { path: "/about", element:<About /> },
 
       {
         path: "/admin",
-        element: (
-          <AdminRoute>
-            <AdminDashboard />
-          </AdminRoute>
-        ),
-        children: [{ path: "inventory", element: <AdminInventory /> }],
+        children: [
+          { path: "", element: <AdminDashboard /> },
+          { path: "dashboard", element: <AdminDashboard /> },
+          { path: "inventory", element: <AdminInventory /> }],
       },
     ],
   },
