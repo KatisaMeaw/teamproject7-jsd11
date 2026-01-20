@@ -1,21 +1,22 @@
-import { useNavigate } from "react-router-dom";
+  import { useNavigate } from "react-router-dom";
 
-function Card({ product }) {
-  const navigate = useNavigate();
+  function Card({ product }) {
+    const navigate = useNavigate();
 
-  if (!product) return null;
+    if (!product) return null;
 
-  // ฟังก์ชันนำทางไปยังหน้ารายละเอียดสินค้า
-  const handleViewDetail = (e) => {
-    // ป้องกันไม่ให้ Event กระโดดซ้ำซ้อน
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
+    // ฟังก์ชันนำทางไปยังหน้ารายละเอียดสินค้า
+    const handleViewDetail = (e) => {
+      // ป้องกันไม่ให้ Event กระโดดซ้ำซ้อน
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
 
-    // เปลี่ยนจาก .id เป็น ._id (MongoDB ID)
-    navigate(`/product/${product._id}`);
-  };
+      // เปลี่ยนจาก .id เป็น ._id (MongoDB ID)
+      navigate(`/product/${product._id}`);
+    };
+
   return (
     <div
       onClick={handleViewDetail}
