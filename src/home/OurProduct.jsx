@@ -4,69 +4,59 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 function OurProduct() {
-  // const [allProducts, setAllProducts] = useState([
-  //   { id: 1, name: "Leviosa", description: "stylish comfy chair", price: 2500, badge: "-30%", img:""},
-  //   { id: 2, name: "Lolito", description: "stylish comfy chair", price: 1500, badge: "-30%"},
-  //   { id: 3, name: "Respira", description: "stylish comfy chair", price: 500, badge: "-30%", img:"" },
-  //   { id: 4, name: "viosa", description: "stylish comfy chair", price: 700, badge: "-30%", img:"" },
-  //   { id: 5, name: "pira", description: "stylish comfy chair", price: 2500, badge: "-30%", img:"" },
-  //   { id: 6, name: "Pingky", description: "stylish comfy chair", price: 1500, badge: "-30%", img:"" },
-  //   { id: 7, name: "Leatera", description: "stylish comfy chair", price: 500, badge: "-30%", img:"" },
-  //   { id: 8, name: "Lovely", description: "stylish comfy chair", price: 700, badge: "-30%", img:"" },
-  //   { id: 9, name: "Grifo", description: "stylish comfy chair", price: 2500, badge: "-30%", img:"" },
-  //   {
-  //     id: 10,
-  //     name: "Syltherine",
-  //     description: "stylish comfy chair",
-  //     price: 3000,
-  //   },
-  // ]);
-  const url = "https://jsonplaceholder.typicode.com/posts";
+  // สร้าง state ว่างๆ เพื่อรอรับสินค้า สินค้าที่สุ่มมาแล้ว
+    const [products, setProducts] = useState([])
 
-  const [displayProducts, setDisplayProducts] = useState([]);
+  // กำหนด URL หลักของ Backend
+  // apiBase = URL ของ API ที่เก็บไว้ใน .env
+  // ใช้ import.meta.env เพื่อดึงค่าจากไฟล์ .env
+    const apiBase = import.meta.env.VITE_API_URL;
 
-  
+  // ทำงานครั้งเดียวตอนโหลดหน้า web
+  useEffect(()=> {
+    const fetchRandomProDucts = async () => {
+      try {
+        // ดึงข้อมูลทั้งหมด 60 ตัว
+        const response = await axios.get(`${apiBase}/products`);
+        const allData = response.data.data || response.data;
 
-  function showAllItems() {
-    return (
-      <>
-        {displayProducts.slice(0, 8).map((post) => (
-          <Card
-            // key={prod.id}
-            // name={prod.name}
-            // description={prod.description}
-            // price={prod.price}
-            // badge={prod.badge}
-            key={post.id}
-            title={post.title}
-            body={post.body}
+        // shuffle ข้อมูลตำแหน่งcard
+        // [...allData]ดึงdataทั้งหมดแบบไม่กระทบต้นฉบับ
+        //.sort(<กำหนดเกณฑ์การค้นหา>)  Math.random(): คำสั่งนี้จะสุ่มตัวเลขระหว่าง 0 ถึง 0.999... ออกมาเสมอ
+        const shuffled = [...allData].sort(() => 0.5 - Math.random());
 
-          />
-        ))}
-      </>
-    );
-  }
+        // เลือกมาแค่ 8 ชิ้น เก็บใส่ใน State (Index 0 ถึง 8)
+        const selected = shuffled.slice(0,8)
 
-  useEffect(() => {
-    const fetchData = async () => {
-    let res = await axios.get(url);
-    setDisplayProducts(res.data);
-  };
-  fetchData();
-  }, []);
+        // เอา 8 ชิ้น เก็บไส่ state
+        setProducts(selected);
+      } catch (error) {
+        console.error("Error fetching random products:" ,error);
+      }
+    };
+    fetchRandomProDucts()
+  },[]); // [] แปลว่าทำครั้งเดียว
 
   return (
     <>
-      <div className="p-15 flex flex-col justify-center items-center ">
+      <div className="p-16 flex flex-col justify-center items-center ">
         <h1 className="text-2xl md:text-3xl font-bold text-[#447F98]">
           Our Products
         </h1>
       </div>
-      <div className="mb-15 w-full">
+      <div className="mb-16 w-full">
         <div className="container mx-auto ">
+          {/* Grid Layout: แสดง 4 column */}
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-6 md:px-0 ">
-           {showAllItems()}
-           
+
+          {/* Loop สินค้า */}
+          {products.map((item)=>(
+            // ทำ Link ให้ไปหน้า ProductDetail
+            <Link key={item.id} to={`/shop/${item.id}`}>
+              {/* ส่งข้อมูลสินค้าทั้งก้อน(Item) ไปให้ Card */}
+              <Card product={item}/>
+            </Link>
+          ))}
           </div>
         </div>
       </div>
@@ -80,8 +70,6 @@ function OurProduct() {
       </div>
     </>
   );
-
-  
 }
 
 export default OurProduct;
