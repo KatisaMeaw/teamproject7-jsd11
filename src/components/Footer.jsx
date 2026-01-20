@@ -18,10 +18,10 @@ export default function Footer() {
             <div className="">
                 <h4 className="text-gray-500 text-sm font-normal uppercase mb-4 tracking-wider">Links</h4>
                 <ul className="space-y-2">
-                    <li><a href="#" className="hover:text-gray-700 text-teal-600 text-sm">Home</a></li>
-                    <li><a href="#" className="hover:text-gray-700 text-teal-600 text-sm">Shop</a></li>
-                    <li><a href="#" className="hover:text-gray-700 text-teal-600 text-sm">About</a></li>
-                    <li><a href="#" className="hover:text-gray-700 text-teal-600 text-sm">Contact</a></li>
+                    <li><a href="/" className="hover:text-gray-700 text-teal-600 text-sm">Home</a></li>
+                    <li><a href="/shop" className="hover:text-gray-700 text-teal-600 text-sm">Shop</a></li>
+                    <li><a href="/about" className="hover:text-gray-700 text-teal-600 text-sm">About</a></li>
+                    <li><a href="/contact" className="hover:text-gray-700 text-teal-600 text-sm">Contact</a></li>
                 </ul>
             </div>
 
