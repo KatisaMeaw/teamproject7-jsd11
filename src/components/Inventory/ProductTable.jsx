@@ -8,11 +8,24 @@ const products = [
   {
     id: 1,
     name: "MacBook Pro",
-    price: "$2,499",
+    price: "2,499฿",
     desc: "M3 Max Chip, 32GB RAM",
+    category: "Accessories",
   },
-  { id: 2, name: "iPad Pro", price: "$999", desc: "Ultra Retina XDR Display" },
-  { id: 3, name: "Magic Mouse", price: "$79", desc: "Multi-Touch Surface" },
+  {
+    id: 2,
+    name: "iPad Pro",
+    price: "999฿",
+    desc: "Ultra Retina XDR Display",
+    category: "Accessories",
+  },
+  {
+    id: 3,
+    name: "Magic Mouse",
+    price: "79฿",
+    desc: "Multi-Touch Surface",
+    category: "Accessories",
+  },
 ];
 
 function ProductTable() {
@@ -73,25 +86,41 @@ function ProductTable() {
                 <th className="text-left p-4 text-sm font-semibold text-slate-600">
                   Price
                 </th>
+                <th className="text-left p-4 text-sm font-semibold text-slate-600">
+                  Description
+                </th>
+                <th className="text-left p-4 text-sm font-semibold text-slate-600">
+                  Category
+                </th>
               </tr>
             </thead>
             <tbody>
               {items.map((item, index) => {
                 return (
                   <tr className="border-b border-slate-200/50 dark:border-slate-700/50 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
-                    <td className="p-4" key={index}>
+                    <td className="p-5" key={index}>
                       <span className="text-sm text-slate-800 dark:text-white">
                         {item.id}
                       </span>
                     </td>
-                    <td className="p-4">
+                    <td className="p-5">
                       <span className="text-sm text-slate-800 dark:text-white">
                         {item.name}
                       </span>
                     </td>
-                    <td className="p-4">
+                    <td className="p-5">
                       <span className="text-sm text-slate-800 dark:text-white">
                         {item.price}
+                      </span>
+                    </td>
+                    <td className="p-5">
+                      <span className="text-sm text-slate-800 dark:text-white">
+                        {item.desc}
+                      </span>
+                    </td>
+                    <td className="p-5">
+                      <span className="text-sm text-slate-800 dark:text-white">
+                        {item.category}
                       </span>
                     </td>
                     <td className="p-4 text-right">
@@ -135,6 +164,9 @@ function ProductTable() {
               </div>
               <div className="p-3 bg-blue-50 text-blue-700 rounded-md text-sm">
                 Description: {activeProduct?.desc}
+              </div>
+              <div className="p-3 bg-blue-50 text-blue-700 rounded-md text-sm">
+                Category: {activeProduct?.category}
               </div>
             </div>
           </Modal>

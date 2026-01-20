@@ -18,11 +18,13 @@ const CreateItemModal = ({ isOpen, onClose, onSubmit }) => {
   };
 
   return ReactDOM.createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm ">
       <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
-          <h3 className="text-xl font-bold text-gray-800">Add New Product</h3>
+          <h3 className="text-xl font-bold text-gray-800">
+            Add New Product
+          </h3>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600"
