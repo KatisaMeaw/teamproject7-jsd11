@@ -11,13 +11,14 @@ const OrderHistoryCard = () => {
   const [loading, setLoading] = useState(true);
   const [openOrderId, setOpenOrderId] = useState(null);
   const { isLoggedIn, loading: authLoading } = useContext(CartContext);
-
-  // เพิ่ม State สำหรับจัดการ Tab
   const [activeTab, setActiveTab] = useState("all");
 
   useEffect(() => {
     const fetchOrders = async () => {
+      // 1. ถ้าสถานะ Auth กำลังโหลด ให้รอการทำงานก่อน
       if (authLoading) return;
+
+      // 2. ถ้าไม่ได้ Login ให้เคลียร์ข้อมูลและเลิกโหลด
       if (!isLoggedIn) {
         setOrders([]);
         setLoading(false);
@@ -25,15 +26,16 @@ const OrderHistoryCard = () => {
       }
 
       try {
+        setLoading(true);
         const response = await axios.get(`${API_URL}/orders/me`, {
           withCredentials: true,
         });
-        setOrders(response.data.orders || response.data.data || []);
+        // ✅ ป้องกัน Error ถ้า API ตอบกลับมาไม่มี data
+        const data = response.data.orders || response.data.data || [];
+        setOrders(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Error fetching orders:", error);
-        if (error.response?.status === 401) {
-          setOrders([]);
-        }
+        setOrders([]);
       } finally {
         setLoading(false);
       }
@@ -42,11 +44,12 @@ const OrderHistoryCard = () => {
     fetchOrders();
   }, [isLoggedIn, authLoading]);
 
-  // กรองข้อมูลตาม Tab ที่เลือก
-  const filteredOrders = orders.filter((order) => {
+  // กรองข้อมูลตาม Tab และป้องกัน orders เป็น undefined
+  const filteredOrders = (orders || []).filter((order) => {
     if (activeTab === "all") return true;
     if (activeTab === "completed") return order.status === "Delivered";
-    if (activeTab === "pending") return order.status === "Pending";
+    if (activeTab === "pending")
+      return order.status === "Pending" || order.status === "Processing";
     if (activeTab === "cancelled") return order.status === "Cancelled";
     return true;
   });
@@ -55,7 +58,16 @@ const OrderHistoryCard = () => {
     setOpenOrderId(openOrderId === id ? null : id);
   };
 
-  if (!isLoggedIn && !authLoading) {
+  // ✅ แสดง Loading ระหว่างรอ Auth หรือรอ Data
+  if (authLoading || (loading && orders.length === 0)) {
+    return (
+      <div className="p-20 text-center text-gray-500">
+        Loading your orders...
+      </div>
+    );
+  }
+
+  if (!isLoggedIn) {
     return (
       <div className="p-4 text-center py-20 text-gray-500">
         Please log in to view your order history.
@@ -63,50 +75,41 @@ const OrderHistoryCard = () => {
     );
   }
 
-  if (loading) return <div className="p-10 text-center">Loading...</div>;
-
   return (
     <div className="p-4 max-w-6xl mx-auto">
-      {/* ส่ง Props ไปยัง OrderTabs */}
+      {/* ส่วนหัว Tab */}
       <OrderTabs
         activeTab={activeTab}
         onTabChange={setActiveTab}
-        orders={orders}
+        orders={orders || []} // ✅ ส่งเป็น Array ว่างเสมอถ้าไม่มีข้อมูล
       />
 
-      {/* เปลี่ยนจาก orders.map เป็น filteredOrders.map */}
+      {/* รายการ Order */}
       {filteredOrders.length > 0 ? (
         filteredOrders.map((order) => (
           <div
             key={order._id}
-            className="border border-[#E4E7E9] mb-6 mt-10 overflow-hidden rounded-sm"
+            className="border border-[#E4E7E9] mb-6 mt-6 overflow-hidden rounded-sm"
           >
-            {/* ส่วนหัว (Header) */}
+            {/* Header ของแต่ละ Order */}
             <div
               className={`flex justify-between items-center p-6 cursor-pointer transition-all duration-200 
-        ${
-          openOrderId === order._id
-            ? "bg-[#F2F4F5] border-b border-[#E4E7E9]" // เมื่อเปิด: พื้นหลังเทาอ่อนเพื่อให้เห็นขอบชัด
-            : "bg-white hover:bg-[#F9FBFC]" // เมื่อปิด: สีขาวสะอาดตา
-        }`}
+                ${openOrderId === order._id ? "bg-[#F2F4F5] border-b" : "bg-white hover:bg-[#F9FBFC]"}`}
               onClick={() => toggleOrder(order._id)}
             >
-              <div className="flex gap-6 items-center text-xl font-medium">
+              <div className="flex flex-wrap gap-4 items-center">
                 <span className="text-[#191C1F] font-bold">
-                  #{order._id.slice(-8).toUpperCase()}
+                  #{order._id?.slice(-8).toUpperCase()}
                 </span>
-                <div className="text-sm font-normal text-[#5F6C72]">
-                  {order.orderItems?.length} Products •{" "}
-                  {new Date(order.createdAt).toLocaleDateString("en-GB", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                  })}
+                <div className="text-sm text-[#5F6C72]">
+                  {/* ✅ ใช้ Optional Chaining ป้องกัน Error length */}
+                  {order.orderItems?.length || 0} Products •{" "}
+                  {order.createdAt
+                    ? new Date(order.createdAt).toLocaleDateString("en-GB")
+                    : "N/A"}
                 </div>
-
-                {/* ปรับแต่ง Badge สถานะให้ดูสวยขึ้น */}
                 <span
-                  className={`text-[10px] uppercase px-2.5 py-0.5 rounded-full font-bold shadow-sm ${
+                  className={`text-[10px] uppercase px-2.5 py-0.5 rounded-full font-bold ${
                     order.status === "Delivered"
                       ? "bg-green-100 text-green-700"
                       : order.status === "Cancelled"
@@ -119,37 +122,21 @@ const OrderHistoryCard = () => {
               </div>
 
               <div className="flex items-center gap-6">
-                <div className="text-2xl font-bold text-[#2484A2]">
-                  {" "}
-                  {/* ใช้สีฟ้าโทนเดียวกับ Sidebar */}
-                  THB {order.totalPrice?.toLocaleString()}
+                <div className="text-xl font-bold text-[#2484A2]">
+                  THB {order.totalPrice?.toLocaleString() || 0}
                 </div>
-                <div className="text-[#929FA5]">
-                  {openOrderId === order._id ? (
-                    <ChevronUp size={20} />
-                  ) : (
-                    <ChevronDown size={20} />
-                  )}
-                </div>
+                {openOrderId === order._id ? (
+                  <ChevronUp size={20} />
+                ) : (
+                  <ChevronDown size={20} />
+                )}
               </div>
             </div>
 
-            {/* ส่วนเนื้อหา (Content) */}
+            {/* รายละเอียดสินค้าภายใน (Dropdown) */}
             {openOrderId === order._id && (
-              <div className="p-6 animate-in fade-in slide-in-from-top-2 duration-300">
-                <p className="text-sm mb-6">
-                  Order Status:{" "}
-                  <span className="font-bold">{order.status}</span>
-                </p>
-
-                <h2 className="text-lg font-bold mb-4">
-                  Product{" "}
-                  <span className="text-gray-400 font-normal">
-                    ({order.orderItems?.length.toString().padStart(2, "0")})
-                  </span>
-                </h2>
-
-                <div className="grid grid-cols-4 p-3 bg-[#F2F4F5] text-[12px] font-bold text-[#475156] mb-4">
+              <div className="p-6 bg-white animate-in slide-in-from-top-2 duration-200">
+                <div className="hidden md:grid grid-cols-4 p-3 bg-[#F2F4F5] text-[12px] font-bold text-[#475156] mb-4">
                   <p>PRODUCTS</p>
                   <p>PRICE</p>
                   <p>QUANTITY</p>
@@ -159,66 +146,45 @@ const OrderHistoryCard = () => {
                 {order.orderItems?.map((item, idx) => (
                   <div
                     key={idx}
-                    className="grid grid-cols-4 items-center py-4 border-b border-gray-100 last:border-0"
+                    className="grid grid-cols-1 md:grid-cols-4 items-center py-4 border-b last:border-0 gap-4"
                   >
                     <div className="flex items-center gap-4">
                       <img
                         src={item.image}
                         alt=""
-                        className="w-16 h-16 object-cover rounded-md"
+                        className="w-16 h-16 object-cover rounded-md bg-gray-100"
                       />
                       <div>
                         <p className="text-[#447F98] font-bold text-sm">
                           {item.name}
                         </p>
-                        <p className="text-xs text-gray-400">
-                          Standard Quality Item
-                        </p>
                       </div>
                     </div>
-                    <p className="text-sm font-medium text-gray-700">
+                    <p className="text-sm font-medium">
                       THB {item.price?.toLocaleString()}
                     </p>
-                    <p className="text-sm text-gray-500 font-medium">
-                      x{item.quantity}
-                    </p>
-                    <p className="text-sm font-bold text-gray-900">
-                      THB {(item.price * item.quantity).toLocaleString()}
+                    <p className="text-sm text-gray-500">x{item.quantity}</p>
+                    <p className="text-sm font-bold">
+                      THB {(item.price * item.quantity)?.toLocaleString()}
                     </p>
                   </div>
                 ))}
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 mt-6 border-t border-gray-100">
+                {/* ที่อยู่จัดส่ง */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 mt-6 border-t">
                   <div>
-                    <h3 className="font-bold text-lg mb-4">Billing Address</h3>
-                    <p className="text-sm font-bold">
+                    <h3 className="font-bold text-gray-800 mb-2">
+                      Shipping Address
+                    </h3>
+                    <p className="text-sm text-gray-600">
                       {order.shippingAddress?.firstName}{" "}
                       {order.shippingAddress?.lastName}
-                    </p>
-                    <p className="text-sm text-gray-500 mt-2 leading-relaxed">
+                      <br />
                       {order.shippingAddress?.address},{" "}
                       {order.shippingAddress?.city}{" "}
-                      {order.shippingAddress?.postalCode}{" "}
+                      {order.shippingAddress?.postalCode}
+                      <br />
                       {order.shippingAddress?.country}
-                    </p>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg mb-4">Shipping Address</h3>
-                    <p className="text-sm font-bold">
-                      {order.shippingAddress?.firstName}{" "}
-                      {order.shippingAddress?.lastName}
-                    </p>
-                    <p className="text-sm text-gray-500 mt-2 leading-relaxed">
-                      {order.shippingAddress?.address},{" "}
-                      {order.shippingAddress?.city}{" "}
-                      {order.shippingAddress?.postalCode}{" "}
-                      {order.shippingAddress?.country}
-                    </p>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg mb-4">Order Notes</h3>
-                    <p className="text-sm text-gray-500 leading-relaxed">
-                      {order.orderNotes || "No additional notes provided."}
                     </p>
                   </div>
                 </div>
