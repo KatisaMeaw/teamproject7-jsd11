@@ -1,9 +1,18 @@
-import { Edit2, Eye, MoreHorizontal } from "lucide-react";
+import { Edit2, Eye, MoreHorizontal, Trash2 } from "lucide-react";
+import React from "react";
 
-const ActionDropdown = ({ item, onEdit, onDetail, isOpen, onToggle }) => {
+const ActionDropdown = ({
+  item,
+  onEdit,
+  onDetail,
+  isOpen,
+  onToggle,
+  onDelete,
+}) => {
   return (
     <div className="relative inline-block text-left">
       <button
+        type="button"
         onClick={(e) => {
           e.stopPropagation(); // Prevent row click events
           onToggle();
@@ -37,6 +46,15 @@ const ActionDropdown = ({ item, onEdit, onDetail, isOpen, onToggle }) => {
                 className="flex items-center w-full px-4 py-2 text-sm text-slate-700 hover:text-gray-500 dark:hover:text-white dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
               >
                 <Edit2 className="w-4 h-4 mr-2" /> Edit Item
+              </button>
+              <button
+                onClick={() => {
+                  onDelete(item);
+                  onToggle();
+                }}
+                className="flex items-center w-full px-4 py-2 text-sm text-red-400 hover:text-red-500 dark:hover:text-white dark:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-700"
+              >
+                <Trash2 className="w-4 h-4 mr-2" /> Delete
               </button>
             </div>
           </div>
