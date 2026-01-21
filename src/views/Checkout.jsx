@@ -7,6 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
+
 const FormInput = ({
   label,
   name,
@@ -40,8 +41,11 @@ const Checkout = () => {
     subtotal,
     clearCart,
     isLoggedIn,
+    userId,      // ✅ รับค่า userId จาก Context
+    userName,    // ✅ รับค่า userName จาก Context (ที่เราแก้ใน CartProvider เมื่อสักครู่)
     loading: authLoading,
   } = useCart();
+
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
@@ -70,10 +74,8 @@ const Checkout = () => {
     e.preventDefault();
 
     // ✅ Validation เบื้องต้น
-
     if (!isLoggedIn) {
       alert("กรุณาเข้าสู่ระบบก่อนทำการสั่งซื้อสินค้า");
-      // พาไปหน้า Login และอาจจะส่ง state ไปเพื่อบอกว่าหลังจาก login ให้กลับมาที่ checkout
       navigate("/login", { state: { from: "/checkout" } });
       return;
     }
@@ -81,31 +83,27 @@ const Checkout = () => {
       alert("ตะกร้าของคุณยังไม่มีสินค้า กรุณาเลือกสินค้าก่อนชำระเงิน");
       return;
     }
-
     if (formData.phone.length !== 10) {
       alert("กรุณากรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก");
       return;
     }
 
-    // ✅ ปรับโครงสร้างข้อมูลให้ตรงกับ Order Schema ของคุณ
+    // ✅ ปรับโครงสร้างข้อมูลให้ตรงกับ Order Schema
     const orderData = {
-      // 1. เชื่อมโยงผู้ใช้ (ถ้ายังไม่ทำระบบ Login ให้ส่งเป็น null หรือค่าที่เหมาะสม)
-      //user: userId, //
+      user: userId,       // ✅ ใช้ ID จาก Context
+      userName: userName, // ✅ บันทึกชื่อจากระบบ Auth ลงในคอลเลกชัน Orders อัตโนมัติ (แก้ Error required)
 
-      // 2. รายการสินค้า (map ให้ตรงกับ schema ของ orderItems)
       orderItems: cartItems.map((item) => {
-        const productId = item._id || item.id; // ดึง ObjectId มา
-
+        const productId = item._id || item.id;
         return {
-          product: productId, // ✅ ต้องส่ง ID นี้ไป (Required)
-          name: item.name, //
-          quantity: Number(item.quantity || 1), //
-          image: item.image, //
-          price: Number(item.price || 0), //
+          product: productId,
+          name: item.name,
+          quantity: Number(item.quantity || 1),
+          image: item.image,
+          price: Number(item.price || 0),
         };
       }),
 
-      // 3. ที่อยู่จัดส่ง
       shippingAddress: {
         firstName: formData.firstName,
         lastName: formData.lastName,
@@ -117,12 +115,9 @@ const Checkout = () => {
         email: formData.email,
       },
 
-      // 4. สรุปยอดเงินและสถานะ
       totalPrice: Number(finalTotal || 0),
-      isPaid: false, // ค่าเริ่มต้นตาม Schema
-      status: "Pending", // ค่าเริ่มต้นตาม Schema
-
-      // ข้อมูลเพิ่มเติม (ถ้า Backend ไม่ได้กำหนดใน Schema จะไม่ถูกบันทึก)
+      isPaid: false,
+      status: "Pending",
       paymentMethod: formData.paymentMethod,
       additionalInfo: formData.additionalInfo,
     };
@@ -137,21 +132,12 @@ const Checkout = () => {
       if (response.status === 200 || response.status === 201) {
         alert("สั่งซื้อสำเร็จ!");
         if (clearCart) clearCart();
-        window.location.href = "/";
+        navigate("/"); // ใช้ navigate แทน window.location เพื่อความสมูท
       }
     } catch (error) {
-      // ✅ จัดการ Error แบบ axios
       const errorMessage =
         error.response?.data?.message || "ข้อมูลไม่ครบถ้วน หรือระบบมีปัญหา";
-
-      // ถ้า Error บอกว่าขาด product แสดงว่า ID ในตะกร้าหาย
-      if (errorMessage.includes("product")) {
-        alert(
-          "เกิดข้อผิดพลาด: ข้อมูลสินค้าในตะกร้าไม่สมบูรณ์ กรุณาล้างตะกร้าแล้วเลือกสินค้าใหม่อีกครั้ง",
-        );
-      } else {
-        alert("เกิดข้อผิดพลาด: " + errorMessage);
-      }
+      alert("เกิดข้อผิดพลาด: " + errorMessage);
       console.error("Checkout Error:", error.response || error);
     } finally {
       setLoading(false);
@@ -162,10 +148,7 @@ const Checkout = () => {
     <>
       <SubNavbar />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col lg:flex-row gap-12"
-        >
+        <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-12">
           {/* Billing Details */}
           <div className="lg:w-3/5">
             <h2 className="text-3xl font-medium mb-10">Billing details</h2>
@@ -247,19 +230,12 @@ const Checkout = () => {
             <h3 className="text-xl font-bold mb-6 border-b pb-4">Your Order</h3>
             <div className="space-y-4 mb-6">
               {cartItems.map((item) => (
-                <div
-                  key={item._id || item.id}
-                  className="flex justify-between text-sm"
-                >
+                <div key={item._id || item.id} className="flex justify-between text-sm">
                   <span className="text-gray-600">
                     {item.name} x {item.quantity}
                   </span>
                   <span className="font-medium">
-                    {/* ✅ เพิ่ม Safety check เพื่อไม่ให้หน้าจอขาว (Crash) */}
-                    THB{" "}
-                    {(
-                      Number(item.price || 0) * Number(item.quantity || 0)
-                    ).toLocaleString()}
+                    THB {(Number(item.price || 0) * Number(item.quantity || 0)).toLocaleString()}
                   </span>
                 </div>
               ))}
@@ -276,6 +252,7 @@ const Checkout = () => {
                   <label className="flex items-center cursor-pointer text-sm">
                     <input
                       type="radio"
+                      name="shipping"
                       checked={shippingMethod === "standard"}
                       onChange={() => setShippingMethod("standard")}
                       className="mr-2"
@@ -285,6 +262,7 @@ const Checkout = () => {
                   <label className="flex items-center cursor-pointer text-sm">
                     <input
                       type="radio"
+                      name="shipping"
                       checked={shippingMethod === "express"}
                       onChange={() => setShippingMethod("express")}
                       className="mr-2"
@@ -303,11 +281,10 @@ const Checkout = () => {
               type="submit"
               disabled={loading || cartItems.length === 0 || authLoading}
               className={`w-full mt-8 font-bold py-3 px-8 rounded-lg shadow-md transition duration-300 
-    ${
-      loading || cartItems.length === 0 || authLoading
-        ? "bg-gray-400 cursor-not-allowed"
-        : "bg-[#447F98] hover:bg-[#5591A9] text-white cursor-pointer"
-    }`}
+                ${loading || cartItems.length === 0 || authLoading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-[#447F98] hover:bg-[#5591A9] text-white cursor-pointer"
+                }`}
             >
               {authLoading
                 ? "CHECKING AUTH..."
