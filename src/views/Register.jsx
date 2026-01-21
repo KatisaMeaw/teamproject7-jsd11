@@ -158,8 +158,6 @@ const Register = () => {
 
           if (targetUser && targetUser._id) {
             localStorage.setItem("userId", targetUser._id);
-            console.log("✅ Login สำเร็จ! บันทึก ID:", targetUser._id);
-
             await login({
               email: formData.email,
               password: formData.password,
