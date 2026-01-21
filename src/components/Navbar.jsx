@@ -6,10 +6,89 @@ export function Navbar({logout,user}) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="sticky top-0 flex justify-between items-center shadow-md p-4 bg-white z-50">
+    <nav className="sticky top-0 grid grid-cols-2 md:grid-cols-3 items-center shadow-md p-4 bg-white z-50">
+      
+      <div className="flex justify-start">
       <Link to="/" className="flex items-center">
         <img src="icon/Frame 281.png" alt="Logo" className="h-10" />
       </Link>
+      </div>
+
+
+      <ul className="hidden md:flex justify-center gap-12 lg:gap-28 text-shadow-none text-[#447F98] font-bold">
+        <li>
+          <Link to="/" className="hover:text-gray-500">
+            Home
+          </Link>
+        </li>
+        <li>
+          <Link to="/shop" className="hover:text-gray-500">
+            Shop
+          </Link>
+        </li>
+        <li>
+          <Link to="/about" className="hover:text-gray-500">
+            About
+          </Link>
+        </li>
+        <li>
+          <Link to="/contact" className="hover:text-gray-500">
+            Contact
+          </Link>
+        </li>
+      </ul>
+
+
+
+        {/* ส่วน Desktop Icons */}
+      <div className="flex justify-end items-center gap-4">
+
+      <div className="hidden md:flex items-center gap-4 lg:gap-6">
+
+        {user && user.role === "admin" && (
+    <Link
+      to="/admin"
+      className="p-2 px-4 rounded-full bg-red-100 text-red-600 hover:bg-red-200 font-bold flex items-center"
+    >
+      Admin Panel
+    </Link>
+  )}
+        {user  ? ( <Link
+          to="/userprofile"
+          className="p-2 rounded-full text-gray-600 hover:bg-teal-100"
+        >
+          <img src="icon/mdi_account-alert-outline.png" alt="" />
+        </Link>
+        ) : (<Link
+          to="/login"
+          className="p-2 rounded-full text-gray-600 hover:bg-teal-100"
+        >
+          <img src="icon/mdi_account-alert-outline.png" alt="" />
+        </Link>)}
+        <a
+          href="/shop"
+          className="p-2 rounded-full text-gray-600 hover:bg-teal-100"
+        >
+          <img src="icon/akar-icons_search.png" alt="" />
+        </a>
+        
+        
+        <Link to="/cart"
+          className="p-2 rounded-full text-gray-600 hover:bg-teal-100"
+        >
+          <img src="icon/ant-design_shopping-cart-outlined.png" alt="Cart" />
+        </Link> 
+
+        {user && (
+          <button
+            onClick={logout}
+            className="group p-2 rounded-full hover:bg-red-100 hover:text-red-500 transition-colors cursor-pointer"
+          >
+            <MdOutlineLogout className="w-6 h-6 text-[#629BB5] group-hover:text-red-500 transition-colors" />
+          </button>
+        )}
+      </div>
+
       <div className="md:hidden">
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -48,83 +127,11 @@ export function Navbar({logout,user}) {
           )}
         </button>
       </div>
-      <ul className="hidden md:flex justify-center gap-28 text-shadow-none text-[#447F98] font-bold">
-        <li>
-          <Link to="/" className="hover:text-gray-500">
-            Home
-          </Link>
-        </li>
-        <li>
-          <Link to="/shop" className="hover:text-gray-500">
-            Shop
-          </Link>
-        </li>
-        <li>
-          <Link to="/about" className="hover:text-gray-500">
-            About
-          </Link>
-        </li>
-        <li>
-          <Link to="/contact" className="hover:text-gray-500">
-            Contact
-          </Link>
-        </li>
-      </ul>
-      <div className="hidden md:flex justify-center gap-6">
-
-        {user && user.role === "admin" && (
-    <Link
-      to="/admin"
-      className="p-2 px-4 rounded-full bg-red-100 text-red-600 hover:bg-red-200 font-bold flex items-center"
-    >
-      Admin Panel
-    </Link>
-  )}
-        {user  ? ( <Link
-          to="/userprofile"
-          className="p-2 rounded-full text-gray-600 hover:bg-teal-100"
-        >
-          <img src="icon/mdi_account-alert-outline.png" alt="" />
-        </Link>
-        ) : (<Link
-          to="/login"
-          className="p-2 rounded-full text-gray-600 hover:bg-teal-100"
-        >
-          <img src="icon/mdi_account-alert-outline.png" alt="" />
-        </Link>)}
-        <a
-          href="#"
-          className="p-2 rounded-full text-gray-600 hover:bg-teal-100"
-        >
-          <img src="icon/akar-icons_search.png" alt="" />
-        </a>
-        <a
-          href="#"
-          className="p-2 rounded-full text-gray-600 hover:bg-teal-100"
-        >
-          <img src="icon/akar-icons_heart.png" alt="" />
-        </a>
-        <a
-          href="/cart"
-          className="p-2 rounded-full text-gray-600 hover:bg-teal-100"
-        >
-          <img src="icon/ant-design_shopping-cart-outlined.png" alt="" />
-        </a>
-
-        {user && (
-          <button
-            onClick={logout}
-            className="group p-2 rounded-full hover:bg-red-100 hover:text-red-500 transition-colors cursor-pointer"
-          >
-            <MdOutlineLogout className="w-6 h-6 text-[#629BB5] group-hover:text-red-500 transition-colors" />
-          </button>
-        )}
       </div>
-
 
      
 
-      
+      {/* ส่วน Mobile Nav */}
         <div className={`fixed inset-0 top-18 w-full bg-white shadow-lg flex flex-col items-center py-4 space-y-6 md:hidden z-50 transition-all duration-700 ease-in-out
           ${isOpen 
     ? "translate-x-0 opacity-100 visible animate-menu-slide" 
@@ -181,9 +188,9 @@ export function Navbar({logout,user}) {
       </Link>
     )}
 
-        
+
         </div>
-      
+
     </nav>
   );
 }

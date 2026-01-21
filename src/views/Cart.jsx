@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
 import SubNavbar from "../components/SubNavbar";
 import SubFooter from "../components/SubFooter";
@@ -6,6 +6,8 @@ import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
+
+  const {user} = useOutletContext();
   const navigate = useNavigate();
   const { cartItems, updateQuantity, removeItem, subtotal } = useCart();
 
@@ -39,10 +41,28 @@ const Cart = () => {
     <>
       <SubNavbar />
       <main className="max-w-7xl mx-auto px-4 py-12 min-h-[60vh]">
+        {!user ? (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="w-40 h-40 mb-6 bg-gray-50 rounded-full flex items-center justify-center">
+            <svg className="w-20 h-20 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+          </div>
+          <h3 className="text-2xl font-bold text-gray-800 mb-2">Please log in to see your cart</h3>
+          <p className="text-gray-500 mb-8 max-w-sm">Log in now to view the items you have added or to start a new order.</p>
+          
+          <div className="flex flex-col sm:flex-row gap-4">
+            
+            <Link to="/login?redirect=/cart" className="bg-[#447F98] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#5591A9] shadow-md transition-all">
+              Login / Sign Up
+            </Link>
+          </div>
+        </div>
+      ) : (
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="lg:w-2/3">
             <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-              <div className="grid grid-cols-4 p-4 bg-blue-50/50 font-bold text-sm text-gray-700">
+              <div className="hidden md:grid grid-cols-4 p-4 bg-blue-50/50 font-bold text-sm text-gray-700">
                 <div>Product</div>
                 <div>Price</div>
                 <div className="text-center">Quantity</div>
@@ -54,13 +74,13 @@ const Cart = () => {
                   {cartItems.map((item) => (
                     <div
                       key={item._id || item.id} // ✅ รองรับทั้ง _id และ id
-                      className="grid grid-cols-4 items-center border-t border-gray-100 py-6 px-4 text-sm hover:bg-gray-50 transition-colors"
+                      className="grid grid-cols-2 md:grid-cols-4 items-center border-t border-gray-100 py-6 px-4 text-sm hover:bg-gray-50 transition-colors"
                     >
-                      <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-4 col-span-2 md:col-span-1">
                         <img
                           src={item.image}
                           alt={item.name}
-                          className="w-16 h-16 object-cover border rounded-md bg-white"
+                          className="w-16 h-16 object-cover border rounded-md bg-white shrink-0"
                         />
                         <span className="font-medium text-gray-800">
                           {item.name}
@@ -69,11 +89,13 @@ const Cart = () => {
 
                       {/* ราคาต่อชิ้น */}
                       <div className="text-gray-500">
+                        <span className="md:hidden text-xs block text-gray-400">Price</span>
                         THB {item.price.toLocaleString()}
                       </div>
 
                       {/* ตัวปรับจำนวน */}
-                      <div className="flex justify-center">
+                      <div className="flex flex-col md:items-center">
+                        <span className="md:hidden text-xs text-gray-400 mb-1">Quantity</span>
                         <input
                           type="number"
                           min="1"
@@ -85,11 +107,15 @@ const Cart = () => {
                         />
                       </div>
 
-                      <div className="flex justify-between items-center pl-4">
+                      <div className="flex justify-between items-center md:pl-4 col-span-2 md:col-span-1 border-t md:border-none pt-4 md:pt-0">
+                        <div>
+                          <span className="md:hidden text-xs block text-gray-400">Subtotal</span>
                         <span className="font-bold text-gray-900">
                           {/* ✅ คำนวณแบบปลอดภัย */}
                           {(Number(item.price || 0) * Number(item.quantity || 0)).toLocaleString()}
                         </span>
+                        </div>
+
                         <button
                           onClick={() => handleRemove(item._id || item.id)}
                           className="text-gray-400 hover:text-red-500 transition-colors p-2"
@@ -155,6 +181,7 @@ const Cart = () => {
             </div>
           </div>
         </div>
+        )}
       </main>
       <SubFooter />
       <Footer />

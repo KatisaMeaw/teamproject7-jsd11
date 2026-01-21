@@ -6,7 +6,6 @@ const Bottombar = ({user}) => {
     const navItems = [
         { name: "Home", img: "icon/home.png", link: "/"},
         { name: "Search", img: "icon/akar-icons_search.png", link: "/shop"},
-        { name: "Favorite", img: "icon/akar-icons_heart.png", link: "/favorite"},
         { name: "Cart", img: "icon/ant-design_shopping-cart-outlined.png", link: "/cart"},
         { name: "Profile", img: "icon/mdi_account-alert-outline.png", link: user ? "/userprofile" : "/login"},
         
@@ -27,7 +26,7 @@ const location = useLocation();
                         to={item.link}
 
                         className={`
-                            flex flex-col items-center flex-grow 
+                            flex flex-col items-center grow 
                             text-xs font-medium 
                             p-2 mb-1 
                             min-w-0

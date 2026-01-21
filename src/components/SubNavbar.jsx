@@ -20,8 +20,11 @@ export default function SubNavbar() {
       case "/userprofile":
         return "User Profile";
 
-      default:
-        return path.replace("/", "").charAt(0).toUpperCase() + path.slice(2);
+      default: {
+        const mainPath = path.split("/")[1];
+        if (!mainPath) return "Home";
+        return mainPath.charAt(0).toUpperCase() + mainPath.slice(1);
+      }
     }
   };
 
@@ -49,4 +52,4 @@ export default function SubNavbar() {
       </div>
     </div>
   );
-}
+};
