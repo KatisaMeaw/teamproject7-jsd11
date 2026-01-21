@@ -107,10 +107,14 @@ const Checkout = () => {
 
       // 3. ที่อยู่จัดส่ง
       shippingAddress: {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
         address: formData.streetAddress,
         city: formData.city,
         postalCode: formData.postalCode,
         country: "Thailand",
+        phone: formData.phone,
+        email: formData.email,
       },
 
       // 4. สรุปยอดเงินและสถานะ

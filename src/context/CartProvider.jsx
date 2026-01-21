@@ -12,9 +12,7 @@ const CartProvider = ({ children }) => {
     loading: true
   });
 
-  // ----------------------------------
-  // CHECK LOGIN FROM BACKEND
-  // ----------------------------------
+  // 1. เช็คสถานะการเข้าสู่ระบบ
   const checkAuth = async () => {
     try {
       const res = await axios.get(`${API_URL}/users/auth/cookie/me`, {
@@ -32,9 +30,8 @@ const CartProvider = ({ children }) => {
         userId: null,
         loading: false
       });
-      // ถ้าไม่ล็อกอิน ให้ดึงจาก LocalStorage มาโชว์
-      const savedCart = localStorage.getItem("cart");
-      if (savedCart) setCartItems(JSON.parse(savedCart));
+      // ✅ เมื่อไม่ล็อกอิน ให้ล้างข้อมูลตะกร้าใน State ทันที
+      setCartItems([]);
     }
   };
 
@@ -42,137 +39,99 @@ const CartProvider = ({ children }) => {
     checkAuth();
   }, []);
 
-  // ----------------------------------
-  // FETCH CART WHEN LOGIN
-  // ----------------------------------
+  // 2. ดึงข้อมูลจาก Server (เฉพาะตอนล็อกอิน)
   const fetchCartFromServer = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/carts`, { // ✅ เปลี่ยนเป็น /carts
-        withCredentials: true
-      });
+    if (!authState.isLoggedIn) return; // กันเหนียว
 
-      // ✅ แตกข้อมูลจาก Schema ที่ทำไว้: { data: { products: [ { productId: {...}, quantity: 1 } ] } }
+    try {
+      const res = await axios.get(`${API_URL}/carts`, { withCredentials: true });
       if (res.data.success && res.data.data) {
-        const formattedItems = res.data.data.products.map(item => ({
-          ...item.productId, // ข้อมูลสินค้าที่ถูก populate มา
-          quantity: item.quantity,
-          _id: item.productId._id // มั่นใจว่ามี ID ไว้ใช้อ้างอิง
-        }));
+        const formattedItems = res.data.data.products
+          .filter(item => item.productId)
+          .map(item => ({
+            ...item.productId,
+            quantity: item.quantity,
+            _id: item.productId?._id
+          }));
         setCartItems(formattedItems);
       }
     } catch (err) {
-      console.error("Fetch cart error:", err.message);
+      if (err.response?.status !== 401) {
+        console.error("Fetch cart error:", err.message);
+      }
     }
   };
 
   useEffect(() => {
     if (authState.isLoggedIn) {
       fetchCartFromServer();
+    } else {
+      setCartItems([]); // ✅ ถ้า Logout ให้ล้าง State ทันที
     }
   }, [authState.isLoggedIn]);
 
-  // ----------------------------------
-  // SAVE GUEST CART (LocalStorage)
-  // ----------------------------------
-  useEffect(() => {
-    if (!authState.isLoggedIn && !authState.loading) {
-      localStorage.setItem("cart", JSON.stringify(cartItems));
-    }
-  }, [cartItems, authState]);
 
-  // ----------------------------------
-  // ADD TO CART
-  // ----------------------------------
+  // 3. ADD TO CART (เฉพาะสมาชิก)
   const addToCart = async (product) => {
+    if (!authState.isLoggedIn) {
+      alert("Please login to add items to cart"); // แจ้งเตือน หรือเปลี่ยนเส้นทางไปหน้า Login
+      return;
+    }
+
     const productId = product._id || product.id;
-
-    if (!authState.isLoggedIn) {
-      setCartItems((prev) => {
-        const exist = prev.find((i) => (i._id || i.id) === productId);
-        if (exist) {
-          return prev.map((i) =>
-            (i._id || i.id) === productId
-              ? { ...i, quantity: i.quantity + 1 }
-              : i
-          );
-        }
-        return [...prev, { ...product, quantity: 1 }];
-      });
-    } else {
-      try {
-        await axios.post(
-          `${API_URL}/carts`, //
-          { productId, quantity: 1 },
-          { withCredentials: true }
-        );
-        fetchCartFromServer();
-      } catch (error) {
-        console.error("Add to cart error", error);
-      }
+    try {
+      await axios.post(
+        `${API_URL}/carts`,
+        { productId, quantity: 1 },
+        { withCredentials: true }
+      );
+      fetchCartFromServer();
+    } catch (error) {
+      console.error("Add to cart error", error);
     }
   };
 
-  // ----------------------------------
-  // UPDATE QTY
-  // ----------------------------------
+  // 4. UPDATE QTY (เฉพาะสมาชิก)
   const updateQuantity = async (id, qty) => {
-    if (qty < 1) return;
+    if (qty < 1 || !authState.isLoggedIn) return;
 
-    if (!authState.isLoggedIn) {
-      setCartItems((prev) =>
-        prev.map((i) =>
-          (i._id === id || i.id === id) ? { ...i, quantity: qty } : i
-        )
+    try {
+      await axios.put(
+        `${API_URL}/carts/${id}`,
+        { quantity: qty },
+        { withCredentials: true }
       );
-    } else {
-      try {
-        await axios.put(
-          `${API_URL}/carts/${id}`,
-          { quantity: qty },
-          { withCredentials: true }
-        );
-        fetchCartFromServer();
-      } catch (error) {
-        console.error("Update quantity error", error);
-      }
+      fetchCartFromServer();
+    } catch (error) {
+      console.error("Update quantity error", error);
     }
   };
 
-  // ----------------------------------
-  // REMOVE ITEM
-  // ----------------------------------
+  // 5. REMOVE ITEM (เฉพาะสมาชิก)
   const removeItem = async (id) => {
-    if (!authState.isLoggedIn) {
-      setCartItems((prev) =>
-        prev.filter((i) => i._id !== id && i.id !== id)
-      );
-    } else {
-      try {
-        await axios.delete(`${API_URL}/carts/${id}`, {
-          withCredentials: true
-        });
-        fetchCartFromServer();
-      } catch (error) {
-        console.error("Remove item error", error);
-      }
+    if (!authState.isLoggedIn) return;
+
+    try {
+      await axios.delete(`${API_URL}/carts/${id}`, {
+        withCredentials: true
+      });
+      fetchCartFromServer();
+    } catch (error) {
+      console.error("Remove item error", error);
     }
   };
 
-  // ----------------------------------
-  // CLEAR CART
-  // ----------------------------------
+  // 6. CLEAR CART (เฉพาะสมาชิก)
   const clearCart = async () => {
-    setCartItems([]);
-    if (!authState.isLoggedIn) {
-      localStorage.removeItem("cart");
-    } else {
-      try {
-        await axios.delete(`${API_URL}/carts`, {
-          withCredentials: true
-        });
-      } catch (error) {
-        console.error("Clear cart error", error);
-      }
+    if (!authState.isLoggedIn) return;
+
+    try {
+      await axios.delete(`${API_URL}/carts`, {
+        withCredentials: true
+      });
+      setCartItems([]);
+    } catch (error) {
+      console.error("Clear cart error", error);
     }
   };
 
