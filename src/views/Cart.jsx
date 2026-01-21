@@ -1,19 +1,20 @@
-import { Link } from "react-router-dom"; 
+import { useState } from "react"; // เพิ่ม useState
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
 import SubNavbar from "../components/SubNavbar";
 import SubFooter from "../components/SubFooter";
 import Footer from "../components/Footer";
-import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const navigate = useNavigate();
+  // เพิ่ม state สำหรับจัดการ loading ขณะอัปเดตรายชิ้น
+  const [isUpdating, setIsUpdating] = useState(false);
   
-  // ✅ ดึง clearCart มาเพิ่ม (ถ้าคุณต้องการใช้ฟังก์ชันล้างตะกร้าทั้งหมด)
   const { 
     cartItems, 
     updateQuantity, 
     removeItem, 
-    clearCart, // ดึงมาใช้จาก useCart
+    clearCart, 
     subtotal, 
     loading, 
     isLoggedIn 
@@ -28,41 +29,48 @@ const Cart = () => {
   };
 
   const handleQuantityChange = async (id, value) => {
-    if (value === "") {
-      updateQuantity(id, 1);
-      return;
-    }
-    const qty = typeof value === "string" ? parseInt(value, 10) : value;
+    if (isUpdating) return; // ป้องกันการกดย้ำๆ
+
+    const qty = parseInt(value, 10);
     
+    if (isNaN(qty) || qty === "") return;
+
     try {
+      setIsUpdating(true);
       if (qty < 1) {
-        handleRemove(id);
-      } else if (!isNaN(qty)) {
-        await updateQuantity(id, qty); // ✅ ใส่ await เพื่อรอผลลัพธ์
+        await handleRemove(id);
+      } else {
+        await updateQuantity(id, qty);
       }
     } catch (error) {
-      // หากเกิด error เช่น token หมดอายุ ให้แจ้งเตือน
       console.error("Update failed:", error);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
   const handleRemove = async (id) => {
     if (window.confirm("Are you sure you want to remove this item?")) {
       try {
-        await removeItem(id); // ✅ ใส่ await
+        setIsUpdating(true);
+        await removeItem(id);
       } catch (error) {
         alert("Failed to remove item. Please try again.");
+      } finally {
+        setIsUpdating(false);
       }
     }
   };
 
-  // ✅ เพิ่มฟังก์ชันล้างตะกร้าทั้งหมด (แก้ปัญหา NotFound: DELETE /api/v1/carts)
   const handleClearAll = async () => {
     if (window.confirm("Do you want to clear your entire cart?")) {
       try {
+        setIsUpdating(true);
         await clearCart();
       } catch (error) {
         console.error("Clear cart failed:", error);
+      } finally {
+        setIsUpdating(false);
       }
     }
   };
@@ -95,14 +103,14 @@ const Cart = () => {
             </div>
             <h3 className="text-2xl font-bold text-gray-800 mb-2">Please log in to see your cart</h3>
             <p className="text-gray-500 mb-8 max-w-sm">Log in now to view the items you have added.</p>
-            <Link to="/login?redirect=/cart" className="bg-[#447F98] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#5591A9] shadow-md transition-all">
+            <Link to="/login" className="bg-[#447F98] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#5591A9] shadow-md transition-all">
               Login / Sign Up
             </Link>
           </div>
         ) : (
           <div className="flex flex-col lg:flex-row gap-8">
             <div className="lg:w-2/3">
-              <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+              <div className={`bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm transition-opacity ${isUpdating ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
                 {/* Product List Header */}
                 <div className="hidden md:grid grid-cols-4 p-4 bg-blue-50/50 font-bold text-sm text-gray-700">
                   <div>Product</div>
@@ -121,21 +129,33 @@ const Cart = () => {
                         </div>
                         <div className="text-gray-500">
                           <span className="md:hidden text-xs block text-gray-400">Price</span>
-                          THB {item.price?.toLocaleString()}
+                          THB {Number(item.price || 0).toLocaleString()}
                         </div>
                         <div className="flex flex-col md:items-center">
                           <span className="md:hidden text-xs text-gray-400 mb-1">Quantity</span>
                           <div className="flex items-center border border-gray-300 rounded-md overflow-hidden h-10 bg-white">
-                            <button type="button" onClick={() => handleQuantityChange(item._id || item.id, item.quantity - 1)} className="px-3 h-full hover:bg-gray-100">-</button>
+                            <button 
+                              disabled={isUpdating}
+                              onClick={() => handleQuantityChange(item._id || item.id, item.quantity - 1)} 
+                              className="px-3 h-full hover:bg-gray-100 disabled:opacity-30"
+                            >-</button>
                             <input type="number" value={item.quantity} readOnly className="w-12 text-center text-sm font-bold outline-none" />
-                            <button type="button" onClick={() => handleQuantityChange(item._id || item.id, item.quantity + 1)} className="px-3 h-full hover:bg-gray-100">+</button>
+                            <button 
+                              disabled={isUpdating}
+                              onClick={() => handleQuantityChange(item._id || item.id, item.quantity + 1)} 
+                              className="px-3 h-full hover:bg-gray-100 disabled:opacity-30"
+                            >+</button>
                           </div>
                         </div>
                         <div className="flex justify-between items-center md:pl-4 col-span-2 md:col-span-1 border-t md:border-none pt-4 md:pt-0">
                           <span className="font-bold text-gray-900">
                             {(Number(item.price || 0) * Number(item.quantity || 0)).toLocaleString()}
                           </span>
-                          <button onClick={() => handleRemove(item._id || item.id)} className="text-gray-400 hover:text-red-500 p-2">
+                          <button 
+                            disabled={isUpdating}
+                            onClick={() => handleRemove(item._id || item.id)} 
+                            className="text-gray-400 hover:text-red-500 p-2 disabled:opacity-30"
+                          >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                           </button>
                         </div>
@@ -146,13 +166,12 @@ const Cart = () => {
                         <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                         Continue Shopping
                       </Link>
-                      
-                      {/* ✅ เพิ่มปุ่มล้างตะกร้าทั้งหมด */}
                       <button 
+                        disabled={isUpdating}
                         onClick={handleClearAll}
-                        className="text-xs text-red-400 hover:text-red-600 font-medium underline"
+                        className="text-xs text-red-400 hover:text-red-600 font-medium underline disabled:opacity-30"
                       >
-                        Clear Shopping Cart
+                        {isUpdating ? "Processing..." : "Clear Shopping Cart"}
                       </button>
                     </div>
                   </>
@@ -160,7 +179,7 @@ const Cart = () => {
                   <div className="p-20 text-center">
                     <h3 className="text-xl font-bold text-gray-800 mb-2">Your cart is empty</h3>
                     <p className="text-gray-500 mb-8">Looks like you haven't added anything to your cart yet.</p>
-                    <Link to="/shop" className="inline-block bg-[#447F98] text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 shadow-md">Start Shopping</Link>
+                    <Link to="/shop" className="inline-block bg-[#447F98] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#5591A9] shadow-md transition-colors">Start Shopping</Link>
                   </div>
                 )}
               </div>
@@ -176,15 +195,15 @@ const Cart = () => {
                 </div>
                 <div className="flex justify-between text-xl font-bold pt-6 border-t border-gray-100 mb-8">
                   <span>Total</span>
-                  <span className="text-blue-600">THB {(subtotal || 0).toLocaleString()}</span>
+                  <span className="text-[#447F98]">THB {(subtotal || 0).toLocaleString()}</span>
                 </div>
                 <button 
                   onClick={handleCheckout} 
-                  disabled={cartItems?.length === 0}
+                  disabled={cartItems?.length === 0 || isUpdating}
                   className={`text-center w-full mt-8 font-bold py-3 px-8 rounded-lg shadow-md transition
-                  ${cartItems?.length > 0 ? "bg-[#447F98] hover:bg-[#5591A9] text-white" : "bg-gray-300 text-gray-500 cursor-not-allowed"}`}
+                  ${cartItems?.length > 0 && !isUpdating ? "bg-[#447F98] hover:bg-[#5591A9] text-white" : "bg-gray-300 text-gray-500 cursor-not-allowed"}`}
                 >
-                  CHECKOUT
+                  {isUpdating ? "WAITING..." : "CHECKOUT"}
                 </button>
               </div>
             </div>

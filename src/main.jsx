@@ -24,7 +24,12 @@ import  About  from "./views/About.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    // ย้าย CartProvider มาหุ้ม Layout ตรงนี้
+    element: (
+      <CartProvider>
+        <Layout />
+      </CartProvider>
+    ),
     errorElement: (
       <div className="min-h-screen flex justify-center items-center">
         <h1 className="text-4xl">404 - Page Not Found😭</h1>
@@ -61,8 +66,6 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <CartProvider>
       <RouterProvider router={router} />
-    </CartProvider>
   </React.StrictMode>,
 );
