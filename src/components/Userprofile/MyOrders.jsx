@@ -1,84 +1,204 @@
-import React from 'react'
+import React, { useEffect, useState, useContext } from "react";
+import axios from "axios";
 import OrderTabs from "./OrderTabs.jsx";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { CartContext } from "../../context/CartContext";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const OrderHistoryCard = () => {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [openOrderId, setOpenOrderId] = useState(null);
+  const { isLoggedIn, loading: authLoading } = useContext(CartContext);
+  const [activeTab, setActiveTab] = useState("all");
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      // 1. ถ้าสถานะ Auth กำลังโหลด ให้รอการทำงานก่อน
+      if (authLoading) return;
+
+      // 2. ถ้าไม่ได้ Login ให้เคลียร์ข้อมูลและเลิกโหลด
+      if (!isLoggedIn) {
+        setOrders([]);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const response = await axios.get(`${API_URL}/orders/me`, {
+          withCredentials: true,
+        });
+        // ✅ ป้องกัน Error ถ้า API ตอบกลับมาไม่มี data
+        const data = response.data.orders || response.data.data || [];
+        setOrders(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+        setOrders([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, [isLoggedIn, authLoading]);
+
+  // กรองข้อมูลตาม Tab และป้องกัน orders เป็น undefined
+  const filteredOrders = (orders || []).filter((order) => {
+    if (activeTab === "all") return true;
+    if (activeTab === "completed") return order.status === "Delivered";
+    if (activeTab === "pending")
+      return order.status === "Pending" || order.status === "Processing";
+    if (activeTab === "cancelled") return order.status === "Cancelled";
+    return true;
+  });
+
+  const toggleOrder = (id) => {
+    setOpenOrderId(openOrderId === id ? null : id);
+  };
+
+  // ✅ แสดง Loading ระหว่างรอ Auth หรือรอ Data
+  if (authLoading || (loading && orders.length === 0)) {
+    return (
+      <div className="p-20 text-center text-gray-500">
+        Loading your orders...
+      </div>
+    );
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <div className="p-4 text-center py-20 text-gray-500">
+        Please log in to view your order history.
+      </div>
+    );
+  }
+
   return (
-    <div className="p-4">
-    <OrderTabs />
-    <div className=" border border-[#E4E7E9] py-10 mb-6 mt-10">
-        <div className="grid grid-cols-2 items-center bg-[#FDFAE7] border border-[#F8EBAA] w-[95%] mx-auto py-10">
-        <div className="md:text-xl ml-8 font-medium">#96459761<div className="text-base font-normal mt-2">4 Products • Order Placed in 17 Jan, 2026 at 7:32 PM</div> </div>
-        <div className="ml-10 text-xl md:text-3xl font-bold mr-8 text-[#447F98]">$3,000.00</div>
+    <div className="p-4 max-w-6xl mx-auto">
+      {/* ส่วนหัว Tab */}
+      <OrderTabs
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        orders={orders || []} // ✅ ส่งเป็น Array ว่างเสมอถ้าไม่มีข้อมูล
+      />
+
+      {/* รายการ Order */}
+      {filteredOrders.length > 0 ? (
+        filteredOrders.map((order) => (
+          <div
+            key={order._id}
+            className="border border-[#E4E7E9] mb-6 mt-6 overflow-hidden rounded-sm"
+          >
+            {/* Header ของแต่ละ Order */}
+            <div
+              className={`flex justify-between items-center p-6 cursor-pointer transition-all duration-200 
+                ${openOrderId === order._id ? "bg-[#F2F4F5] border-b" : "bg-white hover:bg-[#F9FBFC]"}`}
+              onClick={() => toggleOrder(order._id)}
+            >
+              <div className="flex flex-wrap gap-4 items-center">
+                <span className="text-[#191C1F] font-bold">
+                  #{order._id?.slice(-8).toUpperCase()}
+                </span>
+                <div className="text-sm text-[#5F6C72]">
+                  {/* ✅ ใช้ Optional Chaining ป้องกัน Error length */}
+                  {order.orderItems?.length || 0} Products •{" "}
+                  {order.createdAt
+                    ? new Date(order.createdAt).toLocaleDateString("en-GB")
+                    : "N/A"}
+                </div>
+                <span
+                  className={`text-[10px] uppercase px-2.5 py-0.5 rounded-full font-bold ${
+                    order.status === "Delivered"
+                      ? "bg-green-100 text-green-700"
+                      : order.status === "Cancelled"
+                        ? "bg-red-100 text-red-700"
+                        : "bg-blue-100 text-[#2484A2]"
+                  }`}
+                >
+                  {order.status}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-6">
+                <div className="text-xl font-bold text-[#2484A2]">
+                  THB {order.totalPrice?.toLocaleString() || 0}
+                </div>
+                {openOrderId === order._id ? (
+                  <ChevronUp size={20} />
+                ) : (
+                  <ChevronDown size={20} />
+                )}
+              </div>
+            </div>
+
+            {/* รายละเอียดสินค้าภายใน (Dropdown) */}
+            {openOrderId === order._id && (
+              <div className="p-6 bg-white animate-in slide-in-from-top-2 duration-200">
+                <div className="hidden md:grid grid-cols-4 p-3 bg-[#F2F4F5] text-[12px] font-bold text-[#475156] mb-4">
+                  <p>PRODUCTS</p>
+                  <p>PRICE</p>
+                  <p>QUANTITY</p>
+                  <p>SUB-TOTAL</p>
+                </div>
+
+                {order.orderItems?.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="grid grid-cols-1 md:grid-cols-4 items-center py-4 border-b last:border-0 gap-4"
+                  >
+                    <div className="flex items-center gap-4">
+                      <img
+                        src={item.image}
+                        alt=""
+                        className="w-16 h-16 object-cover rounded-md bg-gray-100"
+                      />
+                      <div>
+                        <p className="text-[#447F98] font-bold text-sm">
+                          {item.name}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-sm font-medium">
+                      THB {item.price?.toLocaleString()}
+                    </p>
+                    <p className="text-sm text-gray-500">x{item.quantity}</p>
+                    <p className="text-sm font-bold">
+                      THB {(item.price * item.quantity)?.toLocaleString()}
+                    </p>
+                  </div>
+                ))}
+
+                {/* ที่อยู่จัดส่ง */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 mt-6 border-t">
+                  <div>
+                    <h3 className="font-bold text-gray-800 mb-2">
+                      Shipping Address
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {order.shippingAddress?.firstName}{" "}
+                      {order.shippingAddress?.lastName}
+                      <br />
+                      {order.shippingAddress?.address},{" "}
+                      {order.shippingAddress?.city}{" "}
+                      {order.shippingAddress?.postalCode}
+                      <br />
+                      {order.shippingAddress?.country}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        ))
+      ) : (
+        <div className="mt-20 text-center text-gray-500">
+          No orders found in "{activeTab}" category.
         </div>
-
-        <p className="ml-10 mt-4">Order expected arrival<span className="font-semibold"> 23 Jan, 2021</span></p>
-        <h2 className="ml-10 mt-10 text-xl font-semibold">Product<span className="text-gray-500"> (02)</span></h2>
-
-
-            <div className="hidden md:grid grid-cols-4 p-4 border border-[#E7EAEB] bg-[#F2F4F5] mt-8 text-sm font-semibold">
-            <p className="text-[#475156]">PRODUCTS</p>
-            <p className="text-[#475156]">PRICE</p>
-            <p className="text-[#475156]">QUANTITY</p>
-            <p className="text-[#475156]">SUB-TOTAL</p>
-            </div>
-        
-            <div className="grid grid-cols-2 md:grid-cols-4 relative p-4 mt-5 gap-y-4 after:absolute after:bottom-0 after:left-6 after:right-6 after:border-b after:border-gray-200">
-                <div className="flex items-center gap-4 col-span-2 md:col-span-1">
-                    <img
-              src="./img-prod/chair1.jpeg"
-              alt=""
-              className="rounded-xl w-16 h-16 md:w-20 md:h-20 object-cover"
-            />
-                
-            <div className="text-sm text-[#447F98] font-medium cursor-pointer">Syltherine
-            <p className="text-xs md:text-base text-gray-500 font-normal">Stylish comfy chair</p>
-            </div>
-            </div>
-           
-
-            <div className="flex flex-col md:block">
-            <span className="text-xs text-gray-400 md:hidden">Price</span>
-            <p className="text-sm md:text-md font-medium">$1,500</p>
-            </div>
-
-            <div className="flex flex-col md:block">
-            <span className="text-xs text-gray-400 md:hidden">Quantity</span>
-            <p className="text-sm md:text-md text-gray-600">x1</p>
-            </div>
-
-            {/* Sub Total for mobile */}
-            <div className="flex flex-col md:block text-right md:text-left col-span-2 md:col-span-1 border-t md:border-none pt-2 md:pt-0">
-            <span className="text-xs text-gray-400 md:hidden">Sub-total</span>
-            <p className="text-md font-bold md:font-medium text-[#447F98] md:text-black">$1,500</p>
-            </div>
-        </div>
-
-            
-
-
-            <div className="md:grid grid-cols-3 relative p-4 mt-10 border-t border-gray-200 font-semibold">
-            <div className="text-xl">Billing Address
-                <div className="text-base mt-5">Kevin Gilbert</div>
-                <div className="text-base text-gray-500">999/9 Rama I Rd,Pathum Wan, Bangkok 10330 Thailand</div>
-                <div className="text-base">Phone Number:<span className="text-gray-500"> +66-234-5678</span></div>
-                <div className="text-base">Email:<span className="text-gray-500"> kevin.gilbert@gmail.com</span></div>
-            </div>
-            <div className="text-xl mt-10 md:mt-0">Shipping Address
-                <div className="text-base mt-5">Kevin Gilbert</div>
-                <div className="text-base text-gray-500">999/9 Rama I Rd,Pathum Wan, Bangkok 10330 Thailand</div>
-                <div className="text-base">Phone Number:<span className="text-gray-500"> +66-234-5678</span></div>
-                <div className="text-base">Email:<span className="text-gray-500"> kevin.gilbert@gmail.com</span></div>
-            </div>
-            
-            <div className="text-xl mt-10 md:mt-0">Order Notes
-                <p className="text-base text-gray-500 mt-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique quidem esse illo earum omnis voluptatem dignissimos corporis unde tenetur nesciunt!</p>
-            </div>
-
-            </div>
-
+      )}
     </div>
-    </div>
-  )
-}
+  );
+};
 
-export default OrderHistoryCard 
+export default OrderHistoryCard;

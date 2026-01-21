@@ -107,7 +107,7 @@ export default function ProductDetail() {
         <div className="flex flex-col gap-6">
           <div>
             <h1 className="text-4xl font-bold text-gray-900 mb-2">{product.name}</h1>
-            <p className="text-2xl text-gray-500 font-medium">THB {(Number(product.price || 0)).toLocaleString()}</p>
+            <p className="text-2xl text-black font-medium">THB {(Number(product.price || 0)).toLocaleString()}</p>
           </div>
           <div className="flex item-center gap-4">
             <div className="flex text-yellow-400">
@@ -117,9 +117,9 @@ export default function ProductDetail() {
               <span>⭐</span>
             </div>
             <div className="h-5 w-px bg-gray-300"></div>
-            <span className="text-sm text-gray-500">5 Customer Review</span>
+            <span className="text-sm text-black">5 Customer Review</span>
           </div>
-          <p className="text-gray-600 leading-relaxed">
+          <p className="text-black leading-relaxed">
             {product.description || "No decription available."}
           </p>
 
@@ -128,7 +128,7 @@ export default function ProductDetail() {
                 <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
                   <button
                     onClick={decrementQty} // 5. ใส่ฟังก์ชันลด
-                    className="w-10 h-12 text-gray-500 hover:bg-gray-200 transition"
+                    className="w-10 h-12 text-black hover:bg-gray-200 transition"
                   >
                     -
                   </button>
@@ -139,7 +139,7 @@ export default function ProductDetail() {
 
                   <button
                     onClick={incrementQty} // 7. ใส่ฟังก์ชันเพิ่ม
-                    className="w-10 h-12 text-gray-500 hover:bg-gray-200 transition"
+                    className="w-10 h-12 text-black hover:bg-gray-200 transition"
                   >
                     +
                   </button>
@@ -155,27 +155,27 @@ export default function ProductDetail() {
               </div>
 
           <div
-            className="mt-8 pt-8 border-t border-gray-200 text-sm text-gray-500 space-y-3"
+            className="mt-8 pt-8 border-t border-gray-200 text-sm text-black space-y-3"
           >
             <div className="flex">
-              <span className="w-24 text-gray-800">SKU</span>
+              <span className="w-24 text-black">SKU</span>
               <span>: {product._id ? String(product._id).substring(0, 8).toUpperCase() : "N/A"}</span>
             </div>
             <div className="flex">
-              <span className="w-24 text-gray-800">Category</span>
+              <span className="w-24 text-black">Category</span>
               <span>: {product.category || "General"}</span>
             </div>
             <div className="flex">
-              <span className="w-24 text-gray-800">Tags</span>
+              <span className="w-24 text-black">Tags</span>
               <span>: {product.category}, Home, Shop</span>
             </div>
             <div className="flex items-center mt-6">
-              <span className="w-24 text-gray-800">Share</span>
-              <span className="text-gray-800 mx-2">:</span>
+              <span className="w-24 text-black">Share</span>
+              <span className="text-black mx-2">:</span>
               <div className="flex gap-4">
-                <img src="/icon/akar-icons_facebook-fill.png" alt="Facebook" className="w-8 h-8"/>
-                <img src="/icon/ant-design_twitter-circle-filled.png" alt="Twitter" className="w-8 h-8"/>
-                <img src="/icon/akar-icons_linkedin-box-fill.png" alt="LinkedIn" className="w-8 h-8"/>
+                <img src="https://i.pinimg.com/736x/e7/c1/54/e7c15488d7a9ef341d79bbe19c5bac30.jpg" alt="Facebook" className="w-8 h-8"/>
+                <img src="https://i.pinimg.com/736x/e9/58/5d/e9585dd0d277236b30953bca60761072.jpg" alt="Twitter" className="w-8 h-8"/>
+                <img src="https://i.pinimg.com/736x/e4/82/2c/e4822ca5dc831c46d1cdf83675feb62d.jpg" alt="IG" className="w-8 h-8"/>
               </div>
             </div>
           </div>

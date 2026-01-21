@@ -23,12 +23,9 @@ const UserProfile = () => {
         axios.defaults.withCredentials = true;
 
         const url = `${apiBase}/users/${userId}`;
-        console.log("กำลังดึงข้อมูลจาก:", url);
 
         const response = await axios.get(url);
         const userData = response.data.data || response.data; // กันพลาดตำแหน่งข้อมูล
-
-        console.log("✅ ได้ข้อมูลมาแล้ว:", userData);
 
         setFormData((prev) => ({
           ...prev,
@@ -73,13 +70,11 @@ const UserProfile = () => {
         alert("ไม่พบ User ID");
         return;
       }
-      console.log("กำลังบันทึกข้อมูลไปที่ ID:", userId);
       const url = `${apiBase}/users/${userId}`;
       const response = await axios.patch(url, formData);
 
       if (response.data.success) {
         alert("บันทึกข้อมูลเรียบร้อยแล้ว! 🎉");
-        console.log("Update Success:", response.data);
       }
     } catch (error) {
       console.error("Update Failed:", error);

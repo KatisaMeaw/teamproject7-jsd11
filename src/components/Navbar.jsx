@@ -188,9 +188,9 @@ export function Navbar({logout,user}) {
       </Link>
     )}
 
-        
+
         </div>
-      
+
     </nav>
   );
 }

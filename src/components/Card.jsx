@@ -32,8 +32,8 @@
         />
 
         {product.discount && (
-          <div className="absolute top-5 right-5 bg-red-400 text-white rounded-full w-12 h-12 flex justify-center items-center text-sm font-medium">
-            {product.discount}
+          <div className="absolute top-5 right-5 bg-green-600 text-white rounded-full w-12 h-12 flex justify-center items-center text-sm font-medium">
+            - {product.discount}%
           </div>
         )}
 
