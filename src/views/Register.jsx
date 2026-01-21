@@ -145,9 +145,6 @@ const Register = () => {
         }
       } else {
         const loginUrl = `${apiBase}/users/auth/cookie/login`;
-
-        console.log("กำลัง Login ไปที่:", loginUrl);
-
         const response = await axios.post(loginUrl, {
           email: formData.email,
           password: formData.password,
