@@ -6,6 +6,7 @@ import Explore from '../home/Explore';
 import Footer from  "../components/Footer"
 import SidebarUser from "../components/Userprofile/SidebarUser";
 import OrderTabs from "../components/Userprofile/OrderTabs";
+import { Navbar } from '../components/Navbar';
 
 const Home = () => {
   return (
