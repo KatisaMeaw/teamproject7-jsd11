@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"; // ลบ useOutletContext ออกถ้าไม่ได้ใช้ทำอย่างอื่น
+import { Link } from "react-router-dom"; 
 import { useCart } from "../hooks/useCart";
 import SubNavbar from "../components/SubNavbar";
 import SubFooter from "../components/SubFooter";
@@ -8,8 +8,16 @@ import { useNavigate } from "react-router-dom";
 const Cart = () => {
   const navigate = useNavigate();
   
-  // ✅ ดึง loading และ isLoggedIn มาจาก useCart โดยตรง
-  const { cartItems, updateQuantity, removeItem, subtotal, loading, isLoggedIn } = useCart();
+  // ✅ ดึง clearCart มาเพิ่ม (ถ้าคุณต้องการใช้ฟังก์ชันล้างตะกร้าทั้งหมด)
+  const { 
+    cartItems, 
+    updateQuantity, 
+    removeItem, 
+    clearCart, // ดึงมาใช้จาก useCart
+    subtotal, 
+    loading, 
+    isLoggedIn 
+  } = useCart();
 
   const handleCheckout = () => {
     if (cartItems.length === 0) {
@@ -19,26 +27,46 @@ const Cart = () => {
     navigate("/checkout");
   };
 
-  const handleQuantityChange = (id, value) => {
+  const handleQuantityChange = async (id, value) => {
     if (value === "") {
       updateQuantity(id, 1);
       return;
     }
     const qty = typeof value === "string" ? parseInt(value, 10) : value;
-    if (qty < 1) {
-      handleRemove(id);
-    } else if (!isNaN(qty)) {
-      updateQuantity(id, qty);
+    
+    try {
+      if (qty < 1) {
+        handleRemove(id);
+      } else if (!isNaN(qty)) {
+        await updateQuantity(id, qty); // ✅ ใส่ await เพื่อรอผลลัพธ์
+      }
+    } catch (error) {
+      // หากเกิด error เช่น token หมดอายุ ให้แจ้งเตือน
+      console.error("Update failed:", error);
     }
   };
 
-  const handleRemove = (id) => {
+  const handleRemove = async (id) => {
     if (window.confirm("Are you sure you want to remove this item?")) {
-      removeItem(id);
+      try {
+        await removeItem(id); // ✅ ใส่ await
+      } catch (error) {
+        alert("Failed to remove item. Please try again.");
+      }
     }
   };
 
-  // 1. ✅ จัดการสถานะ Loading (ป้องกันการเห็นหน้า Login แวบเดียวแล้วหาย)
+  // ✅ เพิ่มฟังก์ชันล้างตะกร้าทั้งหมด (แก้ปัญหา NotFound: DELETE /api/v1/carts)
+  const handleClearAll = async () => {
+    if (window.confirm("Do you want to clear your entire cart?")) {
+      try {
+        await clearCart();
+      } catch (error) {
+        console.error("Clear cart failed:", error);
+      }
+    }
+  };
+
   if (loading) {
     return (
       <>
@@ -58,7 +86,6 @@ const Cart = () => {
     <>
       <SubNavbar />
       <main className="max-w-7xl mx-auto px-4 py-12 min-h-[60vh]">
-        {/* 2. ✅ ใช้ isLoggedIn จาก Context แทน user */}
         {!isLoggedIn ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <div className="w-40 h-40 mb-6 bg-gray-50 rounded-full flex items-center justify-center">
@@ -76,6 +103,7 @@ const Cart = () => {
           <div className="flex flex-col lg:flex-row gap-8">
             <div className="lg:w-2/3">
               <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+                {/* Product List Header */}
                 <div className="hidden md:grid grid-cols-4 p-4 bg-blue-50/50 font-bold text-sm text-gray-700">
                   <div>Product</div>
                   <div>Price</div>
@@ -83,7 +111,6 @@ const Cart = () => {
                   <div className="text-right md:text-left">Subtotal</div>
                 </div>
 
-                {/* 3. ✅ ใช้ Optional Chaining (?.) เพื่อความปลอดภัยของข้อมูล */}
                 {cartItems?.length > 0 ? (
                   <>
                     {cartItems.map((item) => (
@@ -114,11 +141,19 @@ const Cart = () => {
                         </div>
                       </div>
                     ))}
-                    <div className="p-6 bg-gray-50/50 border-t border-gray-100">
+                    <div className="p-6 bg-gray-50/50 border-t border-gray-100 flex justify-between items-center">
                       <Link to="/shop" className="inline-flex items-center text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors group">
                         <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                         Continue Shopping
                       </Link>
+                      
+                      {/* ✅ เพิ่มปุ่มล้างตะกร้าทั้งหมด */}
+                      <button 
+                        onClick={handleClearAll}
+                        className="text-xs text-red-400 hover:text-red-600 font-medium underline"
+                      >
+                        Clear Shopping Cart
+                      </button>
                     </div>
                   </>
                 ) : (
@@ -131,6 +166,7 @@ const Cart = () => {
               </div>
             </div>
 
+            {/* Cart Summary Card */}
             <div className="lg:w-1/3">
               <div className="bg-white p-8 rounded-lg border border-gray-200 shadow-sm sticky top-8">
                 <h2 className="text-2xl font-bold mb-8 text-gray-800 border-b pb-4">Cart Total</h2>
@@ -142,9 +178,12 @@ const Cart = () => {
                   <span>Total</span>
                   <span className="text-blue-600">THB {(subtotal || 0).toLocaleString()}</span>
                 </div>
-                <button onClick={handleCheckout} disabled={cartItems?.length === 0}
+                <button 
+                  onClick={handleCheckout} 
+                  disabled={cartItems?.length === 0}
                   className={`text-center w-full mt-8 font-bold py-3 px-8 rounded-lg shadow-md transition
-                  ${cartItems?.length > 0 ? "bg-[#447F98] hover:bg-[#5591A9] text-white" : "bg-gray-300 text-gray-500 cursor-not-allowed"}`}>
+                  ${cartItems?.length > 0 ? "bg-[#447F98] hover:bg-[#5591A9] text-white" : "bg-gray-300 text-gray-500 cursor-not-allowed"}`}
+                >
                   CHECKOUT
                 </button>
               </div>
