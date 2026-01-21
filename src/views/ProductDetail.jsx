@@ -75,6 +75,7 @@ export default function ProductDetail() {
 
   // 3. ปรับฟังก์ชันส่งข้อมูล
   const handleAddToCart = () => {
+    
     const productId = product._id || product.id; 
     if (!productId) {
       alert("Cannot add to cart: Missing Product ID");
