@@ -4,7 +4,7 @@ import Header from '../components/AdminPage/Header';
 import Inventory from '../components/Inventory/Inventory';
 
 function AdminInventory() {
-    const [sideBarCollapsed, setSideBarCollapsed] = useState(true);
+    const [sideBarCollapsed, setSideBarCollapsed] = useState(false);
     const [currentPage, setCurrentPage] = useState("inventory");
 
   return (
