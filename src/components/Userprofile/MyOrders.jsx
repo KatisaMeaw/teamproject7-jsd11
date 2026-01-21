@@ -58,7 +58,34 @@ const OrderHistoryCard = () => {
     setOpenOrderId(openOrderId === id ? null : id);
   };
 
-  // ✅ แสดง Loading ระหว่างรอ Auth หรือรอ Data
+  const handleCancelOrder = async (e, orderId) => {
+    e.stopPropagation(); // ป้องกันไม่ให้ Dropdown ปิดตอนกดยกเลิก
+
+    if (!window.confirm("Are you sure you want to cancel this order?")) return;
+
+    try {
+      const response = await axios.patch(
+        `${API_URL}/orders/${orderId}/cancel`,
+        {},
+        { withCredentials: true },
+      );
+
+      if (response.data.success) {
+        alert("Order cancelled successfully");
+
+        // อัปเดต State แบบไม่ต้องรีโหลดหน้าจอ (Manual Update)
+        setOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order._id === orderId ? { ...order, status: "Cancelled" } : order,
+          ),
+        );
+      }
+    } catch (error) {
+      console.error("Cancel error:", error);
+      alert(error.response?.data?.message || "Failed to cancel order");
+    }
+  };
+  // แสดง Loading ระหว่างรอ Auth หรือรอ Data
   if (authLoading || (loading && orders.length === 0)) {
     return (
       <div className="p-20 text-center text-gray-500">
@@ -81,7 +108,7 @@ const OrderHistoryCard = () => {
       <OrderTabs
         activeTab={activeTab}
         onTabChange={setActiveTab}
-        orders={orders || []} // ✅ ส่งเป็น Array ว่างเสมอถ้าไม่มีข้อมูล
+        orders={orders || []} // ส่งเป็น Array ว่างเสมอถ้าไม่มีข้อมูล
       />
 
       {/* รายการ Order */}
@@ -102,7 +129,7 @@ const OrderHistoryCard = () => {
                   #{order._id?.slice(-8).toUpperCase()}
                 </span>
                 <div className="text-sm text-[#5F6C72]">
-                  {/* ✅ ใช้ Optional Chaining ป้องกัน Error length */}
+                  {/* ใช้ Optional Chaining ป้องกัน Error length */}
                   {order.orderItems?.length || 0} Products •{" "}
                   {order.createdAt
                     ? new Date(order.createdAt).toLocaleDateString("en-GB")
@@ -110,7 +137,7 @@ const OrderHistoryCard = () => {
                 </div>
                 <span
                   className={`text-[10px] uppercase px-2.5 py-0.5 rounded-full font-bold ${
-                    order.status === "Delivered"
+                    order.status === "Delivered" || order.status === "Completed"
                       ? "bg-green-100 text-green-700"
                       : order.status === "Cancelled"
                         ? "bg-red-100 text-red-700"
@@ -119,6 +146,16 @@ const OrderHistoryCard = () => {
                 >
                   {order.status}
                 </span>
+
+                {/* ปุ่ม Cancel Order: จะแสดงเฉพาะเมื่อสถานะเป็น Pending เท่านั้น */}
+                {order.status === "Pending" && (
+                  <button
+                    onClick={(e) => handleCancelOrder(e, order._id)}
+                    className="text-[10px] font-bold text-red-500 border border-red-200 px-2 py-0.5 rounded hover:bg-red-50 transition-colors"
+                  >
+                    CANCEL ORDER
+                  </button>
+                )}
               </div>
 
               <div className="flex items-center gap-6">

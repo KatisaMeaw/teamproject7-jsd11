@@ -9,6 +9,7 @@ const CartProvider = ({ children }) => {
   const [authState, setAuthState] = useState({
     isLoggedIn: false,
     userId: null,
+    userName: "",
     loading: true,
   });
 
@@ -51,22 +52,23 @@ const CartProvider = ({ children }) => {
         withCredentials: true,
       });
 
-      const userId = res.data.user._id;
-      
+      const { _id, name } = res.data.user;
+
       setAuthState({
         isLoggedIn: true,
-        userId: userId,
+        userId: _id,
+        userName: name,
         loading: false,
       });
 
       // 🔥 หัวใจสำคัญ: ดึงข้อมูลตะกร้าทันทีหลังตรวจสอบ Auth สำเร็จโดยส่งค่า true เข้าไปตรงๆ
       // เพื่อไม่ให้เกิด Race Condition ที่ต้องรอสถานะ isLoggedIn เปลี่ยน
       await fetchCartFromServer(true);
-      
     } catch (error) {
       setAuthState({
         isLoggedIn: false,
         userId: null,
+        userName: "",
         loading: false,
       });
       setCartItems([]);
@@ -74,29 +76,21 @@ const CartProvider = ({ children }) => {
   }, [fetchCartFromServer]);
 
   useEffect(() => {
-    // ฟังก์ชันนี้จะทำงานเมื่อหน้าจอถูกกลับมาโฟกัส (เช่น หลังจาก Login หน้าของเพื่อนแล้วเด้งกลับมาหน้า Cart)
+    checkAuth();
+
     const handleFocus = () => {
+      // ใช้ค่าจาก authState.isLoggedIn ที่ใส่ใน dependency ด้านล่างแล้ว
       if (!authState.isLoggedIn) {
         checkAuth();
       }
     };
 
     window.addEventListener("focus", handleFocus);
-    
-    // ตั้งเวลาเช็คทุกๆ 2 วินาที เฉพาะในกรณีที่ยังไม่ได้ Login 
-    // เพื่อดึงข้อมูลทันทีที่เพื่อนเขียน Cookie ลงเครื่องสำเร็จ
-    let interval;
-    if (!authState.isLoggedIn) {
-      interval = setInterval(() => {
-        checkAuth();
-      }, 2000); 
-    }
 
     return () => {
       window.removeEventListener("focus", handleFocus);
-      if (interval) clearInterval(interval);
     };
-  }, [authState.isLoggedIn, checkAuth]);
+  }, [checkAuth, authState.isLoggedIn]); //
 
   // 3. ADD TO CART
   const addToCart = async (product) => {
@@ -112,7 +106,7 @@ const CartProvider = ({ children }) => {
       await axios.post(
         `${API_URL}/carts`,
         { productId, quantity: qty },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       // ดึงข้อมูลใหม่หลังเพิ่มเสร็จทันที
       fetchCartFromServer(true);
@@ -129,7 +123,7 @@ const CartProvider = ({ children }) => {
       await axios.put(
         `${API_URL}/carts/${id}`,
         { quantity: qty },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       fetchCartFromServer(true);
     } catch (error) {
@@ -167,7 +161,7 @@ const CartProvider = ({ children }) => {
 
   const subtotal = cartItems.reduce(
     (sum, item) => sum + Number(item.price || 0) * Number(item.quantity || 0),
-    0
+    0,
   );
 
   return (
@@ -180,6 +174,7 @@ const CartProvider = ({ children }) => {
         clearCart,
         subtotal,
         userId: authState.userId,
+        userName: authState.userName,
         isLoggedIn: authState.isLoggedIn,
         loading: authState.loading,
       }}
