@@ -130,8 +130,8 @@ const Checkout = () => {
       });
 
       if (response.status === 200 || response.status === 201) {
+        if (clearCart) await clearCart();
         alert("สั่งซื้อสำเร็จ!");
-        if (clearCart) clearCart();
         navigate("/"); // ใช้ navigate แทน window.location เพื่อความสมูท
       }
     } catch (error) {

@@ -52,7 +52,7 @@ function OurProduct() {
           {/* Loop สินค้า */}
           {products.map((item)=>(
             // ทำ Link ให้ไปหน้า ProductDetail
-            <Link key={item.id} to={`/shop/${item.id}`}>
+            <Link key={item._id} to={`/shop/${item._id}`}>
               {/* ส่งข้อมูลสินค้าทั้งก้อน(Item) ไปให้ Card */}
               <Card product={item}/>
             </Link>
