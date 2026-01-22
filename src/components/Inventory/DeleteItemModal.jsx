@@ -12,7 +12,7 @@ const DeleteItemModal = ({ isOpen, onClose, item, onDeleteSuccess }) => {
     setIsDeleting(true);
     try {
       await axios.delete(`${API_URL}/products/${item._id}`, {
-        credentials: "include",
+        withCredentials: true
       });
       onDeleteSuccess(item._id); // Tell parent to remove it from state
       onClose(); // Close the modal
