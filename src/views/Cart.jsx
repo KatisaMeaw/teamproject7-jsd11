@@ -50,15 +50,13 @@ const Cart = () => {
   };
 
   const handleRemove = async (id) => {
-    if (window.confirm("Are you sure you want to remove this item?")) {
-      try {
-        setIsUpdating(true);
-        await removeItem(id);
-      } catch (error) {
-        alert("Failed to remove item. Please try again.");
-      } finally {
-        setIsUpdating(false);
-      }
+    try {
+      setIsUpdating(true);
+      await removeItem(id);
+    } catch (error) {
+     console.error("Failed to remove item:", error);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
