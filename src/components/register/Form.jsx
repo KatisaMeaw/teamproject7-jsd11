@@ -62,7 +62,7 @@ export const Form = ({
           {mode === "signup" ? "Register with" : "Login"}
         </div>
 
-        <div>
+        {/* <div>
           <div className="flex flex-row items-center p-6 ">
             <div className="w-15 h-15 md:w-20 md:h-20 border border-[#E2E8F0]  rounded-lg flex items-center justify-center mr-4 ">
               <span className="[&>svg]:h-7 [&>svg]:w-7 [&>svg]:fill-[#2D3748] cursor-pointer">
@@ -98,15 +98,15 @@ export const Form = ({
               <span className="[&>svg]:h-6 [&>svg]:w-6 [&>svg]:fill-[#2D3748] cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
                   {/* Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc. */}
-                  <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
+                  {/* <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
                 </svg>
               </span>
             </div>
           </div>
-        </div>
+        </div> */} 
 
         {/* ---------------------------------ช่อง input ----------------------------------------------- */}
-        <h3 className="text-[#A0AEC0] text-xl">or</h3>
+        {/* <h3 className="text-[#A0AEC0] text-xl">or</h3> */}
 
         <div className="mt-10 flex flex-col md:gap-x-4 w-[95%]">
           <div
@@ -291,22 +291,21 @@ export const Form = ({
               )}
             </div>
           </div>
-
+{/* 
           <label className="inline-flex items-center cursor-pointer mb-4">
             <input type="checkbox" value="" className="sr-only peer" />
             <div className="relative w-9 h-5 bg-gray-200   rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#447F98]"></div>
             <span className="select-none ms-3 text-sm font-medium text-heading">
               Remember me
             </span>
-          </label>
+          </label> */}
 
-          {/* ? "cursor-pointer hover:bg-[#5591A9]"
-                : "opacity-60 cursor-default" */}
+          
           <button
             type="submit"
             disabled={loading || !isFormValid}
             
-            className={`bg-[#447F98] w-full h-10 md:w-95 md:h-12 rounded-lg text-sm font-bold text-white
+            className={`bg-[#447F98] w-full h-10 md:w-95 md:h-12 mt-8 rounded-lg text-sm font-bold text-white
               
               ${
                 loading || !isFormValid
