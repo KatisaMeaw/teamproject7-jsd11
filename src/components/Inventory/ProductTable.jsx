@@ -44,6 +44,7 @@ function ProductTable() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(newItem),
+        credentials: "include",
       });
 
       if (!response.ok) {
