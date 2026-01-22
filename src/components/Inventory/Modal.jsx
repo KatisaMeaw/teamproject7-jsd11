@@ -21,7 +21,7 @@ const Modal = ({
       {/* Modal Box */}
       <div className="relative bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden">
         {showHeader && (
-          <div className="px-6 py-4 border-b flex justify-between items-center">
+          <div className="px-6 py-4 border border-gray-300 flex justify-between items-center">
             <h3 className="text-xl font-semibold">{title}</h3>
             <button
               onClick={onClose}
