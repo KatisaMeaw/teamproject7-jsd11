@@ -148,14 +148,14 @@ const CartProvider = ({ children }) => {
   };
 
   const clearCart = async () => {
+    setCartItems([]);
     if (!authState.isLoggedIn) return;
     try {
       await axios.delete(`${API_URL}/carts`, {
         withCredentials: true,
       });
-      setCartItems([]);
     } catch (error) {
-      console.error("Clear cart error", error);
+      console.warn("Backend cart might already be empty:", error.response?.status);
     }
   };
 
