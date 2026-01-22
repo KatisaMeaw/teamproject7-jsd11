@@ -1,10 +1,12 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { CartContext } from "./CartContext";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const CartProvider = ({ children }) => {
+  const location = useLocation();
   const [cartItems, setCartItems] = useState([]);
   const [authState, setAuthState] = useState({
     isLoggedIn: false,
@@ -13,9 +15,10 @@ const CartProvider = ({ children }) => {
     loading: true,
   });
 
-  // 2. ดึงข้อมูลจาก Server (แยกออกมาเป็น useCallback เพื่อให้เรียกซ้ำได้เสถียร)
+  const isLoggedInRef = useRef(false);
+
+  // 2. ฟังก์ชันดึงข้อมูลจาก Server
   const fetchCartFromServer = useCallback(async (isLoggedIn) => {
-    // หากไม่ได้ Login ให้ล้างข้อมูลตะกร้าและออกจากการทำงานทันที
     if (!isLoggedIn) {
       setCartItems([]);
       return;
@@ -36,7 +39,6 @@ const CartProvider = ({ children }) => {
         setCartItems(formattedItems);
       }
     } catch (err) {
-      // หากพบว่า 401 (Unauthorized) ให้ล้างตะกร้า
       if (err.response?.status === 401) {
         setCartItems([]);
       } else {
@@ -45,7 +47,7 @@ const CartProvider = ({ children }) => {
     }
   }, []);
 
-  // 1. เช็คสถานะการเข้าสู่ระบบ
+  // 1. ฟังก์ชันเช็คสถานะการเข้าสู่ระบบ
   const checkAuth = useCallback(async () => {
     try {
       const res = await axios.get(`${API_URL}/users/auth/cookie/me`, {
@@ -60,9 +62,9 @@ const CartProvider = ({ children }) => {
         userName: name,
         loading: false,
       });
+      isLoggedInRef.current = true;
 
-      // 🔥 หัวใจสำคัญ: ดึงข้อมูลตะกร้าทันทีหลังตรวจสอบ Auth สำเร็จโดยส่งค่า true เข้าไปตรงๆ
-      // เพื่อไม่ให้เกิด Race Condition ที่ต้องรอสถานะ isLoggedIn เปลี่ยน
+      // 🔥 ดึงตะกร้าต่อทันทีเมื่อยืนยันตัวตนสำเร็จ
       await fetchCartFromServer(true);
     } catch (error) {
       setAuthState({
@@ -71,28 +73,33 @@ const CartProvider = ({ children }) => {
         userName: "",
         loading: false,
       });
+      isLoggedInRef.current = false;
       setCartItems([]);
     }
   }, [fetchCartFromServer]);
 
+  // 3. จัดการ Lifecycle ของแอป (ทำงานเมื่อ Load หน้าเว็บ และเมื่อกลับมาโฟกัสหน้าจอ)
+  // --- ส่วนที่แก้ไข ---
   useEffect(() => {
+    // ฟังก์ชันนี้จะทำงานทุกครั้งที่ location.pathname เปลี่ยนแปลง
+    // เช่น เปลี่ยนจากหน้า /login ไปหน้า /cart
     checkAuth();
 
     const handleFocus = () => {
-      // ใช้ค่าจาก authState.isLoggedIn ที่ใส่ใน dependency ด้านล่างแล้ว
-      if (!authState.isLoggedIn) {
-        checkAuth();
-      }
+      checkAuth();
     };
 
     window.addEventListener("focus", handleFocus);
-
     return () => {
       window.removeEventListener("focus", handleFocus);
     };
-  }, [checkAuth, authState.isLoggedIn]); //
+  }, [checkAuth, location.pathname]); // เพิ่ม location.pathname ที่นี่
+  // ------------------
 
-  // 3. ADD TO CART
+  // ---------------------------------------------------------
+  // Cart Actions (Add, Update, Remove, Clear)
+  // ---------------------------------------------------------
+
   const addToCart = async (product) => {
     if (!authState.isLoggedIn) {
       alert("Please login to add items to cart");
@@ -108,47 +115,40 @@ const CartProvider = ({ children }) => {
         { productId, quantity: qty },
         { withCredentials: true },
       );
-      // ดึงข้อมูลใหม่หลังเพิ่มเสร็จทันที
-      fetchCartFromServer(true);
+      await fetchCartFromServer(true);
     } catch (error) {
       console.error("Add to cart error", error);
     }
   };
 
-  // 4. UPDATE QTY
   const updateQuantity = async (id, qty) => {
     if (qty < 1 || !authState.isLoggedIn) return;
-
     try {
       await axios.put(
         `${API_URL}/carts/${id}`,
         { quantity: qty },
         { withCredentials: true },
       );
-      fetchCartFromServer(true);
+      await fetchCartFromServer(true);
     } catch (error) {
       console.error("Update quantity error", error);
     }
   };
 
-  // 5. REMOVE ITEM
   const removeItem = async (id) => {
     if (!authState.isLoggedIn) return;
-
     try {
       await axios.delete(`${API_URL}/carts/${id}`, {
         withCredentials: true,
       });
-      fetchCartFromServer(true);
+      await fetchCartFromServer(true);
     } catch (error) {
       console.error("Remove item error", error);
     }
   };
 
-  // 6. CLEAR CART
   const clearCart = async () => {
     if (!authState.isLoggedIn) return;
-
     try {
       await axios.delete(`${API_URL}/carts`, {
         withCredentials: true,
@@ -177,6 +177,7 @@ const CartProvider = ({ children }) => {
         userName: authState.userName,
         isLoggedIn: authState.isLoggedIn,
         loading: authState.loading,
+        checkAuth,
       }}
     >
       {children}
