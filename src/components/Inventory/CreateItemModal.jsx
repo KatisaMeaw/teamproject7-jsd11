@@ -2,7 +2,6 @@ import { useState } from "react";
 import ReactDOM from "react-dom";
 
 const CreateItemModal = ({ isOpen, onClose, onSubmit }) => {
-  // 1. ปรับ State ให้ตรงกับ Schema ของ Mongoose
   const [formData, setFormData] = useState({
     name: "",
     category: "",
@@ -17,7 +16,6 @@ const CreateItemModal = ({ isOpen, onClose, onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // แปลงตัวเลขก่อนส่งออกไป
     const submissionData = {
       ...formData,
       price: Number(formData.price),
