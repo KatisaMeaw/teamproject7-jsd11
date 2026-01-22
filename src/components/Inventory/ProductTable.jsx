@@ -68,6 +68,7 @@ function ProductTable() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedItem),
+        credentials: "include"
       });
 
       if (!response.ok) throw new Error("Update failed");
