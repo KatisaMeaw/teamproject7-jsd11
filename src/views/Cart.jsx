@@ -101,7 +101,7 @@ const Cart = () => {
             </div>
             <h3 className="text-2xl font-bold text-gray-800 mb-2">Please log in to see your cart</h3>
             <p className="text-gray-500 mb-8 max-w-sm">Log in now to view the items you have added.</p>
-            <Link to="/login?redirect=/" className="bg-[#447F98] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#5591A9] shadow-md transition-all">
+            <Link to="/login" className="bg-[#447F98] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#5591A9] shadow-md transition-all">
               Login / Sign Up
             </Link>
           </div>
