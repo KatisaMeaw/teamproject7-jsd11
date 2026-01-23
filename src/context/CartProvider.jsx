@@ -50,9 +50,7 @@ const CartProvider = ({ children }) => {
     }
   }, []);
 
-  // -------------------------
-  // Check Auth (ยิงครั้งเดียว)
-  // -------------------------
+  // 1. ฟังก์ชันเช็คสถานะการเข้าสู่ระบบ ใช้ได
   const checkAuth = useCallback(async () => {
     if (isCheckingAuthRef.current) return;
 
