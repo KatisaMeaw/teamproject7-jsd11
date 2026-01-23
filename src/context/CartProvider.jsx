@@ -47,7 +47,7 @@ const CartProvider = ({ children }) => {
     }
   }, []);
 
-  // 1. ฟังก์ชันเช็คสถานะการเข้าสู่ระบบ
+  // 1. ฟังก์ชันเช็คสถานะการเข้าสู่ระบบ ใช้ได
   const checkAuth = useCallback(async () => {
     try {
       const res = await axios.get(`${API_URL}/users/auth/cookie/me`, {
