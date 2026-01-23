@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
 const EditProductModal = ({ isOpen, onClose, onSubmit, item }) => {
-  // 1. กำหนด Initial State ให้ตรงกับ Mongoose Schema
   const [formData, setFormData] = useState({
     name: "",
     category: "",
@@ -12,14 +11,13 @@ const EditProductModal = ({ isOpen, onClose, onSubmit, item }) => {
     originalPrice: "",
   });
 
-  // 2. ซิงค์ข้อมูลจาก prop 'item' เมื่อมีการกดแก้ไขสินค้าตัวใหม่
   useEffect(() => {
     if (item) {
       setFormData({
         name: item.name || "",
         category: item.category || "",
         image: item.image || "",
-        description: item.description || "", // เปลี่ยนจาก desc เป็น description
+        description: item.description || "",
         price: item.price || "",
         originalPrice: item.originalPrice || "",
       });
@@ -31,7 +29,6 @@ const EditProductModal = ({ isOpen, onClose, onSubmit, item }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // แปลงข้อมูลเป็น Number ก่อนส่งกลับไปหา API
     const updatedData = {
       ...formData,
       price: Number(formData.price),
@@ -40,7 +37,7 @@ const EditProductModal = ({ isOpen, onClose, onSubmit, item }) => {
         : undefined,
     };
 
-    onSubmit({ ...item, ...updatedData }); // รวม _id เดิมเข้ากับข้อมูลที่แก้ใหม่
+    onSubmit({ ...item, ...updatedData });
     onClose();
   };
 
@@ -48,7 +45,7 @@ const EditProductModal = ({ isOpen, onClose, onSubmit, item }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
       <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
         {/* Header */}
-        <div className="px-6 py-4 border-b flex justify-between items-center bg-gray-50">
+        <div className="px-6 py-4 border border-gray-300 flex justify-between items-center bg-white">
           <h3 className="text-xl font-bold text-gray-800">Edit Product</h3>
           <button
             onClick={onClose}
@@ -70,7 +67,7 @@ const EditProductModal = ({ isOpen, onClose, onSubmit, item }) => {
             <input
               required
               type="text"
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               value={formData.name}
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
@@ -84,7 +81,7 @@ const EditProductModal = ({ isOpen, onClose, onSubmit, item }) => {
             </label>
             <select
               required
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               value={formData.category}
               onChange={(e) =>
                 setFormData({ ...formData, category: e.target.value })
@@ -104,7 +101,7 @@ const EditProductModal = ({ isOpen, onClose, onSubmit, item }) => {
             <input
               required
               type="text"
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               value={formData.image}
               onChange={(e) =>
                 setFormData({ ...formData, image: e.target.value })
@@ -115,7 +112,7 @@ const EditProductModal = ({ isOpen, onClose, onSubmit, item }) => {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
             <textarea
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               rows="3"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -130,7 +127,7 @@ const EditProductModal = ({ isOpen, onClose, onSubmit, item }) => {
               <input
                 required
                 type="number"
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                 value={formData.price}
                 onChange={(e) =>
                   setFormData({ ...formData, price: e.target.value })
@@ -144,7 +141,7 @@ const EditProductModal = ({ isOpen, onClose, onSubmit, item }) => {
               </label>
               <input
                 type="number"
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                 value={formData.originalPrice}
                 onChange={(e) =>
                   setFormData({ ...formData, originalPrice: e.target.value })
@@ -158,13 +155,13 @@ const EditProductModal = ({ isOpen, onClose, onSubmit, item }) => {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
+              className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2.5 text-white bg-blue-600 rounded-xl hover:bg-blue-700 shadow-md transition-all"
+              className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 shadow-md transition-all"
             >
               Update Product
             </button>
