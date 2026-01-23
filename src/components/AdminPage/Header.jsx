@@ -26,7 +26,7 @@ function Header({ sideBarCollapsed, onToggledSidebar }) {
             <h1 className='text-2xl font-black text-slate-800 dark:text-white'>
               Dashboard
             </h1>
-            <p>Welcome back, Alex! here's what's happening today</p>
+            <p>Welcome back, Admin! here's what's happening today</p>
           </div>
         </div>
 
@@ -74,13 +74,13 @@ function Header({ sideBarCollapsed, onToggledSidebar }) {
           {/* User profile */}
           <div className="flex items-center space-x-3 pl-3 border-l border-slate-200 dark:border-slate-700">
             <img
-              src="https://is1-ssl.mzstatic.com/image/thumb/Features71/v4/9a/d2/82/9ad28263-7e5e-8528-9806-89cc3b28d103/mzl.tkmgpqca.png/190x190cc.webp"
+              src="https://icons.veryicon.com/png/o/miscellaneous/8atour/people-23.png"
               alt="User"
               className="w-8 h-8 rounded-full ring-2 ring-blue-500"
             />
             <div className="hidden md:block">
               <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                Alex JohnSon
+                Admin
               </p>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 Administrator

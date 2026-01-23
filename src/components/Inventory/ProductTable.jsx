@@ -44,15 +44,18 @@ function ProductTable() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(newItem),
+        credentials: "include",
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+        throw new Error(
+          errorData.message || "An error occurred while saving the data.",
+        );
       }
 
       fetchData();
-      alert("เพิ่มสินค้าสำเร็จ!");
+      alert("Product added successfully!");
     } catch (error) {
       console.error("Error adding item:", error);
       alert(`Can not fill up the product: ${error.message}`);
@@ -65,15 +68,16 @@ function ProductTable() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedItem),
+        credentials: "include"
       });
 
       if (!response.ok) throw new Error("Update failed");
 
       fetchData();
-      alert("อัปเดตข้อมูลสำเร็จ!");
+      alert("Data updated successfully!");
     } catch (error) {
       console.error(error);
-      alert("ไม่สามารถแก้ไขข้อมูลได้");
+      alert("The information cannot be edited.");
     }
   };
 
@@ -191,17 +195,15 @@ function ProductTable() {
             <div className="space-y-4">
               {activeProduct?.image && (
                 <div className="relative w-full overflow-hidden rounded-xl bg-gray-100 group">
-
                   <div className="aspect-video w-full sm:aspect-square md:h-72 lg:h-80">
                     <img
                       src={activeProduct.image}
                       alt={activeProduct.name}
                       className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-
                     />
                   </div>
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent pointer-events-none" />
                 </div>
               )}
 
@@ -215,7 +217,6 @@ function ProductTable() {
               </div>
 
               <div className="grid grid-cols-1 gap-3">
-                {/* รายละเอียดสินค้า */}
                 <div className="p-4 bg-gray-50 rounded-xl">
                   <p className="text-sm font-medium text-gray-500 mb-1">
                     Description
@@ -225,7 +226,6 @@ function ProductTable() {
                   </p>
                 </div>
 
-                {/* ข้อมูลราคา */}
                 <div className="flex items-center gap-4 p-4 bg-blue-50 rounded-xl">
                   <div>
                     <p className="text-sm font-medium text-blue-600 mb-1">
@@ -254,7 +254,6 @@ function ProductTable() {
                   )}
                 </div>
 
-                {/* ข้อมูลระบบ (Metadata) */}
                 <div className="grid grid-cols-2 gap-2 mt-2">
                   <div className="p-3 bg-gray-100 rounded-lg text-[10px] text-gray-500">
                     <span className="block font-bold uppercase">
@@ -275,10 +274,9 @@ function ProductTable() {
                 </div>
               </div>
 
-              {/* ปุ่มปิด Modal (Optional) */}
               <button
                 onClick={() => setActiveProduct(null)}
-                className="w-full py-3 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-colors"
+                className="w-full px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 shadow-md shadow-blue-200"
               >
                 Close
               </button>
