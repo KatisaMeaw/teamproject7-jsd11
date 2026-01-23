@@ -35,27 +35,34 @@ export function Layout() {
     checkAuth();
   }, [apiBase]);
 
-  const login = async ({ email, password }) => {
+  const login = async (data) => {
     setAuthError(null);
 
-    try {
-      const response = await axios.post(
-        `${apiBase}/users/auth/cookie/login`,
-        { email, password },
-        // if user have token in the cookies, it will attach token with http request.
-        { withCredentials: true }
-      );
-
-      setUser(response.data.user);
-      return true;
-    } catch (error) {
-      const message = error.response.data.message || error.response.data.error || error.message;
-
-      setAuthError(message || "Login failed");
-      setUser(null);
-      return null;
+    // 🔥 เพิ่มส่วนนี้: ถ้า data มี _id แสดงว่าเป็นข้อมูล User แล้ว ให้ Set State เลย (ไม่ต้องยิง API)
+    if (data && data._id) {
+        setUser(data);
+        return true;
     }
-  };
+
+    // ถ้าไม่มี _id แสดงว่าเป็น email/password แบบเดิม ให้ดึงค่าออกมาแล้วยิง API
+    const { email, password } = data;
+
+    try {
+        const response = await axios.post(
+            `${apiBase}/users/auth/cookie/login`,
+            { email, password },
+            { withCredentials: true }
+        );
+
+        setUser(response.data.user);
+        return true;
+    } catch (error) {
+        const message = error.response?.data?.message || error.response?.data?.error || error.message;
+        setAuthError(message || "Login failed");
+        setUser(null);
+        return null;
+    }
+};
 
   const logout = async () => {
     setAuthError(null);

@@ -1,4 +1,4 @@
-import { useState } from "react"; // เพิ่ม useState
+import { useState, useEffect } from "react"; // เพิ่ม useState
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
 import SubNavbar from "../components/SubNavbar";
@@ -7,18 +7,24 @@ import Footer from "../components/Footer";
 
 const Cart = () => {
   const navigate = useNavigate();
+  const [isUpdating, setIsUpdateing] = useState(false);
   // เพิ่ม state สำหรับจัดการ loading ขณะอัปเดตรายชิ้น
-  const [isUpdating, setIsUpdating] = useState(false);
+
   
-  const { 
-    cartItems, 
-    updateQuantity, 
-    removeItem, 
-    clearCart, 
-    subtotal, 
-    loading, 
-    isLoggedIn 
+  const {
+    cartItems,
+    updateQuantity,
+    removeItem,
+    clearCart,
+    subtotal,
+    loading,
+    isLoggedIn,
+    checkAuth
   } = useCart();
+  
+useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   const handleCheckout = () => {
     if (cartItems.length === 0) {
@@ -36,7 +42,7 @@ const Cart = () => {
     if (isNaN(qty) || qty === "") return;
 
     try {
-      setIsUpdating(true);
+     setIsUpdateing(true);
       if (qty < 1) {
         await handleRemove(id);
       } else {
@@ -45,30 +51,30 @@ const Cart = () => {
     } catch (error) {
       console.error("Update failed:", error);
     } finally {
-      setIsUpdating(false);
+      setIsUpdateing(false);
     }
   };
 
   const handleRemove = async (id) => {
     try {
-      setIsUpdating(true);
+      setIsUpdateing(true);
       await removeItem(id);
     } catch (error) {
      console.error("Failed to remove item:", error);
     } finally {
-      setIsUpdating(false);
+      setIsUpdateing(false);
     }
   };
 
   const handleClearAll = async () => {
     if (window.confirm("Do you want to clear your entire cart?")) {
       try {
-        setIsUpdating(true);
+        setIsUpdateing(true);
         await clearCart();
       } catch (error) {
         console.error("Clear cart failed:", error);
       } finally {
-        setIsUpdating(false);
+        setIsUpdateing(false);
       }
     }
   };

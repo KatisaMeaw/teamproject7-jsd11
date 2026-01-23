@@ -144,29 +144,39 @@ const Register = () => {
           setTouched({});
         }
       } else {
-        const loginUrl = `${apiBase}/users/auth/cookie/login`;
-        const response = await axios.post(loginUrl, {
-          email: formData.email,
-          password: formData.password,
-        });
+       const loginUrl = `${apiBase}/users/auth/cookie/login`;
+  
+  // 🔴 จุดที่ผิด (ของเดิม): ลืม { withCredentials: true }
+  /* const response = await axios.post(loginUrl, {
+    email: formData.email,
+    password: formData.password,
+  }); 
+  */
 
-        if (!response.data.error) {
-          const targetUser = response.data.user || response.data.data;
+  // 🟢 จุดที่แก้ (ใส่แทนอันบน): เติม config เข้าไป
+  const response = await axios.post(
+    loginUrl,
+    {
+      email: formData.email,
+      password: formData.password,
+    },
+    { withCredentials: true } // 👈 🔥 สำคัญมาก! ต้องเติมบรรทัดนี้ ไม่งั้นล็อกอินหลุด
+  );
 
-          if (targetUser && targetUser._id) {
-            localStorage.setItem("userId", targetUser._id);
-            await login({
-              email: formData.email,
-              password: formData.password,
-            });
+  if (!response.data.error) {
+    // ... (โค้ดส่วนเช็ค targetUser ของคุณ ถูกต้องแล้ว)
+    const targetUser = response.data.user || response.data.data;
 
-            //location.search หมายถึงส่วนที่อยู่ข้างหลัง ? เช่น /login?redirect=/cart
-            //URLSearchParams  เป็นเครื่องมือช่วยดึงข้อมูลออกมาจาก "ข้อความ" ให้กลายเป็น "ตัวแปร" ที่เราใช้งานได้ง่ายๆ
-            const searchParams = new URLSearchParams(location.search);
-            //.get("redirect") คือการสั่งว่าให้ไปหาคำว่า redirect มาแล้วดูว่ามันคู่กับค่าอะไร ในที่นี้คือ /cart และ "/" คือแผนสำรอง
-            const redirectPath = searchParams.get("redirect") || "/";
+    if (targetUser && targetUser._id) {
+        localStorage.setItem("userId", targetUser._id);
 
-            navigate(redirectPath);
+        // ✅ ส่วนนี้คุณแก้ถูกแล้ว (ส่ง targetUser ไปตรงๆ)
+        await login(targetUser); 
+
+        const searchParams = new URLSearchParams(location.search);
+        const redirectPath = searchParams.get("redirect") || "/";
+
+        navigate(redirectPath);
           } else {
             alert("Login สำเร็จ แต่ไม่พบ User ID ส่งกลับมา");
           }
