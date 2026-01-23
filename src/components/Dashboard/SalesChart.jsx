@@ -3,7 +3,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
 const data = [
   { name: "Ergonomic Chair", value: 45, color: "#3b82f6" },
-  { name: "Ergonomic Desk", value: 30, color: "#8b5cf6" },
+  { name: "Desk", value: 30, color: "#8b5cf6" },
   { name: "Accessories", value: 15, color: "#10b981" },
   { name: "Other", value: 10, color: "#f59e0b" },
 ];
